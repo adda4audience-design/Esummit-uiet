@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | E-SUMMIT '26 UIET KUK</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+            --bg-black: #00030a;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --primary-orange: #ff3300;
+            --primary-gold: #ffaa00;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--bg-black); color: var(--text-main); 
+            font-family: 'Montserrat', sans-serif; 
+            min-height: 100vh; display: flex; justify-content: center;
+            overflow-x: hidden; position: relative;
+        }
+
+        #webgl-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none;
+        }
+
+        /* --- Transparent Header & Navigation (Matches index.html) --- */
+        .nav-header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 1.2rem 5%; display: flex; justify-content: space-between; 
+            align-items: center; z-index: 100; pointer-events: auto;
+            background: transparent;
+            transition: background 0.4s ease;
+        }
+
+        .logo { font-size: 1rem; font-weight: 900; color: var(--text-main); text-decoration: none; letter-spacing: 2px; }
+
+        .hamburger { display: none; color: #ffffff; font-size: 1.5rem; cursor: pointer; transition: transform 0.3s; }
+        .hamburger:hover { transform: scale(1.1); }
+
+        .main-nav ul { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+        .main-nav a {
+            color: var(--text-main); text-decoration: none; font-weight: 700;
+            font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase;
+            opacity: 0.65; transition: opacity 0.3s, color 0.3s, text-shadow 0.3s;
+        }
+        .main-nav a:hover { opacity: 1; color: var(--primary-gold); }
+
+        .nav-profile-icon {
+            font-size: 1.1rem !important; color: var(--primary-gold) !important; opacity: 0.8 !important;
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.3);
+            transition: all 0.3s ease !important;
+        }
+        .nav-profile-icon:hover { background: var(--primary-gold); color: var(--bg-black) !important; box-shadow: 0 0 15px rgba(255, 170, 0, 0.5); transform: scale(1.1); opacity: 1 !important; }
+
+        /* --- Dashboard Specific Styles --- */
+        .container {
+            width: 100%; padding: 120px 5% 40px; 
+            display: flex; justify-content: center; position: relative; z-index: 10;
+        }
+
+        .dashboard-wrapper { width: 100%; max-width: 1200px; display: grid; grid-template-columns: 1fr 400px; gap: 40px; }
+
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(10,10,10,0.85), rgba(3,3,3,0.95));
+            backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); 
+            padding: 30px; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 20px rgba(255, 51, 0, 0.05);
+            border-top: 4px solid var(--primary-orange);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-panel:hover { border-color: var(--primary-gold); box-shadow: 0 15px 40px rgba(255, 170, 0, 0.15); }
+
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px; }
+        .header h1 { color: var(--text-main); text-transform: uppercase; margin: 0; font-size: 1.6rem; letter-spacing: 2px; font-weight: 900;}
+        .header h1 span { color: var(--primary-gold); }
+        
+        .btn-action { background: transparent; border: 1px solid; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 800; text-transform: uppercase; transition: all 0.3s; margin-left: 10px; font-family: 'Montserrat', sans-serif;}
+        
+        .btn-edit { background: rgba(255, 170, 0, 0.1); color: var(--primary-gold); border-color: var(--primary-gold); }
+        .btn-edit:hover { background: var(--primary-gold); color: var(--bg-black); box-shadow: 0 0 15px rgba(255,170,0,0.4); }
+
+        .btn-logout { background: rgba(255, 51, 0, 0.1); color: var(--primary-orange); border-color: var(--primary-orange); }
+        .btn-logout:hover { background: var(--primary-orange); color: var(--text-main); box-shadow: 0 0 15px rgba(255,51,0,0.4); }
+
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .data-group { background: rgba(255,255,255,0.02); padding: 15px; border-radius: 6px; border-left: 3px solid rgba(255,255,255,0.1); }
+        .data-group.highlight { border-left-color: var(--primary-gold); background: rgba(255, 170, 0, 0.05); }
+        .data-group label { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; font-weight: 700; letter-spacing: 1px;}
+        .data-group label i { margin-right: 5px; color: var(--primary-gold); }
+        .data-group .value { font-size: 1.1rem; font-weight: 600; word-break: break-word; color: var(--text-main); }
+        .span-2 { grid-column: span 2; }
+
+        .ticket-wrapper { border-top: 4px solid var(--primary-gold); display: flex; flex-direction: column; align-items: center; justify-content: center;}
+        
+        .btn-download { background: var(--primary-orange); color: var(--text-main); border: 1px solid var(--primary-orange); padding: 15px 30px; border-radius: 4px; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; cursor: pointer; margin-top: 20px; width: 100%; transition: all 0.3s; font-family: 'Montserrat', sans-serif;}
+        .btn-download:hover { background: rgba(255, 51, 0, 0.1); color: var(--primary-orange); box-shadow: 0 0 25px rgba(255, 51, 0, 0.6); transform: translateY(-2px); }
+
+        .lock-screen { text-align: center; color: var(--text-muted); padding: 40px 20px; }
+        .lock-screen i { font-size: 3rem; color: var(--primary-orange); margin-bottom: 15px; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; display: none; justify-content: center; align-items: center; }
+        .modal-content { background: var(--bg-black); border: 1px solid var(--primary-gold); padding: 30px; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 0 30px rgba(255, 170, 0, 0.2); max-height: 90vh; overflow-y: auto;}
+        .modal-content h2 { margin-top: 0; margin-bottom: 20px; color: var(--text-main); text-transform: uppercase; font-weight: 900; letter-spacing: 2px;}
+        .modal-content h2 span { color: var(--primary-gold); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;}
+        .form-group input, .form-group select { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 4px; box-sizing: border-box; font-family: 'Montserrat', sans-serif;}
+        .form-group input:focus, .form-group select:focus { border-color: var(--primary-gold); outline: none; background: rgba(255, 170, 0, 0.05);}
+        .form-group select option { background: var(--bg-black); }
+
+        /* --- TICKET MODAL STYLES --- */
+        .ticket-modal-container { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,3,10,0.95); z-index: 2000; display: none; 
+            justify-content: center; align-items: center; 
+            flex-direction: column; backdrop-filter: blur(10px); 
+            padding: 10px; box-sizing: border-box;
+        }
+
+        .pdf-container-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            transform-origin: center center;
+            box-shadow: 0 0 50px rgba(255, 170, 0, 0.2);
+            border-radius: 12px;
+        }
+
+        @media (max-width: 600px) { .pdf-container-wrapper { transform: scale(0.9); } }        
+        
+        .ticket-modal-container.active { display: flex; }
+        .close-ticket-btn { position: absolute; top: 30px; right: 40px; color: white; font-size: 2.5rem; cursor: pointer; transition: color 0.3s; z-index: 2001;}
+        .close-ticket-btn:hover { color: var(--primary-orange); }
+        
+        .golden-gradient {
+            background: linear-gradient(90deg, #fca311, #ffdd44, #fca311);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .id-box-overlay {
+            position: absolute;
+            display: flex; justify-content: center; align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(0.9rem, 2.2vw, 1.8rem);
+            letter-spacing: 3px;
+        }
+
+        @media (max-width: 992px) {
+            .hamburger { display: block; position: relative; z-index: 100; }
+            .nav-header { background: rgba(0, 3, 10, 0.85); backdrop-filter: blur(12px); }
+            .main-nav { 
+                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+                background: rgba(0, 3, 10, 0.7); backdrop-filter: blur(25px) saturate(120%); 
+                display: flex; justify-content: center; align-items: center; z-index: 90; 
+                opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.4s ease;
+            }
+            .main-nav.active { opacity: 1; visibility: visible; pointer-events: auto; }
+            .main-nav ul { flex-direction: column; gap: 1.2rem; align-items: center; transform: translateY(20px); transition: transform 0.4s ease; }
+            .main-nav.active ul { transform: translateY(0); }
+            .main-nav ul li { display: block !important; }
+            .main-nav ul li:last-child { order: -1; margin-bottom: 1rem; }
+            .main-nav a { font-size: 1.3rem; font-weight: 900; letter-spacing: 4px; text-align: center; }
+            .dashboard-wrapper { grid-template-columns: 1fr; }
+            .span-2 { grid-column: span 1; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 100px 15px 30px; }
+            .dashboard-wrapper { gap: 20px; }
+            .glass-panel { padding: 20px 15px; }
+            
+            .header { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .header h1 { font-size: 1.4rem; }
+            .header div { display: flex; width: 100%; justify-content: flex-start; gap: 10px; }
+            .header .btn-action { margin: 0; font-size: 0.75rem; padding: 8px 12px; }
+
+            .details-grid { grid-template-columns: 1fr; gap: 12px; }
+            #uiet-specs { grid-template-columns: 1fr; }
+            .data-group { padding: 12px 15px; border-left-width: 3px; }
+            .data-group label { font-size: 0.65rem; }
+            .data-group .value { font-size: 1rem; }
+            
+            .btn-download { padding: 12px; font-size: 0.85rem; }
+            .modal-content { padding: 20px; width: 95%; }
+            .close-ticket-btn { top: 15px; right: 20px; font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <header class="nav-header" id="navbar">
+        <a href="index.html" class="logo">E-SUMMIT 26'</a>
+        <div class="hamburger" id="hamburger-menu"><i class="fa-solid fa-bars"></i></div>
+        <nav class="main-nav" id="main-nav">
+            <ul>
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#brochure">Archives</a></li>
+                <li><a href="index.html#events">Events</a></li>
+                <li><a href="index.html#speakers">Speakers</a></li>
+                <li><a href="campus.html">Campus</a></li>
+                <li><a href="dashboard.html" class="nav-profile-icon" title="Dashboard" style="opacity: 1; color: var(--bg-black) !important; background: var(--primary-gold);"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-wrapper" id="dashboard" style="display: none;">
+            <div class="glass-panel">
+                <div class="header">
+                    <h1>User <span>Profile</span></h1>
+                    <div>
+                        <button class="btn-action btn-edit" onclick="openEditModal()"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                        <button class="btn-action btn-logout" onclick="logout()">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Comprehensive Details Grid based on user data -->
+                <div class="details-grid">
+                    <div class="data-group"><label><i class="fa-solid fa-user"></i> Full Name</label><div class="value" id="d-name">--</div></div>
+                    <div class="data-group"><label><i class="fa-solid fa-envelope"></i> Email</label><div class="value" id="d-email">--</div></div>
+                    <div class="data-group"><label><i class="fa-solid fa-phone"></i> Phone</label><div class="value" id="d-phone">--</div></div>
+                    <div class="data-group"><label><i class="fa-solid fa-venus-mars"></i> Gender</label><div class="value" id="d-gender">--</div></div>
+                    <div class="data-group"><label><i class="fa-solid fa-location-dot"></i> Location</label><div class="value" id="d-location">--</div></div>
+                    <div class="data-group"><label><i class="fa-solid fa-briefcase"></i> Role / Desc</label><div class="value" id="d-role">--</div></div>
+                    
+                    <div class="data-group span-2" id="college-box"><label><i class="fa-solid fa-building-columns"></i> Institution</label><div class="value" id="d-college">--</div></div>
+                    
+                    <div id="uiet-specs" style="display: none; grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="data-group"><label><i class="fa-solid fa-code-branch"></i> Branch & Year</label><div class="value" id="d-branch">--</div></div>
+                        <div class="data-group"><label><i class="fa-solid fa-id-badge"></i> Roll Number</label><div class="value" id="d-roll">--</div></div>
+                    </div>
+
+                    <div class="data-group highlight span-2" id="hostel-spec"><label><i class="fa-solid fa-bed"></i> Accomodation Status</label><div class="value" id="d-hostel">--</div></div>
+                </div>
+            </div>
+
+            <!-- Pass Render Area -->
+            <div class="glass-panel ticket-wrapper" id="ticket-render-area">
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Pass PDF Generator Modal -->
+    <div class="ticket-modal-container" id="pass-modal">
+        <i class="fa-solid fa-xmark close-ticket-btn" onclick="closeTicketModal()"></i>
+        
+        <div class="pdf-container-wrapper">
+            <div id="pdf-ticket" style="position: relative; width: 100%; background: transparent;">
+            </div>
+        </div>
+
+        <button class="btn-download" style="max-width: 300px; margin-top: 35px;" onclick="downloadTicket()">
+            <i class="fa-solid fa-download"></i> Download Pass
+        </button>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="edit-modal">
+        <div class="modal-content">
+            <h2>Edit <span>Profile</span></h2>
+            <div class="form-group"><label>Full Name</label><input type="text" id="edit-name"></div>
+            <div class="form-group"><label>Phone Number</label><input type="text" id="edit-phone"></div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group"><label>City</label><input type="text" id="edit-city"></div>
+                <div class="form-group"><label>State</label><input type="text" id="edit-state"></div>
+            </div>
+
+            <div id="edit-nonstudent-details" style="display: none;">
+                <div class="form-group"><label>Company / Org</label><input type="text" id="edit-company"></div>
+            </div>
+
+            <div id="edit-student-details" style="display: none;">
+                <div class="form-group"><label>College Name</label><input type="text" id="edit-college"></div>
+            </div>
+
+            <div id="edit-uiet-specs" style="display: none; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Branch</label>
+                    <input type="text" id="edit-branch" placeholder="Branch">
+                </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <select id="edit-year">
+                        <option value="1st">1st Year</option><option value="2nd">2nd Year</option>
+                        <option value="3rd">3rd Year</option><option value="4th">4th Year</option>
+                        <option value="5th">5th Year</option>
+                    </select>
+                </div>
+                <div class="form-group" style="grid-column: span 2;"><label>Roll Number</label><input type="text" id="edit-roll"></div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button class="btn-action btn-logout" style="flex: 1; margin: 0; padding: 12px;" onclick="closeEditModal()">Cancel</button>
+                <button class="btn-action btn-edit" style="flex: 1; margin: 0; padding: 12px;" onclick="saveProfileUpdates()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Header interaction & Transparency Scroll
+        const hamburger = document.getElementById('hamburger-menu');
+        const mainNav = document.getElementById('main-nav');
+        const navbar = document.getElementById('navbar');
+        
+        hamburger.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            if(mainNav.classList.contains('active')) {
+                hamburger.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            } else {
+                hamburger.innerHTML = '<i class="fa-solid fa-bars"></i>';
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(0, 3, 10, 0.85)';
+                navbar.style.backdropFilter = 'blur(12px)';
+            } else {
+                navbar.style.background = 'transparent';
+                navbar.style.backdropFilter = 'none';
+            }
+        });
+
+        const API_URL = "https://esummit-backend-gonf.onrender.com/api"
+        const token = localStorage.getItem('esummit_token');
+        let currentUserData = null;
+
+        if (!token) window.location.href = "register.html";
+
+        async function loadProfile() {
+            try {
+                const res = await fetch(`${API_URL}/auth/profile`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const result = await res.json();
+
+                if (result.success) {
+                    const user = result.data;
+                    currentUserData = user;
+                    
+                    document.getElementById('dashboard').style.display = 'grid';
+                    
+                    // Map Comprehensive Fields
+                    document.getElementById('d-name').innerText = user.fullName || '--';
+                    document.getElementById('d-email').innerText = user.email || '--';
+                    document.getElementById('d-phone').innerText = user.phoneNumber || '--';
+                    document.getElementById('d-gender').innerText = user.gender || '--';
+                    
+                    const loc = [user.city, user.state].filter(Boolean).join(', ');
+                    document.getElementById('d-location').innerText = loc || '--';
+
+                    // Role details logic
+                    let roleStr = user.role ? user.role.toUpperCase() : 'USER';
+                    if(user.specificRole && user.specificRole !== 'Student') roleStr += ` (${user.specificRole})`;
+                    if(user.company) roleStr += ` - ${user.company}`;
+                    document.getElementById('d-role').innerText = roleStr;
+
+                    if (user.role === 'non-student') {
+                        document.getElementById('college-box').style.display = 'none';
+                        document.getElementById('uiet-specs').style.display = 'none';
+                    } else {
+                        document.getElementById('college-box').style.display = 'block';
+                        document.getElementById('d-college').innerText = user.collegeName || '--';
+                        
+                        if(user.delegateStatus === 'yes') {
+                            document.getElementById('uiet-specs').style.display = 'grid';
+                            document.getElementById('d-branch').innerText = `${user.branch || 'N/A'} / ${user.year || 'N/A'}`;
+                            document.getElementById('d-roll').innerText = user.rollNo || 'N/A';
+                        } else {
+                            document.getElementById('uiet-specs').style.display = 'none';
+                        }
+                    }
+
+                    // Accomodation Logic
+                    const hostelDisplay = document.getElementById('d-hostel');
+                    if (user.needHostel) {
+                        if (user.hostelAllocated) {
+                            hostelDisplay.innerText = `ALLOCATED: ${user.allocatedHostelName || 'TBD'}`;
+                            hostelDisplay.style.color = 'var(--primary-gold)';
+                        } else {
+                            hostelDisplay.innerText = 'WAITLISTED / PENDING';
+                            hostelDisplay.style.color = 'var(--text-main)';
+                        }
+                    } else {
+                        hostelDisplay.innerText = 'NOT REQUESTED';
+                        hostelDisplay.style.color = 'var(--text-muted)';
+                    }
+                    
+                    // --- DIRECT TICKET GENERATION (No Payment Requirement) ---
+                    const ticketArea = document.getElementById('ticket-render-area');
+                    const pdfTicket = document.getElementById('pdf-ticket');
+
+                    if (user.ticketId) {
+                        // Prep Dashboard Access Button
+                        ticketArea.innerHTML = `
+                            <div style="text-align: center;">
+                                <i class="fa-solid fa-ticket" style="font-size: 3.5rem; color: var(--primary-gold); margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,170,0,0.4));"></i>
+                                <h2 style="margin: 0 0 10px 0; color: var(--primary-gold); letter-spacing: 4px; font-weight: 900; text-shadow: 0 0 10px rgba(255, 170, 0, 0.4);">PASS GRANTED</h2>
+                                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.9rem; font-weight: 600;">Your official E-Summit 2026 digital pass is Available.</p>
+                                <button class="btn-download" style="width: auto; padding: 15px 35px; background: transparent; border: 1px solid var(--primary-gold); color: var(--primary-gold);" onmouseover="this.style.background='rgba(255, 170, 0, 0.1)'; this.style.boxShadow='0 0 20px rgba(255, 170, 0, 0.4)'" onmouseout="this.style.background='transparent'; this.style.boxShadow='none'" onclick="openTicketModal()">
+                                    <i class="fa-solid fa-eye"></i> View Pass
+                                </button>
+                            </div>
+                        `;
+
+                        // Clean ID and split into chunks
+                        let cleanId = user.ticketId.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                        let id1 = cleanId.substring(0, 2);
+                        let id2 = cleanId.substring(2, 4);
+                        let id3 = cleanId.substring(4, 6);
+                        let id4 = cleanId.substring(6, 10);
+
+                        pdfTicket.innerHTML = `
+                            <img src="ticket.png" style="width: 100%; height: auto; display: block; border-radius: 12px;" crossorigin="anonymous">
+                            
+                            <div style="position: absolute; top: 26.5%; right: 0%; color: #fff; font-size: clamp(0.75rem, 1.6vw, 0.8rem); font-family: 'Montserrat', sans-serif; font-weight: 800; text-transform: uppercase; width: 22%; text-align: left; word-wrap: break-word; letter-spacing: 1px;">
+                                ${user.fullName}
+                            </div>
+
+                            <div class="id-box-overlay golden-gradient" style="bottom: 15%; height: 11%; left: 4.8%; width: 10.3%;">${id1}</div>
+                            <div class="id-box-overlay golden-gradient" style="bottom: 15%; height: 11%; left: 16.2%; width: 10.3%;">${id2}</div>
+                            <div class="id-box-overlay golden-gradient" style="bottom: 15%; height: 11%; left: 27.6%; width: 10.3%;">${id3}</div>
+                            <div class="id-box-overlay golden-gradient" style="bottom: 15%; height: 11%; left: 40.5%; width: 13.5%;">${id4}</div>
+
+                            <div id="qrcode" style="position: absolute; bottom: 8.5%; right: 5.5%; width: 18.5%; aspect-ratio: 1; background: #fff; padding: 5px; border-radius: 6px; box-sizing: border-box;"></div>
+                        `;
+
+                        // Generate the QR Code dynamically inside the modal
+                        const qrContainer = document.getElementById("qrcode");
+                        new QRCode(qrContainer, {
+                            text: user.ticketId,
+                            width: 160, height: 160,
+                            colorDark : "#000000", colorLight : "#ffffff",
+                            correctLevel : QRCode.CorrectLevel.H
+                        });
+
+                        setTimeout(() => {
+                            const canvas = qrContainer.querySelector('canvas');
+                            if(canvas) {
+                                const imgData = canvas.toDataURL("image/png");
+                                qrContainer.innerHTML = `<img src="${imgData}" style="width:100%; height:100%; display:block; object-fit: contain; border-radius: 2px;" />`;
+                            }
+                        }, 120);
+
+                    } else {
+                        ticketArea.innerHTML = `
+                            <div class="lock-screen">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <h3 style="margin-top: 0; color: var(--primary-orange); letter-spacing: 4px;">PASS PENDING</h3>
+                                <p style="font-weight: 600;">System is processing your credentials. Please check back later.</p>
+                            </div>
+                        `;
+                    }
+                } else { logout(); }
+            } catch (err) { console.error(err); }
+        }
+
+        function openTicketModal() { document.getElementById('pass-modal').classList.add('active'); }
+        function closeTicketModal() { document.getElementById('pass-modal').classList.remove('active'); }
+
+        function openEditModal() {
+            document.getElementById('edit-modal').style.display = 'flex';
+            document.getElementById('edit-name').value = currentUserData.fullName || '';
+            document.getElementById('edit-phone').value = currentUserData.phoneNumber || '';
+            document.getElementById('edit-city').value = currentUserData.city || '';
+            document.getElementById('edit-state').value = currentUserData.state || '';
+
+            if(currentUserData.role === 'non-student') {
+                document.getElementById('edit-nonstudent-details').style.display = 'block';
+                document.getElementById('edit-student-details').style.display = 'none';
+                document.getElementById('edit-uiet-specs').style.display = 'none';
+                document.getElementById('edit-company').value = currentUserData.company || '';
+            } else {
+                document.getElementById('edit-nonstudent-details').style.display = 'none';
+                document.getElementById('edit-student-details').style.display = 'block';
+                document.getElementById('edit-college').value = currentUserData.collegeName || '';
+
+                if (currentUserData.delegateStatus === 'yes') {
+                    document.getElementById('edit-uiet-specs').style.display = 'grid';
+                    document.getElementById('edit-branch').value = currentUserData.branch || '';
+                    document.getElementById('edit-year').value = currentUserData.year || '1st';
+                    document.getElementById('edit-roll').value = currentUserData.rollNo || '';
+                } else {
+                    document.getElementById('edit-uiet-specs').style.display = 'none';
+                }
+            }
+        }
+
+        function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
+
+        async function saveProfileUpdates() {
+            const payload = {
+                fullName: document.getElementById('edit-name').value,
+                phoneNumber: document.getElementById('edit-phone').value,
+                city: document.getElementById('edit-city').value,
+                state: document.getElementById('edit-state').value
+            };
+
+            if(currentUserData.role === 'non-student') {
+                payload.company = document.getElementById('edit-company').value;
+            } else {
+                payload.collegeName = document.getElementById('edit-college').value;
+                if (currentUserData.delegateStatus === 'yes') {
+                    payload.branch = document.getElementById('edit-branch').value;
+                    payload.year = document.getElementById('edit-year').value;
+                    payload.rollNo = document.getElementById('edit-roll').value;
+                }
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/auth/profile`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if(data.success) { closeEditModal(); loadProfile(); } else { alert(data.error); }
+            } catch (err) { alert("Network modification failure."); }
+        }
+
+        function downloadTicket() {
+            const element = document.getElementById('pdf-ticket');
+            const btn = document.querySelector('.btn-download[onclick="downloadTicket()"]');
+            
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating...';
+            btn.disabled = true;
+
+            const originalWidth = element.style.width;
+            const originalPosition = element.style.position;
+            const originalTop = element.style.top;
+            const originalLeft = element.style.left;
+
+            element.style.position = 'fixed';
+            element.style.top = '0';
+            element.style.left = '0';
+            element.style.width = '1200px'; 
+
+            setTimeout(() => {
+                const exactWidth = element.clientWidth; 
+                const exactHeight = element.clientHeight;
+
+                const opt = {
+                    margin: 0,
+                    filename: `${currentUserData.fullName.replace(/\s+/g, '_')}_ESummit_Pass.pdf`,
+                    image: { type: 'jpeg', quality: 1 },
+                    html2canvas: { 
+                        scale: 2, 
+                        useCORS: true, 
+                        backgroundColor: '#000000',
+                        x: 0,
+                        y: 0,
+                        scrollX: 0,
+                        scrollY: 0,
+                        width: exactWidth,
+                        height: exactHeight
+                    },
+                    jsPDF: { 
+                        unit: 'px',
+                        format: [exactWidth + 2, exactHeight + 2], 
+                        orientation: 'landscape',
+                        hotfixes: ["px_scaling"] 
+                    },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } 
+                };
+
+                html2pdf().set(opt).from(element).save().then(() => {
+                    element.style.position = originalPosition;
+                    element.style.top = originalTop;
+                    element.style.left = originalLeft;
+                    element.style.width = originalWidth;
+                    
+                    btn.innerHTML = originalBtnText;
+                    btn.disabled = false;
+                });
+            }, 250);
+        }
+        
+        function logout() {
+            localStorage.removeItem('esummit_token');
+            window.location.href = "register.html";
+        }
+
+        // --- 3D Background Logic (Rover infinite drive) ---
+        const canvas = document.querySelector('#webgl-canvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x00050f); 
+        scene.fog = new THREE.FogExp2(0x00050f, 0.0015);
+
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 8000);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const gridMaterial = new THREE.MeshBasicMaterial({ vertexColors: true, wireframe: true, transparent: true, opacity: 0.2 });
+        const roverOrangeMaterial = new THREE.LineBasicMaterial({ color: 0xff3300 }); 
+        const roverYellowMaterial = new THREE.LineBasicMaterial({ color: 0xffcc00 });
+        
+        function getTerrainHeight(x, z) {
+            const dune1 = Math.sin(x * 0.005) * Math.cos(z * 0.005) * 45;
+            const dune2 = Math.sin(z * 0.002) * 25;
+            const detail = Math.sin(x * 0.02 + z * 0.02) * 3;
+            return dune1 + dune2 + detail - 15; 
+        }
+
+        const terrainGeo = new THREE.PlaneGeometry(4000, 8000, 150, 300);
+        terrainGeo.rotateX(-Math.PI / 2);
+        
+        const positionAttribute = terrainGeo.attributes.position;
+        const colors = [];
+        const baseColor = new THREE.Color(0x667788);
+
+        for (let i = 0; i < positionAttribute.count; i++) {
+            let x = positionAttribute.getX(i);
+            let z = positionAttribute.getZ(i);
+            positionAttribute.setY(i, getTerrainHeight(x, z));
+            colors.push(baseColor.r, baseColor.g, baseColor.b);
+        }
+        terrainGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        terrainGeo.computeVertexNormals();
+        scene.add(new THREE.Mesh(terrainGeo, gridMaterial));
+
+        function createCleanBox(w, h, d, material) { return new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, d)), material); }
+        function createCleanCylinder(r, h, radialSegments, material) {
+            const cylinder = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.CylinderGeometry(r, r, h, radialSegments), 15), material);
+            cylinder.rotation.z = Math.PI / 2; return cylinder;
+        }
+
+        const rover = new THREE.Group();
+        rover.rotation.order = 'YXZ';
+
+        const chassis = createCleanBox(14, 2, 22, roverOrangeMaterial);
+        chassis.position.y = 6; rover.add(chassis);
+
+        const wheels = [];
+        const wheelRadius = 5.5; const wheelWidth = 4;
+        const wheelPositions = [ [-10, wheelRadius, 8], [10, wheelRadius, 8], [-10, wheelRadius, -8], [10, wheelRadius, -8] ];
+
+        wheelPositions.forEach(pos => {
+            const wheel = createCleanCylinder(wheelRadius, wheelWidth, 24, roverOrangeMaterial);
+            wheel.position.set(pos[0], pos[1], pos[2]);
+            rover.add(wheel); wheels.push(wheel);
+        });
+
+        const scannerGroup = new THREE.Group();
+        const neck = createCleanBox(4, 4, 4, roverYellowMaterial);
+        neck.position.set(0, 9, -5); scannerGroup.add(neck);
+
+        const head = createCleanBox(6, 8, 6, roverYellowMaterial);
+        head.position.set(0, 15, -5); scannerGroup.add(head);
+
+        const mainLens = createCleanCylinder(2, 3, 16, roverYellowMaterial);
+        mainLens.rotation.z = 0; mainLens.rotation.x = Math.PI / 2; mainLens.position.set(0, 15, -8); 
+        scannerGroup.add(mainLens);
+        rover.add(scannerGroup); scene.add(rover);
+
+        const particleCount = 50;
+        const particles = [];
+        const particleMaterial = new THREE.MeshBasicMaterial({ color: 0x667788, wireframe: true, transparent: true });
+
+        for(let i=0; i<particleCount; i++) {
+            const p = new THREE.Mesh(new THREE.BoxGeometry(2.0, 2.0, 2.0), particleMaterial.clone());
+            p.visible = false; scene.add(p);
+            particles.push({ mesh: p, life: 0, maxLife: 30 + Math.random() * 15, velocity: new THREE.Vector3() });
+        }
+        let particleIndex = 0;
+
+        const clock = new THREE.Clock();
+        let roverZ = 0;
+        let currentRoverPos = { x: 60, y: getTerrainHeight(60, 0), z: 0 };
+        const neonYellowColor = new THREE.Color(0xffcc00);
+        const terrainColorAttribute = terrainGeo.attributes.color;
+        let driveDirection = 1;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            if (roverZ < -7000) driveDirection = -1;
+            if (roverZ > 0) driveDirection = 1;
+
+            roverZ -= 1.2 * driveDirection;
+            currentRoverPos.z = roverZ;
+            
+            currentRoverPos.x = Math.sin(roverZ * 0.0015) * 65; 
+            currentRoverPos.y = getTerrainHeight(currentRoverPos.x, currentRoverPos.z) - 1.5;
+            
+            rover.position.set(currentRoverPos.x, currentRoverPos.y, currentRoverPos.z);
+
+            for (let i = 0; i < positionAttribute.count; i++) {
+                let vx = positionAttribute.getX(i);
+                let vz = positionAttribute.getZ(i);
+                let dist = Math.sqrt(Math.pow(vx - currentRoverPos.x, 2) + Math.pow(vz - currentRoverPos.z, 2));
+
+                if (dist < 80) { 
+                    terrainColorAttribute.setXYZ(i, neonYellowColor.r, neonYellowColor.g, neonYellowColor.b);
+                } else {
+                    let currentR = terrainColorAttribute.getX(i);
+                    let currentG = terrainColorAttribute.getY(i);
+                    let currentB = terrainColorAttribute.getZ(i);
+                    terrainColorAttribute.setXYZ( i, currentR + (baseColor.r - currentR) * 0.05, currentG + (baseColor.g - currentG) * 0.05, currentB + (baseColor.b - currentB) * 0.05);
+                }
+            }
+            terrainColorAttribute.needsUpdate = true;
+
+            const wheelBase = 16, trackWidth = 20; 
+            const yaw = rover.rotation.y;
+            const fx = currentRoverPos.x + Math.sin(yaw) * (wheelBase/2); const fz = currentRoverPos.z + Math.cos(yaw) * (wheelBase/2);
+            const bx = currentRoverPos.x - Math.sin(yaw) * (wheelBase/2); const bz = currentRoverPos.z - Math.cos(yaw) * (wheelBase/2);
+            let targetPitch = THREE.MathUtils.clamp(-Math.atan2(getTerrainHeight(fx, fz) - getTerrainHeight(bx, bz), wheelBase), -0.35, 0.35); 
+
+            const lx = currentRoverPos.x - Math.cos(yaw) * (trackWidth/2); const lz = currentRoverPos.z + Math.sin(yaw) * (trackWidth/2);
+            const rx = currentRoverPos.x + Math.cos(yaw) * (trackWidth/2); const rz = currentRoverPos.z - Math.sin(yaw) * (trackWidth/2);
+            let targetRoll = THREE.MathUtils.clamp(Math.atan2(getTerrainHeight(lx, lz) - getTerrainHeight(rx, rz), trackWidth), -0.35, 0.35);
+
+            rover.rotation.x += (targetPitch - rover.rotation.x) * 0.15;
+            rover.rotation.z += (targetRoll - rover.rotation.z) * 0.15;
+
+            const nextZ = roverZ - (15 * driveDirection);
+            const nextX = Math.sin(nextZ * 0.0015) * 65;
+            const targetYaw = Math.atan2(nextX - currentRoverPos.x, nextZ - currentRoverPos.z);
+            
+            let diff = targetYaw - rover.rotation.y;
+            while (diff < -Math.PI) diff += Math.PI * 2; while (diff > Math.PI) diff -= Math.PI * 2;
+            rover.rotation.y += diff * 0.05;
+
+            wheels.forEach(wheel => { wheel.rotation.x -= 0.15; });
+
+            if (Math.random() > 0.3) {
+                const centerBackX = rover.position.x - Math.sin(rover.rotation.y) * 10;
+                const centerBackZ = rover.position.z - Math.cos(rover.rotation.y) * 10;
+                const trackOffset = 10; 
+
+                const pLeft = particles[particleIndex];
+                pLeft.mesh.position.set(centerBackX - Math.cos(rover.rotation.y) * trackOffset, rover.position.y - 1, centerBackZ + Math.sin(rover.rotation.y) * trackOffset);
+                pLeft.mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0); pLeft.velocity.set((Math.random()-0.5)*0.08, Math.random()*0.15 + 0.05, (Math.random()-0.5)*0.08);
+                pLeft.life = pLeft.maxLife; pLeft.mesh.visible = true; pLeft.mesh.material.opacity = 0.4; particleIndex = (particleIndex + 1) % particleCount;
+
+                const pRight = particles[particleIndex];
+                pRight.mesh.position.set(centerBackX + Math.cos(rover.rotation.y) * trackOffset, rover.position.y - 1, centerBackZ - Math.sin(rover.rotation.y) * trackOffset);
+                pRight.mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0); pRight.velocity.set((Math.random()-0.5)*0.08, Math.random()*0.15 + 0.05, (Math.random()-0.5)*0.08);
+                pRight.life = pRight.maxLife; pRight.mesh.visible = true; pRight.mesh.material.opacity = 0.4; particleIndex = (particleIndex + 1) % particleCount;
+            }
+
+            particles.forEach(p => {
+                if (p.life > 0) {
+                    p.life--; p.mesh.position.add(p.velocity); p.mesh.rotation.x += 0.02; p.mesh.rotation.y += 0.02;
+                    p.mesh.material.opacity = (p.life / p.maxLife) * 0.4; if (p.life <= 0) p.mesh.visible = false;
+                }
+            });
+
+            const dummy = new THREE.Object3D();
+            dummy.rotation.y = Math.sin(time * 1.5) * 0.4; dummy.rotation.x = Math.sin(time * 1.2) * 0.2;
+            scannerGroup.quaternion.slerp(dummy.quaternion, 0.1);
+
+            let targetCamPos = new THREE.Vector3(currentRoverPos.x * 0.2, currentRoverPos.y + 35, currentRoverPos.z + 80);
+            let targetLookAt = new THREE.Vector3(currentRoverPos.x, currentRoverPos.y + 10, currentRoverPos.z - (20 * driveDirection));
+
+            camera.position.lerp(targetCamPos, 0.05);
+            if (!window.currentLookAtVec) window.currentLookAtVec = targetLookAt.clone();
+            window.currentLookAtVec.lerp(targetLookAt, 0.05);
+            camera.lookAt(window.currentLookAtVec);
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        loadProfile();
+        animate();
+    </script>
+
+    <script>
+    // Global Authentication Check
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Check if the user has an active token in localStorage
+        const token = localStorage.getItem('esummit_token');
+        const profileIcon = document.querySelector('.nav-profile-icon');
+        const currentPath = window.location.pathname;
+
+        if (token) {
+            // --- USER IS LOGGED IN ---
+            
+            // If they accidentally navigate to register.html while logged in, redirect them
+            if (currentPath.endsWith('register.html')) {
+                window.location.href = 'dashboard.html';
+                return; // Stop execution to allow redirect
+            }
+
+            // Update the navigation icon to act as a Dashboard button
+            if (profileIcon) {
+                profileIcon.href = 'dashboard.html';
+                profileIcon.title = 'Dashboard';
+                
+                // Apply the active gold styling to indicate they are logged in
+                profileIcon.style.setProperty('opacity', '1', 'important');
+                profileIcon.style.setProperty('color', 'var(--bg-black)', 'important');
+                profileIcon.style.setProperty('background', 'var(--primary-gold)', 'important');
+            }
+            
+            // Optional: Update the hero buttons on index.html if you want them to shift too
+            const loginBtn = document.querySelector('.btn-login');
+            const regBtn = document.querySelector('.btn-register');
+            if (loginBtn && regBtn && currentPath.endsWith('index.html') || currentPath === '/') {
+                loginBtn.href = 'dashboard.html';
+                loginBtn.innerText = 'Go to Dashboard';
+                regBtn.style.display = 'none'; // Hide register button if already logged in
+            }
+
+        } else {
+            // --- USER IS NOT LOGGED IN ---
+            
+            // Ensure the icon points to the login page (Default state)
+            if (profileIcon) {
+                profileIcon.href = 'register.html';
+                profileIcon.title = 'User Login';
+                
+                // Reset to default transparent styling
+                profileIcon.style.removeProperty('color');
+                profileIcon.style.removeProperty('background');
+                profileIcon.style.opacity = '0.8';
+            }
+        }
+    });
+</script>
+</body>
+</html>

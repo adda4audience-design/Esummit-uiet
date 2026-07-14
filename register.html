@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Login | E-Summit '26 UIET KUK</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+            --bg-black: #00030a;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --primary-orange: #ff3300;
+            --primary-gold: #ffaa00;
+            --neon-blue: #00f0ff;
+            --neon-red: #ff003c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-black); color: var(--text-main);
+            font-family: 'Montserrat', sans-serif; margin: 0; display: flex;
+            justify-content: center; align-items: center; min-height: 100vh;
+            overflow-x: hidden; position: relative;
+        }
+
+        /* --- 3D BACKGROUND --- */
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; display: block; pointer-events: none; }
+
+        .back-icon-top {
+            position: fixed; top: 30px; left: 30px; z-index: 100; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50%; color: rgba(255, 255, 255, 0.7); font-size: 1.2rem;
+            text-decoration: none; backdrop-filter: blur(10px); transition: all 0.3s ease;
+        }
+        .back-icon-top:hover { background: rgba(255, 51, 0, 0.1); color: var(--primary-orange); border-color: var(--primary-orange); transform: translateX(-5px); box-shadow: 0 0 15px rgba(255, 51, 0, 0.4); }
+
+        /* --- SYSTEM HUD ACCENTS --- */
+        .hud-corner {
+            position: fixed; z-index: 5; font-family: monospace; font-size: 0.7rem; color: var(--neon-blue);
+            opacity: 0.7; text-shadow: 0 0 6px var(--neon-blue); pointer-events: none; line-height: 1.6;
+            letter-spacing: 1px; text-transform: uppercase;
+        }
+        .hud-tr { top: 30px; right: 30px; text-align: right; }
+        .hud-bl { bottom: 30px; left: 30px; color: var(--primary-orange); text-shadow: 0 0 6px var(--primary-orange); }
+        .hud-bl span.pulse { display: inline-block; width: 6px; height: 6px; background: #00f0ff; border-radius: 50%; box-shadow: 0 0 8px #00f0ff; margin-right: 6px; animation: blinkDot 1.6s infinite; }
+        @keyframes blinkDot { 50% { opacity: 0.2; } }
+        @media (max-width: 760px) { .hud-corner { display: none; } }
+
+        /* --- AUTH CONTAINER --- */
+        .auth-container {
+            background: linear-gradient(145deg, rgba(10,10,10,0.85), rgba(3,3,3,0.95));
+            backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); border-top: 4px solid var(--primary-orange);
+            padding: 44px 40px; width: 100%; max-width: 500px; border-radius: 8px; margin: 80px 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(255, 51, 0, 0.05);
+            position: relative; z-index: 10; overflow: hidden;
+            opacity: 0; transform: translateY(24px) scale(0.98);
+            animation: containerEnter 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.15s;
+        }
+        @keyframes containerEnter { to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .auth-corner { position: absolute; width: 22px; height: 22px; pointer-events: none; opacity: 0.6; z-index: 2; }
+        .auth-corner.tl { top: 0; left: 0; border-top: 2px solid var(--primary-gold); border-left: 2px solid var(--primary-gold); }
+        .auth-corner.br { bottom: 0; right: 0; border-bottom: 2px solid var(--primary-gold); border-right: 2px solid var(--primary-gold); }
+
+        .auth-eyebrow {
+            text-align: center; font-size: 0.75rem; letter-spacing: 4px; color: var(--text-muted); text-transform: uppercase;
+            margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700;
+        }
+        .auth-eyebrow .dot { width: 5px; height: 5px; background: var(--primary-orange); border-radius: 50%; box-shadow: 0 0 6px var(--primary-orange); animation: blinkDot 1.8s infinite; }
+
+        h2 {
+            color: var(--text-main); text-transform: uppercase; letter-spacing: 4px; text-align: center;
+            margin-bottom: 28px; font-weight: 900; text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            font-size: 1.8rem; transition: opacity 0.25s ease;
+        }
+        h2 span { color: var(--primary-gold); }
+
+        .form-group { margin-bottom: 20px; opacity: 0; transform: translateY(10px); animation: fieldEnter 0.5s ease forwards; }
+        @keyframes fieldEnter { to { opacity: 1; transform: translateY(0); } }
+
+        label { display: block; margin-bottom: 8px; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px;}
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select {
+            width: 100%; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;
+            color: white; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; outline: none; transition: all 0.3s ease; box-sizing: border-box;
+        }
+        input:focus, select:focus { border-color: var(--primary-orange); background: rgba(255, 51, 0, 0.05); box-shadow: 0 0 15px rgba(255, 51, 0, 0.25); }
+        input:hover, select:hover { border-color: var(--primary-gold); }
+        select option { background: var(--bg-black); color: white; }
+
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px; cursor: pointer; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
+        .checkbox-group input { cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary-orange);}
+
+        .dynamic-panel {
+            display: none; padding: 16px; margin-bottom: 20px; background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--neon-blue); border-radius: 0 4px 4px 0;
+            animation: panelSlide 0.35s ease;
+        }
+        #kuk-details { border-left-color: var(--neon-blue); }
+        #external-college-details { border-left-color: var(--primary-gold); }
+        #non-student-details { border-left-color: var(--primary-orange); }
+        
+        #hostel-options {
+            display: none; margin-top: 15px; padding: 15px; border-radius: 4px;
+            background: rgba(255, 170, 0, 0.05); border-left: 3px solid var(--primary-gold);
+            animation: panelSlide 0.35s ease;
+        }
+        @keyframes panelSlide { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .input-row { display: flex; gap: 15px; }
+        .input-row .form-group { flex: 1; margin-bottom: 0;}
+
+        .btn-submit {
+            width: 100%; padding: 16px; background: var(--primary-orange); color: var(--text-main);
+            border: 1px solid var(--primary-orange); font-size: 0.85rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px;
+            cursor: pointer; border-radius: 4px; margin-top: 25px; transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 51, 0, 0.4); position: relative; overflow: hidden;
+        }
+        .btn-submit::after {
+            content: ''; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
+            background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+            transform: skewX(-20deg);
+        }
+        .btn-submit:hover::after { animation: shimmerSweep 1s ease; }
+        @keyframes shimmerSweep { to { left: 150%; } }
+        .btn-submit:hover { background: rgba(255, 51, 0, 0.1); color: var(--primary-orange); box-shadow: 0 0 25px rgba(255, 51, 0, 0.6); }
+        .btn-submit:active { transform: translateY(2px); }
+
+        .toggle-text { text-align: center; margin-top: 25px; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .toggle-text a { color: var(--primary-gold); text-decoration: none; font-weight: 900; cursor: pointer; transition: color 0.3s;}
+        .toggle-text a:hover { color: var(--text-main); text-shadow: 0 0 10px rgba(255, 170, 0, 0.5); }
+
+        #api-message {
+            display: none; padding: 16px 20px; margin-bottom: 25px;
+            border-radius: 4px; font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+            text-align: left; letter-spacing: 1.5px;
+            background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1); animation: slideDown 0.3s ease-out; align-items: center; gap: 15px;
+        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .msg-success { border-left: 4px solid var(--neon-blue); color: var(--text-main); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
+        .msg-success i { color: var(--neon-blue); font-size: 1.2rem; }
+        .msg-error { border-left: 4px solid var(--primary-red); color: var(--text-main); animation: shakeError 0.4s ease; box-shadow: 0 0 15px rgba(255, 17, 0, 0.2); }
+        .msg-error i { color: var(--primary-red); font-size: 1.2rem; }
+        @keyframes shakeError { 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
+
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; } }
+        @media (max-width: 480px) { .auth-container { padding: 32px 22px; margin: 20px 14px; } .input-row { flex-direction: column; } }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <a href="index.html" class="back-icon-top" title="Return Home"><i class="fa-solid fa-arrow-left"></i></a>
+
+    <div class="hud-corner hud-tr">SYS.AUTH // ONLINE<br>NODE: UIET-KUK-01</div>
+    <div class="hud-corner hud-bl"><span class="pulse"></span>SECURE CHANNEL ESTABLISHED</div>
+
+    <div class="auth-container">
+        <div class="auth-corner tl"></div>
+        <div class="auth-corner br"></div>
+
+        <p class="auth-eyebrow"><span class="dot"></span>Login/ Registration Portal</p>
+        <h2 id="form-title">Register <span>Profile</span></h2>
+
+        <div id="api-message"></div>
+
+        <form id="auth-form">
+            <div class="form-group reg-only" style="animation-delay: 0.05s;">
+                <label>Full Name</label>
+                <input type="text" id="inp-name" placeholder="Enter your name">
+            </div>
+            <div class="form-group reg-only" style="animation-delay: 0.1s;">
+                <label>Phone Number</label>
+                <input type="tel" id="inp-phone" placeholder="10 Digit Number" pattern="[0-9]{10}">
+            </div>
+            <div class="form-group" style="animation-delay: 0.15s;">
+                <label>Email ID</label>
+                <input type="email" id="inp-email" placeholder="agent@domain.com" required>
+            </div>
+            <div class="form-group" style="animation-delay: 0.2s;">
+                <label>Password</label>
+                <input type="password" id="inp-password" placeholder="••••••••" required>
+            </div>
+
+            <div class="reg-only">
+                <!-- Role Selection -->
+                <div class="form-group" style="animation-delay: 0.25s;">
+                    <label>Primary Role</label>
+                    <select id="main-role" onchange="updateFormLogic()">
+                        <option value="student">Student</option>
+                        <option value="non-student">Non-Student</option>
+                    </select>
+                </div>
+
+                <!-- Non-Student specific -->
+                <div id="non-student-details" class="dynamic-panel" style="animation-delay: 0s;">
+                    <div class="form-group" style="animation-delay: 0s;">
+                        <label>Specify Role</label>
+                        <input type="text" id="inp-role" placeholder="e.g. Investor, Alumni, Staff">
+                    </div>
+                    <div class="form-group" style="animation-delay: 0s;">
+                        <label>Company Name (Optional)</label>
+                        <input type="text" id="inp-company" placeholder="Organization / Company">
+                    </div>
+                    <div class="input-row">
+                        <div class="form-group" style="animation-delay: 0s;"><label>City</label><input type="text" id="ns-city" placeholder="City"></div>
+                        <div class="form-group" style="animation-delay: 0s;"><label>State</label><input type="text" id="ns-state" placeholder="State"></div>
+                    </div>
+                    <div class="form-group" style="margin-top: 15px; animation-delay: 0s;">
+                        <label>Gender</label>
+                        <select id="ns-gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Student Type Selection -->
+                <div class="form-group" id="student-type-box" style="animation-delay: 0.3s;">
+                    <label>University / College Type</label>
+                    <select id="student-type" onchange="updateFormLogic()">
+                        <option value="kuk">KUK University</option>
+                        <option value="other">Other College</option>
+                    </select>
+                </div>
+
+                <!-- KUK University Dropdown -->
+                <div class="form-group" id="kuk-college-box" style="animation-delay: 0s;">
+                    <label>KUK Department</label>
+                    <select id="kuk-college" onchange="updateFormLogic()">
+                        <option value="uiet">UIET</option>
+                        <option value="iihs">IIHS</option>
+                        <option value="law">Law</option>
+                        <option value="other">Others</option>
+                    </select>
+                </div>
+
+                <!-- KUK Specific Details -->
+                <div id="kuk-details" class="dynamic-panel">
+                    
+                    <!-- Specify Other Department -->
+                    <div class="form-group" id="kuk-other-dept-box" style="animation-delay: 0s; display: none;">
+                        <label>Specify Department</label>
+                        <input type="text" id="inp-kuk-other-dept" placeholder="Enter department name">
+                    </div>
+
+                    <!-- UIET Branch Dropdown -->
+                    <div class="form-group" id="uiet-branch-box" style="animation-delay: 0s;">
+                        <label>Branch</label>
+                        <select id="uiet-branch">
+                            <option value="Cse">Cse</option>
+                            <option value="Aiml">Aiml</option>
+                            <option value="ECO">ECO</option>
+                            <option value="ECE">ECE</option>
+                            <option value="Mech">Mech</option>
+                            <option value="Biotech">Biotech</option>
+                            <option value="Civil">Civil</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Branch Typebox for IIHS, Law, Others -->
+                    <div class="form-group" id="kuk-other-branch-box" style="animation-delay: 0s; display: none;">
+                        <label>Branch / Course</label>
+                        <input type="text" id="kuk-other-branch" placeholder="Enter your branch">
+                    </div>
+
+                    <div class="input-row">
+                        <div class="form-group" style="animation-delay: 0s;">
+                            <label>Year</label>
+                            <select id="kuk-year">
+                                <option value="1st">1st Year</option>
+                                <option value="2nd">2nd Year</option>
+                                <option value="3rd">3rd Year</option>
+                                <option value="4th">4th Year</option>
+                                <option value="5th">5th Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="animation-delay: 0s;"><label>Roll Number</label><input type="text" id="kuk-roll" placeholder="University Roll No"></div>
+                    </div>
+                </div>
+
+                <!-- External College specifics -->
+                <div id="external-college-details" class="dynamic-panel">
+                    <div class="form-group" style="animation-delay: 0s;">
+                        <label>College/University Name</label>
+                        <input type="text" id="ext-college" placeholder="Enter institution name">
+                    </div>
+                    <div class="form-group" style="animation-delay: 0s;">
+                        <label>Branch / Course</label>
+                        <input type="text" id="ext-branch" placeholder="Enter your branch">
+                    </div>
+                    <div class="input-row">
+                        <div class="form-group" style="animation-delay: 0s;"><label>City</label><input type="text" id="ext-city" placeholder="City"></div>
+                        <div class="form-group" style="animation-delay: 0s;"><label>State</label><input type="text" id="ext-state" placeholder="State"></div>
+                    </div>
+                    <div class="form-group" style="margin-top: 15px; animation-delay: 0s;">
+                        <label>Gender</label>
+                        <select id="ext-gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="hostel-options">
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="need-hostel"> Request Accomodation
+                    </label>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn-submit" id="submit-btn">Register</button>
+        </form>
+
+        <p class="toggle-text" id="toggle-hint">Already have access? <a onclick="toggleForm()">Login here</a></p>
+
+    </div>
+
+    <script>
+        const API_URL = "https://esummit-backend-gonf.onrender.com/api";
+        let isLogin = false;
+
+        function showMessage(msg, isSuccess) {
+            const msgBox = document.getElementById('api-message');
+            const icon = isSuccess ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>';
+            msgBox.innerHTML = `${icon} <span>${msg}</span>`;
+            msgBox.className = isSuccess ? 'msg-success' : 'msg-error';
+            msgBox.style.display = 'flex';
+            document.querySelector('.auth-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function updateFormLogic() {
+            if(isLogin) return;
+
+            const mainRole = document.getElementById('main-role').value;
+            const studentTypeBox = document.getElementById('student-type-box');
+            const studentType = document.getElementById('student-type').value;
+            
+            const nonStudentBox = document.getElementById('non-student-details');
+            
+            const kukCollegeBox = document.getElementById('kuk-college-box');
+            const kukCollege = document.getElementById('kuk-college').value;
+            const kukDetailsBox = document.getElementById('kuk-details');
+            const kukOtherDeptBox = document.getElementById('kuk-other-dept-box');
+            const uietBranchBox = document.getElementById('uiet-branch-box');
+            const kukOtherBranchBox = document.getElementById('kuk-other-branch-box');
+            
+            const extCollegeBox = document.getElementById('external-college-details');
+            const hostelBox = document.getElementById('hostel-options');
+
+            // Reset visibility
+            studentTypeBox.style.display = 'none';
+            nonStudentBox.style.display = 'none';
+            kukCollegeBox.style.display = 'none';
+            kukDetailsBox.style.display = 'none';
+            extCollegeBox.style.display = 'none';
+            hostelBox.style.display = 'none';
+
+            if (mainRole === 'non-student') {
+                nonStudentBox.style.display = 'block';
+                hostelBox.style.display = 'block';
+            } else {
+                studentTypeBox.style.display = 'block';
+                
+                if (studentType === 'kuk') {
+                    kukCollegeBox.style.display = 'block';
+                    kukDetailsBox.style.display = 'block';
+                    hostelBox.style.display = 'block';
+
+                    if (kukCollege === 'uiet') {
+                        kukOtherDeptBox.style.display = 'none';
+                        uietBranchBox.style.display = 'block';
+                        kukOtherBranchBox.style.display = 'none';
+                        hostelBox.style.display = 'none'; // Optional: hide hostel for UIET specifically
+                    } else if (kukCollege === 'iihs' || kukCollege === 'law') {
+                        kukOtherDeptBox.style.display = 'none';
+                        uietBranchBox.style.display = 'none';
+                        kukOtherBranchBox.style.display = 'block';
+                    } else if (kukCollege === 'other') {
+                        kukOtherDeptBox.style.display = 'block';
+                        uietBranchBox.style.display = 'none';
+                        kukOtherBranchBox.style.display = 'block';
+                    }
+                } else {
+                    extCollegeBox.style.display = 'block';
+                    hostelBox.style.display = 'block';
+                }
+            }
+        }
+
+        function toggleForm() {
+            isLogin = !isLogin;
+            const title = document.getElementById('form-title');
+            const regOnlyElements = document.querySelectorAll('.reg-only');
+            const btn = document.getElementById('submit-btn');
+            const toggleHint = document.getElementById('toggle-hint');
+            document.getElementById('api-message').style.display = 'none';
+
+            if(isLogin) {
+                title.innerHTML = "<span>Login</span>";
+                regOnlyElements.forEach(el => el.style.display = 'none');
+                btn.innerText = "Login";
+                toggleHint.innerHTML = 'Need clearance? <a onclick="toggleForm()">Register here</a>';
+
+                document.getElementById('inp-name').removeAttribute('required');
+                document.getElementById('inp-phone').removeAttribute('required');
+            } else {
+                title.innerHTML = "<span>Profile</span>";
+                regOnlyElements.forEach(el => el.style.display = 'block');
+                btn.innerText = "Register";
+                toggleHint.innerHTML = 'Already have access? <a onclick="toggleForm()">Login here</a>';
+
+                document.getElementById('inp-name').setAttribute('required', 'true');
+                document.getElementById('inp-phone').setAttribute('required', 'true');
+                updateFormLogic();
+            }
+        }
+
+        document.getElementById('auth-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('inp-email').value;
+            const password = document.getElementById('inp-password').value;
+
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerText;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            submitBtn.style.opacity = '0.7';
+            submitBtn.style.cursor = 'not-allowed';
+
+            try {
+                if (isLogin) {
+                    const res = await fetch(`${API_URL}/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password })
+                    });
+                    const data = await res.json();
+
+                    if(data.success) {
+                        localStorage.setItem('esummit_token', data.token);
+                        showMessage("Successful, Redirecting...", true);
+                        setTimeout(() => window.location.href = "dashboard.html", 1500);
+                    } else {
+                        showMessage(data.error || "Login Failed", false);
+                    }
+                } else {
+                    const mainRole = document.getElementById('main-role').value;
+                    const studentType = document.getElementById('student-type').value;
+                    const kukCollege = document.getElementById('kuk-college').value;
+                    
+                    let institutionName = 'N/A';
+                    let finalCity = 'Kurukshetra';
+                    let finalState = 'Haryana';
+                    let finalGender = 'Other';
+                    let finalBranch = 'N/A';
+                    let finalYear = 'N/A';
+                    let finalRoll = 'N/A';
+                    let finalCompany = '';
+                    let specificRoleVal = 'Student';
+                    let delegateStatus = 'no';
+
+                    if (mainRole === 'non-student') {
+                        specificRoleVal = document.getElementById('inp-role').value;
+                        finalCompany = document.getElementById('inp-company').value;
+                        finalCity = document.getElementById('ns-city').value;
+                        finalState = document.getElementById('ns-state').value;
+                        finalGender = document.getElementById('ns-gender').value;
+                    } else {
+                        if (studentType === 'kuk') {
+                            if (kukCollege === 'other') {
+                                institutionName = document.getElementById('inp-kuk-other-dept').value + ' KUK';
+                                finalBranch = document.getElementById('kuk-other-branch').value;
+                            } else if (kukCollege === 'uiet') {
+                                institutionName = 'UIET KUK';
+                                finalBranch = document.getElementById('uiet-branch').value;
+                            } else {
+                                institutionName = kukCollege.toUpperCase() + ' KUK';
+                                finalBranch = document.getElementById('kuk-other-branch').value;
+                            }
+                            
+                            finalYear = document.getElementById('kuk-year').value;
+                            finalRoll = document.getElementById('kuk-roll').value;
+                            delegateStatus = (kukCollege === 'uiet') ? 'yes' : 'no'; // Example logic based on prev flow
+                        } else {
+                            institutionName = document.getElementById('ext-college').value;
+                            finalBranch = document.getElementById('ext-branch').value;
+                            finalCity = document.getElementById('ext-city').value;
+                            finalState = document.getElementById('ext-state').value;
+                            finalGender = document.getElementById('ext-gender').value;
+                        }
+                    }
+
+                    const payload = {
+                        fullName: document.getElementById('inp-name').value,
+                        phoneNumber: document.getElementById('inp-phone').value,
+                        email: email,
+                        password: password,
+                        role: mainRole,
+                        specificRole: specificRoleVal,
+                        company: finalCompany,
+                        delegateStatus: delegateStatus,
+                        collegeName: institutionName,
+                        city: finalCity,
+                        state: finalState,
+                        needHostel: document.getElementById('need-hostel').checked,
+                        gender: finalGender,
+                        branch: finalBranch,
+                        year: finalYear,
+                        rollNo: finalRoll
+                    };
+
+                    const res = await fetch(`${API_URL}/auth/register`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+
+                    if(data.success) {
+                        const loginRes = await fetch(`${API_URL}/auth/login`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email, password })
+                        });
+                        const loginData = await loginRes.json();
+                        localStorage.setItem('esummit_token', loginData.token);
+
+                        showMessage("Registration Successful! Redirecting...", true);
+                        setTimeout(() => window.location.href = "dashboard.html", 1500);
+
+                    } else {
+                        showMessage(data.error || "Registration Failed", false);
+                    }
+                }
+            } catch (err) {
+                showMessage("Server connection failed.", false);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = originalText;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            }
+        });
+
+        updateFormLogic();
+
+        /* ================= IMMERSIVE 3D BACKGROUND (ROVER & TERRAIN) ================= */
+        const canvas = document.querySelector('#bg-canvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x00050f); 
+        scene.fog = new THREE.FogExp2(0x00050f, 0.0015);
+
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 8000);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // Materials
+        const gridMaterial = new THREE.MeshBasicMaterial({ vertexColors: true, wireframe: true, transparent: true, opacity: 0.2 });
+        const roverOrangeMaterial = new THREE.LineBasicMaterial({ color: 0xff3300 }); 
+        const roverYellowMaterial = new THREE.LineBasicMaterial({ color: 0xffcc00 });
+        const buildingMaterial = new THREE.LineBasicMaterial({ color: 0x445566, transparent: true, opacity: 0.5 });
+        const accentMaterial = new THREE.LineBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.7 });
+
+        // --- Terrain ---
+        function getTerrainHeight(x, z) {
+            const dune1 = Math.sin(x * 0.005) * Math.cos(z * 0.005) * 45;
+            const dune2 = Math.sin(z * 0.002) * 25;
+            const detail = Math.sin(x * 0.02 + z * 0.02) * 3;
+            return dune1 + dune2 + detail - 15; 
+        }
+
+        const terrainGeo = new THREE.PlaneGeometry(4000, 8000, 150, 300);
+        terrainGeo.rotateX(-Math.PI / 2);
+        
+        const positionAttribute = terrainGeo.attributes.position;
+        const colors = [];
+        const baseColor = new THREE.Color(0x667788);
+
+        for (let i = 0; i < positionAttribute.count; i++) {
+            let x = positionAttribute.getX(i);
+            let z = positionAttribute.getZ(i);
+            positionAttribute.setY(i, getTerrainHeight(x, z));
+            colors.push(baseColor.r, baseColor.g, baseColor.b);
+        }
+        terrainGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        terrainGeo.computeVertexNormals();
+        scene.add(new THREE.Mesh(terrainGeo, gridMaterial));
+
+        function createCleanBox(w, h, d, material) {
+            return new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, d)), material);
+        }
+        function createCleanCylinder(r, h, radialSegments, material) {
+            const cylinder = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.CylinderGeometry(r, r, h, radialSegments), 15), material);
+            cylinder.rotation.z = Math.PI / 2;
+            return cylinder;
+        }
+        function createWireframe(geo, material) {
+            return new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), material);
+        }
+
+        // --- Background Buildings ---
+        function createGiantFactoryComplex(x, z, scale = 1, rotation = 0) {
+            const group = new THREE.Group();
+            
+            const mainCore = createCleanBox(200, 350, 250, buildingMaterial);
+            mainCore.position.set(0, 175, 0); group.add(mainCore);
+
+            const leftWing = createCleanBox(300, 150, 200, buildingMaterial);
+            leftWing.position.set(-250, 75, -25); group.add(leftWing);
+
+            const rightWing = createCleanBox(250, 180, 150, buildingMaterial);
+            rightWing.position.set(225, 90, 50); group.add(rightWing);
+
+            const reactor = createWireframe(new THREE.CylinderGeometry(60, 80, 500, 16), buildingMaterial);
+            reactor.position.set(-150, 250, 150); group.add(reactor);
+
+            for(let i=0; i<5; i++) {
+                const ring = createWireframe(new THREE.TorusGeometry(100 - (i*5), 3, 12, 32), accentMaterial);
+                ring.rotation.x = Math.PI / 2; ring.position.set(-150, 150 + (i * 70), 150); group.add(ring);
+            }
+
+            for(let i=0; i<4; i++) {
+                const stack = createWireframe(new THREE.CylinderGeometry(15, 20, 250, 8), buildingMaterial);
+                stack.position.set(150 + (i*50), 200, -50); group.add(stack);
+            }
+
+            group.position.set(x, getTerrainHeight(x, z) - 10, z);
+            group.scale.set(scale, scale, scale);
+            group.rotation.y = rotation;
+            scene.add(group);
+        }
+        
+        createGiantFactoryComplex(-250, -500, 1, Math.PI / 6); 
+        createGiantFactoryComplex(600, -1500, 0.7, -Math.PI / 4);
+        createGiantFactoryComplex(-150, -2500, 0.8, Math.PI / 3); 
+
+        // --- Original Accurate Rover Assembly ---
+        const rover = new THREE.Group();
+        rover.rotation.order = 'YXZ';
+
+        const chassis = createCleanBox(14, 2, 22, roverOrangeMaterial);
+        chassis.position.y = 6; rover.add(chassis);
+
+        const wheels = [];
+        const wheelRadius = 5.5; 
+        const wheelWidth = 4;
+        const wheelPositions = [
+            [-10, wheelRadius, 8],  [10, wheelRadius, 8],
+            [-10, wheelRadius, -8], [10, wheelRadius, -8]
+        ];
+
+        wheelPositions.forEach(pos => {
+            const wheel = createCleanCylinder(wheelRadius, wheelWidth, 24, roverOrangeMaterial);
+            wheel.position.set(pos[0], pos[1], pos[2]);
+            rover.add(wheel); wheels.push(wheel);
+        });
+
+        const scannerGroup = new THREE.Group();
+        const neck = createCleanBox(4, 4, 4, roverYellowMaterial);
+        neck.position.set(0, 9, -5); scannerGroup.add(neck);
+
+        const head = createCleanBox(6, 8, 6, roverYellowMaterial);
+        head.position.set(0, 15, -5); scannerGroup.add(head);
+
+        const mainLens = createCleanCylinder(2, 3, 16, roverYellowMaterial);
+        mainLens.rotation.z = 0; 
+        mainLens.rotation.x = Math.PI / 2;
+        mainLens.position.set(0, 15, -8); 
+        scannerGroup.add(mainLens);
+        
+        rover.add(scannerGroup);
+        scene.add(rover);
+
+        // --- Dust Particles ---
+        const particleCount = 50;
+        const particles = [];
+        const particleMaterial = new THREE.MeshBasicMaterial({ color: 0x667788, wireframe: true, transparent: true });
+
+        for(let i=0; i<particleCount; i++) {
+            const p = new THREE.Mesh(new THREE.BoxGeometry(2.0, 2.0, 2.0), particleMaterial.clone());
+            p.visible = false; scene.add(p);
+            particles.push({ mesh: p, life: 0, maxLife: 30 + Math.random() * 15, velocity: new THREE.Vector3() });
+        }
+        let particleIndex = 0;
+
+        // --- Animation Loop ---
+        const clock = new THREE.Clock();
+        let roverZ = 0;
+        let currentRoverPos = { x: 60, y: getTerrainHeight(60, 0), z: 0 };
+        const neonYellowColor = new THREE.Color(0xffcc00);
+        const terrainColorAttribute = terrainGeo.attributes.color;
+
+        let driveDirection = 1; // 1 = Forward, -1 = Backward
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            // Reverse direction if we hit boundaries
+            if (roverZ < -7000) driveDirection = -1;
+            if (roverZ > 0) driveDirection = 1;
+
+            // Auto drive rover
+            roverZ -= 1.2 * driveDirection;
+            currentRoverPos.z = roverZ;
+            
+            // Wider sweep so it goes outside the center form (max width 500px)
+            currentRoverPos.x = Math.sin(roverZ * 0.0015) * 65; 
+            currentRoverPos.y = getTerrainHeight(currentRoverPos.x, currentRoverPos.z) - 1.5;
+            
+            rover.position.set(currentRoverPos.x, currentRoverPos.y, currentRoverPos.z);
+
+            // Dynamic Terrain coloring
+            for (let i = 0; i < positionAttribute.count; i++) {
+                let vx = positionAttribute.getX(i);
+                let vz = positionAttribute.getZ(i);
+                let dist = Math.sqrt(Math.pow(vx - currentRoverPos.x, 2) + Math.pow(vz - currentRoverPos.z, 2));
+
+                if (dist < 80) { 
+                    terrainColorAttribute.setXYZ(i, neonYellowColor.r, neonYellowColor.g, neonYellowColor.b);
+                } else {
+                    let currentR = terrainColorAttribute.getX(i);
+                    let currentG = terrainColorAttribute.getY(i);
+                    let currentB = terrainColorAttribute.getZ(i);
+
+                    terrainColorAttribute.setXYZ(
+                        i,
+                        currentR + (baseColor.r - currentR) * 0.05,
+                        currentG + (baseColor.g - currentG) * 0.05,
+                        currentB + (baseColor.b - currentB) * 0.05
+                    );
+                }
+            }
+            terrainColorAttribute.needsUpdate = true;
+
+            // Rover pitch/roll to match terrain
+            const wheelBase = 16, trackWidth = 20; 
+            const yaw = rover.rotation.y;
+            const fx = currentRoverPos.x + Math.sin(yaw) * (wheelBase/2);
+            const fz = currentRoverPos.z + Math.cos(yaw) * (wheelBase/2);
+            const bx = currentRoverPos.x - Math.sin(yaw) * (wheelBase/2);
+            const bz = currentRoverPos.z - Math.cos(yaw) * (wheelBase/2);
+            
+            let rawPitch = -Math.atan2(getTerrainHeight(fx, fz) - getTerrainHeight(bx, bz), wheelBase);
+            let targetPitch = THREE.MathUtils.clamp(rawPitch, -0.35, 0.35); 
+
+            const lx = currentRoverPos.x - Math.cos(yaw) * (trackWidth/2);
+            const lz = currentRoverPos.z + Math.sin(yaw) * (trackWidth/2);
+            const rx = currentRoverPos.x + Math.cos(yaw) * (trackWidth/2);
+            const rz = currentRoverPos.z - Math.sin(yaw) * (trackWidth/2);
+            let rawRoll = Math.atan2(getTerrainHeight(lx, lz) - getTerrainHeight(rx, rz), trackWidth);
+            let targetRoll = THREE.MathUtils.clamp(rawRoll, -0.35, 0.35);
+
+            rover.rotation.x += (targetPitch - rover.rotation.x) * 0.15;
+            rover.rotation.z += (targetRoll - rover.rotation.z) * 0.15;
+
+            // Turn rover based on path trajectory (accounting for forward/backward drive)
+            const nextZ = roverZ - (15 * driveDirection);
+            const nextX = Math.sin(nextZ * 0.0015) * 65;
+            const targetYaw = Math.atan2(nextX - currentRoverPos.x, nextZ - currentRoverPos.z);
+            
+            let diff = targetYaw - rover.rotation.y;
+            while (diff < -Math.PI) diff += Math.PI * 2;
+            while (diff > Math.PI) diff -= Math.PI * 2;
+            rover.rotation.y += diff * 0.05; // smooth turning
+
+            // Spin wheels relative to chassis
+            wheels.forEach(wheel => { wheel.rotation.x -= 0.15; });
+
+            // Dust (Math handles correct placement based on yaw)
+            if (Math.random() > 0.3) {
+                const centerBackX = rover.position.x - Math.sin(rover.rotation.y) * 10;
+                const centerBackZ = rover.position.z - Math.cos(rover.rotation.y) * 10;
+                const trackOffset = 10; 
+
+                const pLeft = particles[particleIndex];
+                pLeft.mesh.position.set(
+                    centerBackX - Math.cos(rover.rotation.y) * trackOffset, rover.position.y - 1, centerBackZ + Math.sin(rover.rotation.y) * trackOffset
+                );
+                pLeft.mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
+                pLeft.velocity.set((Math.random()-0.5)*0.08, Math.random()*0.15 + 0.05, (Math.random()-0.5)*0.08);
+                pLeft.life = pLeft.maxLife; pLeft.mesh.visible = true; pLeft.mesh.material.opacity = 0.4; 
+                particleIndex = (particleIndex + 1) % particleCount;
+
+                const pRight = particles[particleIndex];
+                pRight.mesh.position.set(
+                    centerBackX + Math.cos(rover.rotation.y) * trackOffset, rover.position.y - 1, centerBackZ - Math.sin(rover.rotation.y) * trackOffset
+                );
+                pRight.mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
+                pRight.velocity.set((Math.random()-0.5)*0.08, Math.random()*0.15 + 0.05, (Math.random()-0.5)*0.08);
+                pRight.life = pRight.maxLife; pRight.mesh.visible = true; pRight.mesh.material.opacity = 0.4; 
+                particleIndex = (particleIndex + 1) % particleCount;
+            }
+
+            particles.forEach(p => {
+                if (p.life > 0) {
+                    p.life--; 
+                    p.mesh.position.add(p.velocity);
+                    p.mesh.rotation.x += 0.02; 
+                    p.mesh.rotation.y += 0.02;
+                    p.mesh.material.opacity = (p.life / p.maxLife) * 0.4; 
+                    if (p.life <= 0) p.mesh.visible = false;
+                }
+            });
+
+            // Head animation
+            const dummy = new THREE.Object3D();
+            dummy.rotation.y = Math.sin(time * 1.5) * 0.4;
+            dummy.rotation.x = Math.sin(time * 1.2) * 0.2;
+            scannerGroup.quaternion.slerp(dummy.quaternion, 0.1);
+
+            // Follow Camera: Subdued X tracking to let rover peek out behind the center UI
+            let targetCamPos = new THREE.Vector3(currentRoverPos.x * 0.2, currentRoverPos.y + 35, currentRoverPos.z + 80);
+            
+            // Camera always looks towards -Z so when the rover turns around (driveDirection = -1), 
+            // it drives directly toward the camera, and the camera gracefully retreats backwards!
+            let targetLookAt = new THREE.Vector3(currentRoverPos.x, currentRoverPos.y + 10, currentRoverPos.z - (20 * driveDirection));
+
+            camera.position.lerp(targetCamPos, 0.05);
+            
+            if (!window.currentLookAtVec) window.currentLookAtVec = targetLookAt.clone();
+            window.currentLookAtVec.lerp(targetLookAt, 0.05);
+            camera.lookAt(window.currentLookAtVec);
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
