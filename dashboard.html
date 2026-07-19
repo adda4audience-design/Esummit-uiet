@@ -248,7 +248,13 @@
                         <div class="data-group"><label><i class="fa-solid fa-code-branch"></i> Branch & Year</label><div class="value" id="d-branch">--</div></div>
                         <div class="data-group"><label><i class="fa-solid fa-id-badge"></i> Roll Number</label><div class="value" id="d-roll">--</div></div>
                     </div>
-
+                                        <!-- Secure Enrolled Events Panel -->
+                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: var(--neon-blue);">
+                        <label><i class="fa-solid fa-calendar-check"></i> Registered Events</label>
+                        <div id="event-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                            <!-- Events will be safely injected here -->
+                        </div>
+                    </div>
                     <div class="data-group highlight span-2" id="hostel-spec"><label><i class="fa-solid fa-bed"></i> Accomodation Status</label><div class="value" id="d-hostel">--</div></div>
                 </div>
             </div>
@@ -402,7 +408,29 @@
                         hostelDisplay.innerText = 'NOT REQUESTED';
                         hostelDisplay.style.color = 'var(--text-muted)';
                     }
-                    
+                                        // --- SECURE EVENT RENDERING ---
+                    const eventGrid = document.getElementById('event-grid');
+
+                    // Check if the user has events in their array
+                    if (user.registeredEvents && user.registeredEvents.length > 0) {
+                        eventGrid.innerHTML = ''; // Clear default state
+                        
+                        // Iterate and create elements dynamically to prevent XSS injection
+                        user.registeredEvents.forEach(eventName => {
+                            const badge = document.createElement('div');
+                            
+                            // Apply styling to match your dark/neon aesthetic
+                            badge.style.cssText = 'background: rgba(0, 240, 255, 0.1); border: 1px solid var(--neon-blue); color: var(--text-main); padding: 8px 15px; border-radius: 4px; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;';
+                            
+                            // .textContent automatically sanitizes the string, making it 100% secure
+                            badge.textContent = eventName; 
+                            
+                            eventGrid.appendChild(badge);
+                        });
+                    } else {
+                        // Fallback if the array is empty
+                        eventGrid.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">NO EVENTS REGISTERED YET.</span>';
+                    }
                     // --- DIRECT TICKET GENERATION (No Payment Requirement) ---
                     const ticketArea = document.getElementById('ticket-render-area');
                     const pdfTicket = document.getElementById('pdf-ticket');
