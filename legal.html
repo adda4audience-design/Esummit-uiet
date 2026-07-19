@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal & Policies | E-SUMMIT '26 UIET KUK</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        :root {
+            --bg-black: #00030a;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --primary-orange: #ff3300;
+            --primary-red: #ff1100;
+            --primary-gold: #ffaa00;
+            --neon-blue: #00f0ff;
+            --neon-red: #ff003c;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            background-color: var(--bg-black); color: var(--text-main); 
+            font-family: 'Montserrat', sans-serif; 
+            min-height: 100vh; display: flex; flex-direction: column;
+            overflow-x: hidden; position: relative;
+        }
+
+        #webgl-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none;
+        }
+
+        /* --- Header & Navigation --- */
+        .nav-header { position: fixed; top: 0; left: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 100; pointer-events: auto; background: rgba(0, 3, 10, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-size: 1rem; font-weight: 900; color: var(--text-main); text-decoration: none; letter-spacing: 2px; }
+        
+        .hamburger { display: none; color: #ffffff; font-size: 1.5rem; cursor: pointer; transition: transform 0.3s; }
+        .hamburger:hover { transform: scale(1.1); }
+        
+        .main-nav ul { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+        .main-nav a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.65; transition: opacity 0.3s, color 0.3s; }
+        .main-nav a:hover { opacity: 1; color: var(--primary-gold); }
+        .nav-profile-icon { font-size: 1.1rem !important; color: var(--primary-gold) !important; opacity: 0.8 !important; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.3); transition: all 0.3s ease !important; }
+        .nav-profile-icon:hover { background: var(--primary-gold); color: var(--bg-black) !important; box-shadow: 0 0 15px rgba(255, 170, 0, 0.5); transform: scale(1.1); opacity: 1 !important; }
+
+        /* --- Legal Page Specific Layout --- */
+        .legal-wrapper {
+            flex: 1; display: flex; justify-content: center; align-items: flex-start;
+            padding: 120px 5% 60px; position: relative; z-index: 10;
+        }
+
+        .legal-container {
+            width: 100%; max-width: 1000px;
+            background: linear-gradient(145deg, rgba(10,10,10,0.9), rgba(3,3,3,0.95));
+            backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-top: 4px solid var(--primary-gold); padding: 40px; border-radius: 8px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(255, 170, 0, 0.05);
+        }
+
+        .legal-header { text-align: center; margin-bottom: 40px; }
+        
+        .legal-header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 900; letter-spacing: 4px;
+            text-transform: uppercase; margin-bottom: 10px; text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+        .legal-header h1 span { color: var(--primary-gold); }
+        .legal-header p {
+            color: var(--text-muted); font-size: 0.85rem; letter-spacing: 2px;
+            text-transform: uppercase; font-weight: 700;
+        }
+
+        /* --- Tabs Navigation --- */
+        .tabs-nav {
+            display: flex; justify-content: center; gap: 15px; margin-bottom: 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent; border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text-muted); padding: 12px 25px; border-radius: 4px;
+            font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { color: var(--text-main); border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
+        .tab-btn.active {
+            background: rgba(255, 170, 0, 0.1); color: var(--primary-gold);
+            border-color: var(--primary-gold); box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);
+        }
+
+        /* --- Content Area --- */
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .content-section { margin-bottom: 30px; }
+        .content-section h2 {
+            font-size: 1.2rem; color: var(--neon-blue); margin-bottom: 15px;
+            letter-spacing: 2px; text-transform: uppercase; font-weight: 800;
+            border-left: 3px solid var(--neon-blue); padding-left: 10px;
+        }
+        .content-section p, .content-section ul {
+            font-size: 0.95rem; line-height: 1.8; color: #c0c0c0; margin-bottom: 15px;
+        }
+        .content-section ul { padding-left: 20px; }
+        .content-section li { margin-bottom: 8px; }
+
+        /* --- Special Alert Boxes --- */
+        .alert-box {
+            background: rgba(255, 51, 0, 0.1); border: 1px solid var(--primary-orange);
+            border-left: 4px solid var(--primary-red); padding: 20px; border-radius: 4px;
+            margin-bottom: 25px; box-shadow: 0 0 20px rgba(255, 51, 0, 0.2);
+        }
+        .alert-box h3 {
+            color: var(--primary-orange); font-size: 1.1rem; margin-bottom: 10px;
+            text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; gap: 10px;
+        }
+        .alert-box p { color: var(--text-main); margin-bottom: 0; font-weight: 600; font-size: 0.9rem;}
+
+        /* --- Footer --- */
+        .site-footer { background: #000205; padding: 5rem 10% 2rem; position: relative; z-index: 10; color: #a0a0a0; font-family: 'Montserrat', sans-serif; }
+        .footer-divider { display: flex; align-items: center; text-align: center; color: #ff9900; font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; margin-bottom: 4rem; }
+        .footer-divider::before, .footer-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 153, 0, 0.3); }
+        .footer-divider::before { margin-right: 1.5em; } .footer-divider::after { margin-left: 1.5em; }
+        .footer-bottom-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 2rem; margin-bottom: 3rem; }
+        .footer-col h4 { color: #ff9900; font-size: 1.1rem; margin-bottom: 1.5rem; text-transform: capitalize; font-weight: 700; }
+        .brand-logo { color: #fff; font-size: 1.2rem; font-weight: 900; letter-spacing: 2px; margin-bottom: 1.5rem; text-transform: uppercase;}
+        .footer-col p { font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+        .footer-col a { display: block; color: #a0a0a0; text-decoration: none; font-size: 0.9rem; margin-bottom: 0.8rem; transition: color 0.3s; }
+        .footer-col a:hover { color: #ff9900; }
+        .footer-socials-new { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .footer-socials-new a { font-size: 1.5rem; color: #a0a0a0; transition: color 0.3s; }
+        .footer-socials-new a:hover { color: #fff; text-shadow: 0 0 10px #fff; }
+        .footer-copyright { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* --- MOBILE RESPONSIVENESS HIERARCHY --- */
+        @media (max-width: 992px) {
+            .hamburger { display: block; position: relative; z-index: 100; }
+            .main-nav { 
+                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+                background: rgba(0, 3, 10, 0.95); backdrop-filter: blur(25px); 
+                display: flex; justify-content: center; align-items: center; 
+                z-index: 90; opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.4s ease; 
+            }
+            .main-nav.active { opacity: 1; visibility: visible; pointer-events: auto; }
+            .main-nav ul { flex-direction: column; gap: 1.5rem; align-items: center; transform: translateY(20px); transition: transform 0.4s ease; }
+            .main-nav.active ul { transform: translateY(0); }
+            .main-nav a { font-size: 1.2rem; letter-spacing: 3px; text-align: center;}
+            .nav-profile-icon { width: 50px; height: 50px; font-size: 1.5rem !important; margin-top: 10px; }
+        }
+
+        @media (max-width: 768px) {
+            .legal-wrapper { padding: 100px 15px 40px; }
+            .legal-container { padding: 25px 15px; }
+            .legal-header h1 { font-size: 1.8rem; }
+            
+            /* Responsive Grid Tabs */
+            .tabs-nav { flex-direction: row; flex-wrap: wrap; gap: 8px; margin-bottom: 25px; padding-bottom: 15px; }
+            .tab-btn { flex: 1 1 calc(50% - 8px); padding: 10px 5px; font-size: 0.7rem; text-align: center; }
+            
+            .content-section h2 { font-size: 1.05rem; margin-bottom: 10px; }
+            .content-section p, .content-section ul { font-size: 0.85rem; line-height: 1.6; }
+            
+            .alert-box { padding: 15px; }
+            .alert-box h3 { font-size: 0.95rem; }
+            .alert-box p { font-size: 0.8rem; }
+            
+            .footer-bottom-grid { grid-template-columns: 1fr; text-align: center; gap: 1.5rem; }
+            .footer-socials-new { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <header class="nav-header">
+        <a href="index.html" class="logo">E-SUMMIT 26'</a>
+        <div class="hamburger" id="hamburger-menu"><i class="fa-solid fa-bars"></i></div>
+        <nav class="main-nav" id="main-nav">
+            <ul>
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#events">Events</a></li>
+                <li><a href="campus.html">Campus</a></li>
+                <li><a href="register.html" class="nav-profile-icon" title="Dashboard"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="legal-wrapper">
+        <div class="legal-container">
+            
+            <div class="legal-header">
+                <h1>System <span>Protocols</span></h1>
+                <p>// Legal Directives & Event Guidelines //</p>
+            </div>
+
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab('tab-privacy')">Privacy Policy</button>
+                <button class="tab-btn" onclick="switchTab('tab-terms')">Terms & Conditions</button>
+                <button class="tab-btn" onclick="switchTab('tab-refund')">Fraud & Refund Policy</button>
+            </div>
+
+            <!-- PRIVACY POLICY -->
+            <div id="tab-privacy" class="tab-content active">
+                <div class="content-section">
+                    <h2>Data Acquisition & Governance</h2>
+                    <p>At E-Summit '26 UIET KUK, we prioritize the integrity and security of your data. This Privacy Policy details the information network protocols regarding the collection, use, and protection of your personal parameters when you access our system.</p>
+                </div>
+                <div class="content-section">
+                    <h2>Information We Collect</h2>
+                    <ul>
+                        <li><strong>Identity Matrices:</strong> Full name, institutional details (college, branch, roll number), and contact vectors (email, phone number) provided during registration.</li>
+                        <li><strong>Operational Data:</strong> Event participation logs, check-in status, and accommodation requests.</li>
+                        <li><strong>System Telemetry:</strong> Device IP, browser configuration, and site interaction metrics to ensure optimal system performance.</li>
+                    </ul>
+                </div>
+                <div class="content-section">
+                    <h2>Data Utilization</h2>
+                    <p>Collected data is strictly utilized to authenticate users, generate encrypted digital passes (QR credentials), allocate physical resources (like hostels), and maintain a secure grid during the event. We do not sell or lease your identity to third-party entities.</p>
+                </div>
+                <div class="content-section">
+                    <h2>Security Protocols</h2>
+                    <p>Your authentication credentials (passwords) are cryptographically hashed using industry-standard bcrypt algorithms. All network traffic between your node and our mainframe is secured via SSL/HTTPS.</p>
+                </div>
+            </div>
+
+            <!-- TERMS & CONDITIONS -->
+            <div id="tab-terms" class="tab-content">
+                <div class="content-section">
+                    <h2>Grid Access & Conduct</h2>
+                    <p>By registering for E-Summit '26, you agree to abide by the institutional directives of UIET KUK. Access to the grid (event premises) is contingent upon presenting a valid, non-tampered digital pass generated by our system.</p>
+                </div>
+                <div class="content-section">
+                    <h2>Code of Behavior</h2>
+                    <ul>
+                        <li>All attendees must maintain a professional and respectful demeanor toward fellow participants, speakers, and the organizing mainframe.</li>
+                        <li>Any attempt to disrupt event operations, falsify credentials, or execute unauthorized code on event infrastructure will result in immediate expulsion and system ban.</li>
+                        <li>The organizing committee holds the supreme override authority to revoke access passes without prior notice in case of disciplinary violations.</li>
+                    </ul>
+                </div>
+                <div class="content-section">
+                    <h2>Liability Clause</h2>
+                    <p>UIET KUK and the E-Summit '26 organizing body are not liable for the loss, theft, or damage of personal hardware (devices, bags, etc.) brought onto the campus. Participants are responsible for securing their own assets.</p>
+                </div>
+            </div>
+
+            <!-- REFUND POLICY (FOCUSED ON FRAUD & GOODIES) -->
+            <div id="tab-refund" class="tab-content">
+                
+                <div class="alert-box">
+                    <h3><i class="fa-solid fa-triangle-exclamation"></i> Critical System Warning: Free Entry</h3>
+                    <p>Access to E-Summit '26 UIET KUK is <strong>100% FREE</strong>. We do NOT charge any registration fees, entry fees, or participation fees for the core event. Beware of fraudulent payment links, fake emails, or unauthorized nodes asking for money to secure your entry pass. Do not transfer funds to anyone claiming to sell event tickets.</p>
+                </div>
+
+                <div class="content-section">
+                    <h2>Official Merchandise (Goodies) Transmissions</h2>
+                    <p>The only legitimate monetary transactions associated with E-Summit '26 are for the purchase of official event merchandise (Goodies, T-shirts, Kits) via our verified online store or on-site official kiosks.</p>
+                </div>
+                
+                <div class="content-section">
+                    <h2>Goodies Refund & Exchange Directives</h2>
+                    <p>Since merchandise is manufactured to order, our return protocols are strictly regulated:</p>
+                    <ul>
+                        <li><strong>Defective Hardware:</strong> If you receive merchandise with manufacturing defects or damage, a replacement will be issued. Claims must be submitted to the physical Help Desk or via email within 48 hours of receipt.</li>
+                        <li><strong>Sizing Issues:</strong> T-shirt size exchanges are subject to physical inventory availability on-site. We highly recommend verifying the size chart before initiating a transaction.</li>
+                        <li><strong>Cancellations:</strong> Pre-orders for goodies can only be canceled if the production phase has not commenced. Once the order is locked into the manufacturing grid, refunds are nullified.</li>
+                    </ul>
+                </div>
+
+                <div class="content-section">
+                    <h2 style="border-left-color: var(--primary-gold); color: var(--primary-gold);">Reporting Fraudulent Activity</h2>
+                    <p>If you encounter any external entities attempting to charge you for event access or posing as official E-Summit organizers, report them immediately to our command center at <strong>esummit.uietkuk026@gmail.com</strong>.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-divider">
+            <span>MADE BY E-SUMMIT'S TECH TEAM</span>
+        </div>
+        <div class="footer-bottom-grid">
+            <div class="footer-col brand-col">
+                <h3 class="brand-logo">E-SUMMIT 26'</h3>
+                <p>Igniting the shift in technology and entrepreneurship. Join the revolution.</p>
+                <div class="footer-socials-new">
+                    <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" title="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col links-col">
+                <h4>Quick Links</h4>
+                <a href="index.html#about">About Us</a>
+                <a href="index.html#events">Events</a>
+                <a href="index.html#speakers">Speakers</a>
+                <a href="campus.html">Campus</a>
+            </div>
+            <div class="footer-col legal-col">
+                <h4>Legal</h4>
+                <a href="#" onclick="switchTab('tab-privacy'); window.scrollTo(0,0);">Privacy Policy</a>
+                <a href="#" onclick="switchTab('tab-terms'); window.scrollTo(0,0);">Terms & Conditions</a>
+                <a href="#" onclick="switchTab('tab-refund'); window.scrollTo(0,0);">Refund Policy</a>
+            </div>
+            <div class="footer-col contact-col">
+                <h4>Contact Us</h4>
+                <p>>esummit.uietkuk026@gmail.com</p>
+                <p>>+91 9193626076</p>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2026 UIET KUK E-Summit. All systems nominal
+        </div>
+    </footer>
+
+    <script>
+        // --- Hamburger Menu Logic ---
+        const hamburger = document.getElementById('hamburger-menu');
+        const mainNav = document.getElementById('main-nav');
+        
+        hamburger.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            if(mainNav.classList.contains('active')) {
+                hamburger.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            } else {
+                hamburger.innerHTML = '<i class="fa-solid fa-bars"></i>';
+            }
+        });
+
+        // Tab Switcher Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // --- 3D Background Logic ---
+        const canvas = document.querySelector('#webgl-canvas');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x00050f); 
+        scene.fog = new THREE.FogExp2(0x00050f, 0.0015);
+
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 8000);
+        camera.position.set(0, 30, 80);
+        camera.lookAt(0, 10, 0);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const gridMaterial = new THREE.MeshBasicMaterial({ vertexColors: true, wireframe: true, transparent: true, opacity: 0.15 });
+        
+        function getTerrainHeight(x, z) {
+            const dune1 = Math.sin(x * 0.005) * Math.cos(z * 0.005) * 45;
+            const dune2 = Math.sin(z * 0.002) * 25;
+            const detail = Math.sin(x * 0.02 + z * 0.02) * 3;
+            return dune1 + dune2 + detail - 15; 
+        }
+
+        const terrainGeo = new THREE.PlaneGeometry(4000, 4000, 150, 150);
+        terrainGeo.rotateX(-Math.PI / 2);
+        
+        const positionAttribute = terrainGeo.attributes.position;
+        const colors = [];
+        const baseColor = new THREE.Color(0x667788);
+
+        for (let i = 0; i < positionAttribute.count; i++) {
+            let x = positionAttribute.getX(i);
+            let z = positionAttribute.getZ(i);
+            positionAttribute.setY(i, getTerrainHeight(x, z));
+            colors.push(baseColor.r, baseColor.g, baseColor.b);
+        }
+        terrainGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+        terrainGeo.computeVertexNormals();
+        
+        const terrainMesh = new THREE.Mesh(terrainGeo, gridMaterial);
+        scene.add(terrainMesh);
+
+        const particleCount = 60;
+        const particles = [];
+        const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xffaa00, wireframe: true, transparent: true, opacity: 0.2 });
+
+        for(let i=0; i<particleCount; i++) {
+            const p = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1.5), particleMaterial.clone());
+            p.position.set((Math.random() - 0.5) * 400, Math.random() * 50, (Math.random() - 0.5) * 400);
+            scene.add(p);
+            particles.push({ mesh: p, velocity: new THREE.Vector3((Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2, (Math.random()-0.5)*0.2) });
+        }
+
+        const clock = new THREE.Clock();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            terrainMesh.position.z = (time * 15) % 100;
+
+            particles.forEach(p => {
+                p.mesh.position.add(p.velocity);
+                p.mesh.rotation.x += 0.01;
+                p.mesh.rotation.y += 0.02;
+
+                if(p.mesh.position.y > 60) p.mesh.position.y = -10;
+                if(p.mesh.position.y < -10) p.mesh.position.y = 60;
+                if(p.mesh.position.x > 200) p.mesh.position.x = -200;
+                if(p.mesh.position.x < -200) p.mesh.position.x = 200;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
