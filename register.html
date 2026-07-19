@@ -451,6 +451,21 @@
 
                     if(data.success) {
                         localStorage.setItem('esummit_token', data.token);
+                        
+                        // --- AUTO ENROLLMENT LOGIC START ---
+                        const pendingEvent = sessionStorage.getItem('pendingEventRegistration');
+                        if (pendingEvent) {
+                            try {
+                                await fetch(`${API_URL}/events/register`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${data.token}` },
+                                    body: JSON.stringify({ eventName: pendingEvent })
+                                });
+                                sessionStorage.removeItem('pendingEventRegistration');
+                            } catch (e) { console.error("Auto-enroll failed:", e); }
+                        }
+                        // --- AUTO ENROLLMENT LOGIC END ---
+
                         showMessage("Successful, Redirecting...", true);
                         setTimeout(() => window.location.href = "dashboard.html", 1500);
                     } else {
@@ -493,7 +508,7 @@
                             
                             finalYear = document.getElementById('kuk-year').value;
                             finalRoll = document.getElementById('kuk-roll').value;
-                            delegateStatus = (kukCollege === 'uiet') ? 'yes' : 'no'; // Example logic based on prev flow
+                            delegateStatus = (kukCollege === 'uiet') ? 'yes' : 'no'; 
                         } else {
                             institutionName = document.getElementById('ext-college').value;
                             finalBranch = document.getElementById('ext-branch').value;
@@ -537,6 +552,20 @@
                         });
                         const loginData = await loginRes.json();
                         localStorage.setItem('esummit_token', loginData.token);
+
+                        // --- AUTO ENROLLMENT LOGIC START ---
+                        const pendingEvent = sessionStorage.getItem('pendingEventRegistration');
+                        if (pendingEvent) {
+                            try {
+                                await fetch(`${API_URL}/events/register`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${loginData.token}` },
+                                    body: JSON.stringify({ eventName: pendingEvent })
+                                });
+                                sessionStorage.removeItem('pendingEventRegistration');
+                            } catch (e) { console.error("Auto-enroll failed:", e); }
+                        }
+                        // --- AUTO ENROLLMENT LOGIC END ---
 
                         showMessage("Registration Successful! Redirecting...", true);
                         setTimeout(() => window.location.href = "dashboard.html", 1500);
