@@ -230,6 +230,8 @@
         .footer-socials-new a { font-size: 1.5rem; color: #a0a0a0; display: inline-block; }
         .footer-socials-new a:hover { color: #fff; text-shadow: 0 0 10px #fff; }
         .footer-copyright { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; font-size: 0.8rem; letter-spacing: 1px; color: #555; text-transform: uppercase; }
+        /* Hide the injected mobile text on Desktop */
+        .mobile-card-desc { display: none; }
 
         @media (max-width: 992px) {
             .hamburger { display: block; position: relative; z-index: 1001; }
@@ -244,33 +246,78 @@
             .footer-bottom-grid { grid-template-columns: 1fr 1fr; }
             /* Hide the side panel on mobile/tablets where space is restricted */
             .card-side-desc { display: none !important; }
-        }
+    
+    /* Show the injected description text on the back of the card */
+   /* Show the injected description text on the back of the card */
+    .mobile-card-desc {
+        display: block;
+        font-size: 0.75rem; 
+        color: #d0d0d0; 
+        line-height: 1.5; 
+        margin-bottom: 0.8rem;
+        /* NEW: Restrict height and allow scrolling so it doesn't push the button out */
+        max-height: 110px;
+        overflow-y: auto;
+        padding-right: 5px;
+        text-align: center;
+    }
+    
+    /* Sleek custom scrollbar for the text area */
+    .mobile-card-desc::-webkit-scrollbar { width: 3px; }
+    .mobile-card-desc::-webkit-scrollbar-thumb { background: var(--theme-color); border-radius: 3px; }
+
+    /* Override default hover to prevent glitchy flips while scrolling */
+    .event-card-wrapper:hover .event-card-inner { transform: none; }
+    
+    /* Only flip when the card is tapped (controlled via JS) */
+    .event-card-wrapper.mobile-active .event-card-inner { transform: rotateY(180deg) scale(1); }
+}
         @media (max-width: 768px) {
             section { padding: 6rem 5% 4rem 5%; }
             .hero-text-block { margin-left: 0px; margin-top: 14px; text-align: center; margin-bottom: 22vh; }
             .hero-mid { font-size: 0.75rem; margin-left: 0; }
             .hero-main { font-size: clamp(3.5rem, 12vw, 6rem); margin-left: 0; letter-spacing: 0; }
-            .event-card-wrapper { 
-                width: 250px; 
-                height: 380px; 
-            }
-            .card-title h4 {
-                font-size: 1rem;
-            }
-            .event-card-back {
-                padding: 1.5rem 1rem;
-            }
-            .event-card-back h4 {
-                font-size: 1.2rem;
-                margin-bottom: 1rem;
-            }
-            .date-time-box {
-                margin-bottom: 1.2rem;
-                padding: 10px;
-            }
-            .date-time-box p {
-                font-size: 0.85rem;
-            }
+            /* Cleaned up wrapper with slightly more height to fit everything safely */
+        .event-card-wrapper { 
+            width: 280px; 
+            height: 450px; 
+            scroll-snap-align: center; 
+            scroll-snap-stop: always;
+            flex-shrink: 0;
+        }
+
+        .event-card-back { 
+            padding: 1.5rem 1rem; 
+            justify-content: flex-start; /* Let things flow naturally from the top */
+        }
+        
+        .event-card-back h4 { 
+            font-size: 1.15rem; 
+            margin-bottom: 0.5rem; 
+            line-height: 1.2; 
+            flex-shrink: 0; 
+        }
+
+        .date-time-box { 
+            margin-bottom: 0.8rem; 
+            padding: 10px; 
+            flex-shrink: 0; 
+        }
+
+        .date-time-box p { 
+            font-size: 0.75rem; 
+            margin: 4px 0; 
+            justify-content: center;
+        }
+
+        .event-card-back .hero-btn { 
+            padding: 12px; 
+            font-size: 0.8rem; 
+            margin-top: auto; /* Glues the button to the absolute bottom of the card */
+            flex-shrink: 0; /* Prevents the button from getting squished */
+            width: 100%;
+        }
+
             .hero-sub { font-size: 0.85rem; margin-left: 0; }
             .hero-actions { margin-top: 1.5rem; margin-left: 0; justify-content: center; max-width: 100%; flex-direction: row; flex-wrap: wrap; gap: 10px; }
             .hero-btn { padding: 10px 15px; font-size: 0.7rem; width: calc(80% - 10px); text-align: center; }
@@ -1261,32 +1308,91 @@
         // --- NEW INFINITE CSS SCROLL CAROUSEL ---
         const eventTrack = document.getElementById('carousel-track');
         
-        // Duplicate the cards dynamically to create a seamless infinite CSS loop
+        // 1. Automatically inject descriptions into the back of the cards
+        document.querySelectorAll('.event-card-wrapper').forEach(card => {
+            const descText = card.querySelector('.card-side-desc p').innerText;
+            const backCard = card.querySelector('.event-card-back');
+            
+            const mobileDesc = document.createElement('p');
+            mobileDesc.className = 'mobile-card-desc';
+            mobileDesc.innerText = descText;
+            
+            // Insert it right below the H4 title
+            backCard.querySelector('h4').insertAdjacentElement('afterend', mobileDesc);
+        });
+
+        // 2. Duplicate the cards dynamically to create a seamless infinite CSS loop
         const cards = Array.from(eventTrack.children);
         cards.forEach(card => {
             const clone = card.cloneNode(true);
             eventTrack.appendChild(clone);
         });
 
-        // Add Screen-Aware Hover Logic for the Side Panel inside the cards
-        document.querySelectorAll('.event-card-wrapper').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                const rect = card.getBoundingClientRect();
-                const descPanel = card.querySelector('.card-side-desc');
+        // 3. Tap to Lock & Pause Animation on Mobile
+        eventTrack.addEventListener('click', function(e) {
+            if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button')) return;
+
+            const clickedCard = e.target.closest('.event-card-wrapper');
+            if (!clickedCard) return;
+
+            const isCurrentlyActive = clickedCard.classList.contains('mobile-active');
+            
+            // Reset all cards
+            document.querySelectorAll('.event-card-wrapper').forEach(c => c.classList.remove('mobile-active'));
+            
+            if (!isCurrentlyActive) {
+                clickedCard.classList.add('mobile-active');
+                eventTrack.style.setProperty('animation-play-state', 'paused', 'important');
                 
-                // If the card is too far right, flip the panel to the left side so it doesn't get cut off
-                if (rect.right + 300 > window.innerWidth) {
-                    descPanel.style.left = 'auto';
-                    descPanel.style.right = '100%';
-                    descPanel.style.marginRight = '20px';
-                    descPanel.style.marginLeft = '0';
-                } else {
-                    descPanel.style.left = '100%';
-                    descPanel.style.right = 'auto';
-                    descPanel.style.marginLeft = '20px';
-                    descPanel.style.marginRight = '0';
-                }
+                // NEW: Force the card to snap to the center of the screen
+                clickedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            } else {
+                eventTrack.style.setProperty('animation-play-state', 'running', 'important');
+            }
+        });
+
+        // 4. Ensure scrolling resumes and styles are cleaned up
+        const resetCarouselState = () => {
+            eventTrack.style.setProperty('animation-play-state', 'running', 'important');
+            
+            // Remove the active class
+            document.querySelectorAll('.event-card-wrapper').forEach(c => {
+                c.classList.remove('mobile-active');
+                
+                // NEW: Force-reset styles to ensure no blur remains
+                c.style.filter = 'none'; 
+                c.style.opacity = '1';
+                c.style.transform = 'scale(1)';
             });
+        };
+
+        closeCarousel.addEventListener('click', () => {
+            carouselContainer.style.opacity = '0';
+            setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
+            resetCarouselState();
+        });
+
+        carouselContainer.addEventListener('click', (e) => {
+            if (e.target === carouselContainer) {
+                carouselContainer.style.opacity = '0';
+                setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
+                resetCarouselState();
+            }
+        });
+
+        // Update your existing close listeners to also reset the animation state
+        closeCarousel.addEventListener('click', () => {
+            carouselContainer.style.opacity = '0';
+            setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
+            resetCarouselState();
+        });
+
+        carouselContainer.addEventListener('click', (e) => {
+            if (e.target === carouselContainer) {
+                carouselContainer.style.opacity = '0';
+                setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
+                resetCarouselState();
+            }
         });
 
         closeCarousel.addEventListener('click', () => {
@@ -1294,6 +1400,16 @@
             setTimeout(() => {
                 carouselContainer.style.display = 'none';
             }, 500);
+        });
+
+        carouselContainer.addEventListener('click', (e) => {
+            // Check if the exact element clicked was the background container itself
+            if (e.target === carouselContainer) {
+                carouselContainer.style.opacity = '0';
+                setTimeout(() => {
+                    carouselContainer.style.display = 'none';
+                }, 500);
+            }
         });
 
         // --- Original Accurate Rover Assembly ---
