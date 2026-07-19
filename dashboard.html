@@ -248,7 +248,14 @@
                         <div class="data-group"><label><i class="fa-solid fa-code-branch"></i> Branch & Year</label><div class="value" id="d-branch">--</div></div>
                         <div class="data-group"><label><i class="fa-solid fa-id-badge"></i> Roll Number</label><div class="value" id="d-roll">--</div></div>
                     </div>
-
+                    <div class="glass-panel" style="grid-column: span 2;">
+                    <div class="header">
+                        <h1>Enrolled <span>Events</span></h1>
+                    </div>
+                    <div id="event-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                        <!-- Events will be injected here -->
+                    </div>
+                </div>
                     <div class="data-group highlight span-2" id="hostel-spec"><label><i class="fa-solid fa-bed"></i> Accomodation Status</label><div class="value" id="d-hostel">--</div></div>
                 </div>
             </div>
@@ -405,6 +412,17 @@
                     
                     // --- DIRECT TICKET GENERATION (No Payment Requirement) ---
                     const ticketArea = document.getElementById('ticket-render-area');
+                    const eventGrid = document.getElementById('event-grid');
+                    if (user.registeredEvents && user.registeredEvents.length > 0) {
+                        eventGrid.innerHTML = user.registeredEvents.map(eventName => `
+                            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                                <i class="fa-solid fa-calendar-check" style="color: var(--primary-gold); margin-bottom: 10px;"></i>
+                                <h4 style="font-size: 0.9rem; text-transform: uppercase;">${eventName}</h4>
+                            </div>
+                        `).join('');
+                    } else {
+                        eventGrid.innerHTML = '<p style="color: #666;">No events registered yet.</p>';
+                    }
                     const pdfTicket = document.getElementById('pdf-ticket');
 
                     if (user.ticketId) {
