@@ -36,7 +36,7 @@
         section { min-height: 100vh; width: 100%; padding: 5rem 8%; display: flex; flex-direction: column; justify-content: center; position: relative; pointer-events: none; }
 
         /* --- Header & Navigation --- */
-        .nav-header { position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 10; pointer-events: auto; }
+        .nav-header { position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; pointer-events: auto; }
         .logo { font-size: 1rem; font-weight: 900; color: var(--text-main); text-decoration: none; letter-spacing: 2px; }
         .hamburger { display: none; color: #ffffff; font-size: 1.5rem; cursor: pointer; transition: transform 0.3s; }
         .hamburger:hover { transform: scale(1.1); }
@@ -232,8 +232,8 @@
         .footer-copyright { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; font-size: 0.8rem; letter-spacing: 1px; color: #555; text-transform: uppercase; }
 
         @media (max-width: 992px) {
-            .hamburger { display: block; position: relative; z-index: 100; }
-            .main-nav { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 3, 10, 0.7); backdrop-filter: blur(25px) saturate(120%); display: flex; justify-content: center; align-items: center; z-index: 90; opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.4s ease; border: none; border-radius: 0; padding: 0; box-shadow: none; }
+            .hamburger { display: block; position: relative; z-index: 1001; }
+            .main-nav { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 3, 10, 0.7); backdrop-filter: blur(25px) saturate(120%); display: flex; justify-content: center; align-items: center; z-index: 999; opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.4s ease; border: none; border-radius: 0; padding: 0; box-shadow: none; }
             .main-nav.active { opacity: 1; visibility: visible; pointer-events: auto; }
             .main-nav ul { flex-direction: column; gap: 1.2rem; align-items: center; transform: translateY(20px); transition: transform 0.4s ease; }
             .main-nav.active ul { transform: translateY(0); }
@@ -250,6 +250,27 @@
             .hero-text-block { margin-left: 0px; margin-top: 14px; text-align: center; margin-bottom: 22vh; }
             .hero-mid { font-size: 0.75rem; margin-left: 0; }
             .hero-main { font-size: clamp(3.5rem, 12vw, 6rem); margin-left: 0; letter-spacing: 0; }
+            .event-card-wrapper { 
+                width: 250px; 
+                height: 380px; 
+            }
+            .card-title h4 {
+                font-size: 1rem;
+            }
+            .event-card-back {
+                padding: 1.5rem 1rem;
+            }
+            .event-card-back h4 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+            .date-time-box {
+                margin-bottom: 1.2rem;
+                padding: 10px;
+            }
+            .date-time-box p {
+                font-size: 0.85rem;
+            }
             .hero-sub { font-size: 0.85rem; margin-left: 0; }
             .hero-actions { margin-top: 1.5rem; margin-left: 0; justify-content: center; max-width: 100%; flex-direction: row; flex-wrap: wrap; gap: 10px; }
             .hero-btn { padding: 10px 15px; font-size: 0.7rem; width: calc(80% - 10px); text-align: center; }
@@ -575,7 +596,7 @@
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="#brochure">Archives</a></li>
+                <li><a href="#brochure">Brochure</a></li>
                 <li><a href="#events">Events</a></li>
                 <li><a href="#speakers">Speakers</a></li>
                 <li><a href="campus.html">Campus</a></li>
