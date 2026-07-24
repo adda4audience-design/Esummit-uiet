@@ -116,7 +116,10 @@
         .wheel { width: 4px; height: 8px; background-color: var(--primary-gold); border-radius: 4px; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); animation: scroll 1.5s infinite; }
         @keyframes scroll { 0% { top: 10px; opacity: 1; } 100% { top: 30px; opacity: 0; } }
 
-        .spacer { height: 40vh; }
+        /* Adjusted Heights for Shorter Exploration */
+        .spacer { height: 20vh; }
+        #speakers { height: 80vh !important; }
+
         .image-collage { position: relative; width: 100%; height: 220px; margin-top: 1.5rem; margin-bottom: 1rem; }
         .collage-img { position: absolute; width: 55%; border-radius: 8px; border: 2px solid var(--primary-gold); filter: grayscale(100%) brightness(0.7); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 20px rgba(0,0,0,0.6); cursor: pointer; }
         .collage-img.img1 { top: 0; right: 10%; z-index: 1; }
@@ -141,11 +144,11 @@
         .status-matched { color: #00ff66; text-shadow: 0 0 10px #00ff66; animation: blink 0.5s infinite alternate; }
 
         /* --- EVENT CAROUSEL STYLES --- */
-        .carousel-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 5, 15, 0.9); backdrop-filter: blur(8px); z-index: 600; display: none; align-items: center; overflow: hidden; opacity: 0; transition: opacity 0.5s ease; }
+        .carousel-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 5, 15, 0.9); backdrop-filter: blur(8px); z-index: 600; display: none; align-items: center; overflow: hidden; opacity: 0; transition: opacity 0.5s ease; /* Cursor defaults to normal now to suggest it DOES NOT close on click */ }
         
         .carousel-track { 
             display: flex; gap: 40px; width: max-content; padding-left: 40px;
-            animation: scrollMarquee 40s linear infinite; 
+            animation: scrollMarquee 40s linear infinite; cursor: default;
         }
         
         .carousel-track:hover { animation-play-state: paused; }
@@ -153,7 +156,6 @@
 
         @keyframes scrollMarquee {
             0% { transform: translateX(0); }
-            /* Translate by exactly 50% since we duplicate the list inside */
             100% { transform: translateX(calc(-50% - 20px)); }
         }
 
@@ -183,7 +185,6 @@
         .card-title { height: 65px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border-top: 1px solid var(--theme-color); margin-top: 12px; border-radius: 4px; position: relative; z-index: 1; }
         .card-title h4 { color: var(--theme-color); font-size: 1.25rem; text-transform: uppercase; letter-spacing: 2px; margin: 0; text-shadow: 0 0 8px var(--theme-color); }
         
-        /* Back of the card */
         .event-card-back { transform: rotateY(180deg); padding: 2.5rem 2rem; justify-content: center; align-items: center; text-align: center; }
         .event-card-back h4 { color: var(--theme-color); font-size: 1.6rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 2px; position: relative; z-index: 1; text-shadow: 0 0 10px var(--theme-color); line-height: 1.3;}
         
@@ -193,27 +194,44 @@
         
         .event-card-back .hero-btn { 
             z-index: 1; 
-            background: var(--primary-orange) !important;
-            color: #ffffff !important; 
-            border-color: var(--primary-orange) !important;
             width: 100%; text-align: center; 
             text-shadow: none;
         }
 
-        /* Screen-Aware Hover Description Box */
-        .card-side-desc {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            width: 280px; padding: 25px; background: rgba(10, 15, 25, 0.95);
-            border: 1px solid var(--theme-color); box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            border-radius: 8px; backdrop-filter: blur(10px);
-            opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            z-index: -1;
-            /* Default position: Right side */
-            left: 100%; margin-left: 20px;
+        .event-card-back .btn-login {
+            background: var(--primary-orange) !important;
+            color: #ffffff !important; 
+            border-color: var(--primary-orange) !important;
         }
-        .event-card-wrapper:hover .card-side-desc { opacity: 1; visibility: visible; z-index: 20; }
-        .card-side-desc h3 { color: var(--theme-color); margin-bottom: 12px; font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase; }
-        .card-side-desc p { color: #e0e0e0; font-size: 0.9rem; line-height: 1.6; margin: 0; }
+
+        /* --- Custom Close Button --- */
+        .carousel-close-btn {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 51, 0, 0.2);
+            border: 2px solid var(--primary-orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-main);
+            font-size: 1.8rem;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .carousel-close-btn:hover {
+            background: var(--primary-orange);
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 51, 0, 0.6);
+            transform: translateX(-50%) scale(1.15);
+        }
 
         /* --- Footer --- */
         .site-footer { background: #000205; padding: 5rem 10% 2rem; position: relative; z-index: 10; pointer-events: auto; color: #a0a0a0; font-family: 'Montserrat', sans-serif; overflow: hidden; }
@@ -230,8 +248,6 @@
         .footer-socials-new a { font-size: 1.5rem; color: #a0a0a0; display: inline-block; }
         .footer-socials-new a:hover { color: #fff; text-shadow: 0 0 10px #fff; }
         .footer-copyright { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; font-size: 0.8rem; letter-spacing: 1px; color: #555; text-transform: uppercase; }
-        /* Hide the injected mobile text on Desktop */
-        .mobile-card-desc { display: none; }
 
         @media (max-width: 992px) {
             .hamburger { display: block; position: relative; z-index: 1001; }
@@ -244,79 +260,24 @@
             .main-nav a { font-size: 1.3rem; font-weight: 900; letter-spacing: 4px; text-align: center; line-height: 0.5; }
             .nav-profile-icon { width: 50px; height: 50px; font-size: 1.5rem !important; margin-top: 10px; }
             .footer-bottom-grid { grid-template-columns: 1fr 1fr; }
-            /* Hide the side panel on mobile/tablets where space is restricted */
-            .card-side-desc { display: none !important; }
-    
-    /* Show the injected description text on the back of the card */
-   /* Show the injected description text on the back of the card */
-    .mobile-card-desc {
-        display: block;
-        font-size: 0.75rem; 
-        color: #d0d0d0; 
-        line-height: 1.5; 
-        margin-bottom: 0.8rem;
-        /* NEW: Restrict height and allow scrolling so it doesn't push the button out */
-        max-height: 110px;
-        overflow-y: auto;
-        padding-right: 5px;
-        text-align: center;
-    }
-    
-    /* Sleek custom scrollbar for the text area */
-    .mobile-card-desc::-webkit-scrollbar { width: 3px; }
-    .mobile-card-desc::-webkit-scrollbar-thumb { background: var(--theme-color); border-radius: 3px; }
-
-    /* Override default hover to prevent glitchy flips while scrolling */
-    .event-card-wrapper:hover .event-card-inner { transform: none; }
-    
-    /* Only flip when the card is tapped (controlled via JS) */
-    .event-card-wrapper.mobile-active .event-card-inner { transform: rotateY(180deg) scale(1); }
-}
+            
+            .event-card-wrapper:hover .event-card-inner { transform: none; }
+            .event-card-wrapper.mobile-active .event-card-inner { transform: rotateY(180deg) scale(1); }
+            
+            .carousel-close-btn { bottom: 20px; width: 50px; height: 50px; font-size: 1.5rem; }
+        }
         @media (max-width: 768px) {
             section { padding: 6rem 5% 4rem 5%; }
             .hero-text-block { margin-left: 0px; margin-top: 14px; text-align: center; margin-bottom: 22vh; }
             .hero-mid { font-size: 0.75rem; margin-left: 0; }
             .hero-main { font-size: clamp(3.5rem, 12vw, 6rem); margin-left: 0; letter-spacing: 0; }
-            /* Cleaned up wrapper with slightly more height to fit everything safely */
-        .event-card-wrapper { 
-            width: 280px; 
-            height: 450px; 
-            scroll-snap-align: center; 
-            scroll-snap-stop: always;
-            flex-shrink: 0;
-        }
-
-        .event-card-back { 
-            padding: 1.5rem 1rem; 
-            justify-content: flex-start; /* Let things flow naturally from the top */
-        }
-        
-        .event-card-back h4 { 
-            font-size: 1.15rem; 
-            margin-bottom: 0.5rem; 
-            line-height: 1.2; 
-            flex-shrink: 0; 
-        }
-
-        .date-time-box { 
-            margin-bottom: 0.8rem; 
-            padding: 10px; 
-            flex-shrink: 0; 
-        }
-
-        .date-time-box p { 
-            font-size: 0.75rem; 
-            margin: 4px 0; 
-            justify-content: center;
-        }
-
-        .event-card-back .hero-btn { 
-            padding: 12px; 
-            font-size: 0.8rem; 
-            margin-top: auto; /* Glues the button to the absolute bottom of the card */
-            flex-shrink: 0; /* Prevents the button from getting squished */
-            width: 100%;
-        }
+            
+            .event-card-wrapper { width: 280px; height: 450px; scroll-snap-align: center; scroll-snap-stop: always; flex-shrink: 0; }
+            .event-card-back { padding: 1.5rem 1rem; justify-content: flex-start; }
+            .event-card-back h4 { font-size: 1.15rem; margin-bottom: 0.5rem; line-height: 1.2; flex-shrink: 0; }
+            .date-time-box { margin-bottom: 0.8rem; padding: 10px; flex-shrink: 0; }
+            .date-time-box p { font-size: 0.75rem; margin: 4px 0; justify-content: center; }
+            .event-card-back .hero-btn { padding: 12px; font-size: 0.8rem; }
 
             .hero-sub { font-size: 0.85rem; margin-left: 0; }
             .hero-actions { margin-top: 1.5rem; margin-left: 0; justify-content: center; max-width: 100%; flex-direction: row; flex-wrap: wrap; gap: 10px; }
@@ -346,8 +307,9 @@
             .collage-img.img2 { bottom: 0; right: auto; left: 0; }
             .footer-bottom-grid { grid-template-columns: 1fr; text-align: center; margin-bottom: 0rem; gap: 0.5rem; }
             .footer-socials-new { justify-content: center; }
-            #speakers { height: 600vh !important; }
-            .spacer { height: 360vh !important; }
+            
+            #speakers { height: 250vh !important; }
+            .spacer { height: 150vh !important; }
         }
     </style>
 </head>
@@ -391,15 +353,10 @@
     </div>
 
     <div id="events-carousel-container" class="carousel-container">
-        
         <div class="carousel-track" id="carousel-track">
             
             <!-- Event 1: Hackathon -->
             <div class="event-card-wrapper" style="--theme-color: #00f0ff;">
-                <div class="card-side-desc">
-                    <h3>36 Hours Hackathon</h3>
-                    <p>The Ultimate Innovation Challenge spanning day and night. Compete with top minds to develop groundbreaking software solutions under intense time pressure.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="36 hours hackathon"></div>
@@ -411,17 +368,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 6, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 11:00 AM - (36 Hrs)</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('36 hours hackathon', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('36 hours hackathon', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 2: ENTRE-MUN -->
             <div class="event-card-wrapper" style="--theme-color: #ff3300;">
-                <div class="card-side-desc">
-                    <h3>ENTRE-MUN</h3>
-                    <p>An entrepreneurial Model United Nations simulation debating global startup ecosystems, corporate regulations, and international business policies.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="ENTRE-mun"></div>
@@ -433,17 +389,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 7, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 10:30 AM - 05:00 PM</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('ENTRE-mun', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('ENTRE-mun', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 3: IPL Auction -->
             <div class="event-card-wrapper" style="--theme-color: #ffaa00;">
-                <div class="card-side-desc">
-                    <h3>IPL Auction</h3>
-                    <p>A high-energy mock auction event where teams bid for resources under strict budget constraints. Test your strategic planning and quick decision-making.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="IPL Auction simulation"></div>
@@ -455,17 +410,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 8, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 9:00 AM - 10:15 AM</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('IPL Auction simulation', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('IPL Auction simulation', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 4: Stock Market -->
             <div class="event-card-wrapper" style="--theme-color: #00ff66;">
-                <div class="card-side-desc">
-                    <h3>Virtual Stock Market</h3>
-                    <p>A real-time finance competition where participants trade with virtual capital. Analyze live market trends to maximize your portfolio growth.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="Virtual stock market simulation"></div>
@@ -477,17 +431,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 8, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 10:15 AM - 11:30 AM</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('Virtual stock market simulation', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('Virtual stock market simulation', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 5: Big Bang Theory -->
             <div class="event-card-wrapper" style="--theme-color: #ff003c;">
-                <div class="card-side-desc">
-                    <h3>The Big Bang Theory</h3>
-                    <p>A rapid innovation challenge designed to develop creative branding, marketing campaigns, and out-of-the-box market disruption ideas.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="The Big Bang theory"></div>
@@ -499,17 +452,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 7, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 11:00 PM - 12:15 PM</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('The Big Bang theory', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('The Big Bang theory', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 6: Term Sheet -->
             <div class="event-card-wrapper" style="--theme-color: #9b59b6;">
-                <div class="card-side-desc">
-                    <h3>Term Sheet Workshop</h3>
-                    <p>An educational workshop focused entirely on startup funding, reading investment agreements, and understanding legal frameworks.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="Workshop-mastering the term sheet"></div>
@@ -521,17 +473,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 7, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 01:00 PM - 03:00 PM</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('Workshop-mastering the term sheet', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('Workshop-mastering the term sheet', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 7: Pitch Please -->
             <div class="event-card-wrapper" style="--theme-color: #ff00ff;">
-                <div class="card-side-desc">
-                    <h3>Pitch Please</h3>
-                    <p>A creative and hilarious pitching challenge. Sell completely absurd or fictional products to our panel to test your raw persuasion abilities.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="Pitch please competition"></div>
@@ -543,17 +494,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 8, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 11:30 AM - 12:30 PM</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('Pitch please competition', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('Pitch please competition', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 8: Golden Pitch -->
             <div class="event-card-wrapper" style="--theme-color: #ffd700;">
-                <div class="card-side-desc">
-                    <h3>The Golden Pitch</h3>
-                    <p>The ultimate mainstage event. A dynamic startup pitching platform to present your business ideas and prototypes to our elite panel of judges.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="The golden pitch"></div>
@@ -565,17 +515,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 8, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 02:00 PM Onwards</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('The golden pitch', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('The golden pitch', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 9: Network Arena -->
             <div class="event-card-wrapper" style="--theme-color: #3498db;">
-                <div class="card-side-desc">
-                    <h3>Network Arena</h3>
-                    <p>A dedicated networking zone specifically crafted for connecting startups, students, investors, sponsors, and content creators.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="network arena"></div>
@@ -587,17 +536,16 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 8, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> All Day Access</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('network arena', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('network arena', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Event 10: Speaker Session -->
             <div class="event-card-wrapper" style="--theme-color: #e67e22;">
-                <div class="card-side-desc">
-                    <h3>Speaker Session</h3>
-                    <p>Invaluable insights and stories directly from established entrepreneurs, startup founders, investors, and industry professionals.</p>
-                </div>
                 <div class="event-card-inner">
                     <div class="event-card-front">
                         <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="Speaker session"></div>
@@ -609,13 +557,20 @@
                             <p><i class="fa-regular fa-calendar"></i> Oct 8, 2026</p>
                             <p><i class="fa-regular fa-clock"></i> 01:00 PM - 02:00 PM</p>
                         </div>
-                        <button class="hero-btn btn-login" onclick="registerEvent('Speaker session', this)">Register Now</button>
+                        <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                            <a href="#" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <button class="hero-btn btn-login" onclick="registerEvent('Speaker session', this)">Register Now</button>
+                        </div>
                     </div>
                 </div>
             </div>
             
         </div>
-        <div id="close-carousel" style="position: absolute; top: 20px; right: 40px; color: #fff; font-size: 2rem; cursor: pointer; z-index: 1000;"><i class="fa-solid fa-xmark"></i></div>
+        
+        <!-- Beautiful bottom centered close button -->
+        <div id="close-carousel-bottom" class="carousel-close-btn" title="Close Events">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
     </div>
 
     <div class="hud-module" id="map-hud"><div class="hud-icon" title="Grid Map"><i class="fa-solid fa-map-location-dot"></i></div></div>
@@ -684,7 +639,7 @@
 
         <section id="brochure" style="pointer-events: none;"></section>
         <section id="events" style="pointer-events: none;"></section>
-        <section id="speakers" style="pointer-events: none; height: 120vh;"></section>
+        <section id="speakers" style="pointer-events: none;"></section>
         <div class="spacer"></div>
     </main>
 
@@ -847,7 +802,7 @@
             return new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), material);
         }
 
-        // --- Restored Background Buildings ---
+        // --- Restored Background Buildings (Shifted Z-Coordinates for Shorter Exploration) ---
         function createGiantFactoryComplex(x, z, scale = 1, rotation = 0) {
             const group = new THREE.Group();
             
@@ -887,8 +842,8 @@
             scene.add(group);
         }
         
-        createGiantFactoryComplex(-250, -500, 1, Math.PI / 6); 
-        createGiantFactoryComplex(600, -1500, 0.7, -Math.PI / 4);
+        createGiantFactoryComplex(-250, -300, 1, Math.PI / 6); 
+        createGiantFactoryComplex(600, -900, 0.7, -Math.PI / 4);
 
         function createTower(x, z) {
             const group = new THREE.Group();
@@ -899,14 +854,14 @@
             group.position.set(x, getTerrainHeight(x, z) - 10, z);
             scene.add(group);
         }
-        createTower(200, -250);
-        createTower(-300, -800);
-        createTower(400, -1200);
-        createTower(-250, -2200);
+        createTower(200, -150);
+        createTower(-300, -500);
+        createTower(400, -750);
+        createTower(-250, -1250);
 
         // --- Tanks Cluster ---
         const tankGroup = new THREE.Group();
-        const TANK_BASE_Z = -1400;
+        const TANK_BASE_Z = -800; // Shorter distance
 
         function createBarrelCluster(x, z) {
             const cluster = new THREE.Group();
@@ -1004,7 +959,7 @@
 
         // --- Futuristic Terminal / Crate Machine ---
         const machineGroup = new THREE.Group();
-        const EVENTS_BASE_Z = -2300; 
+        const EVENTS_BASE_Z = -1400; // Shorter distance
 
         function createTerminalMachine(x, z) {
             const whiteMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
@@ -1098,7 +1053,7 @@
         // --- MASSIVE 3D DIGITAL BILLBOARD ---
         // ==========================================
         const billboardGroup = new THREE.Group();
-        const SPEAKERS_BASE_Z = -3400; 
+        const SPEAKERS_BASE_Z = -2000; // Shorter distance
 
         function createBillboard(x, z) {
             const whiteWireMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
@@ -1237,7 +1192,7 @@
         const ctxOsc = canvasOsc.getContext('2d');
         const statusText = document.getElementById('tuner-status');
         const carouselContainer = document.getElementById('events-carousel-container');
-        const closeCarousel = document.getElementById('close-carousel');
+        const closeCarouselBottom = document.getElementById('close-carousel-bottom');
 
         let isTuning = false;
         let tuneAnimFrame;
@@ -1307,30 +1262,17 @@
 
         // --- NEW INFINITE CSS SCROLL CAROUSEL ---
         const eventTrack = document.getElementById('carousel-track');
-        
-        // 1. Automatically inject descriptions into the back of the cards
-        document.querySelectorAll('.event-card-wrapper').forEach(card => {
-            const descText = card.querySelector('.card-side-desc p').innerText;
-            const backCard = card.querySelector('.event-card-back');
-            
-            const mobileDesc = document.createElement('p');
-            mobileDesc.className = 'mobile-card-desc';
-            mobileDesc.innerText = descText;
-            
-            // Insert it right below the H4 title
-            backCard.querySelector('h4').insertAdjacentElement('afterend', mobileDesc);
-        });
 
-        // 2. Duplicate the cards dynamically to create a seamless infinite CSS loop
+        // Duplicate the cards dynamically to create a seamless infinite CSS loop
         const cards = Array.from(eventTrack.children);
         cards.forEach(card => {
             const clone = card.cloneNode(true);
             eventTrack.appendChild(clone);
         });
 
-        // 3. Tap to Lock & Pause Animation on Mobile
+        // Tap to Lock & Pause Animation on Mobile
         eventTrack.addEventListener('click', function(e) {
-            if (e.target.tagName.toLowerCase() === 'button' || e.target.closest('button')) return;
+            if (e.target.tagName.toLowerCase() === 'button' || e.target.tagName.toLowerCase() === 'a' || e.target.closest('button') || e.target.closest('a')) return;
 
             const clickedCard = e.target.closest('.event-card-wrapper');
             if (!clickedCard) return;
@@ -1344,14 +1286,14 @@
                 clickedCard.classList.add('mobile-active');
                 eventTrack.style.setProperty('animation-play-state', 'paused', 'important');
                 
-                // NEW: Force the card to snap to the center of the screen
+                // Force the card to snap to the center of the screen
                 clickedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             } else {
                 eventTrack.style.setProperty('animation-play-state', 'running', 'important');
             }
         });
 
-        // 4. Ensure scrolling resumes and styles are cleaned up
+        // Ensure scrolling resumes and styles are cleaned up
         const resetCarouselState = () => {
             eventTrack.style.setProperty('animation-play-state', 'running', 'important');
             
@@ -1359,58 +1301,23 @@
             document.querySelectorAll('.event-card-wrapper').forEach(c => {
                 c.classList.remove('mobile-active');
                 
-                // NEW: Force-reset styles to ensure no blur remains
+                // Force-reset styles to ensure no blur remains
                 c.style.filter = 'none'; 
                 c.style.opacity = '1';
                 c.style.transform = 'scale(1)';
             });
         };
 
-        closeCarousel.addEventListener('click', () => {
+        // Allow users to close the carousel ONLY by clicking on the beautiful close button
+        const closeCarouselAction = () => {
             carouselContainer.style.opacity = '0';
             setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
             resetCarouselState();
-        });
+        };
 
-        carouselContainer.addEventListener('click', (e) => {
-            if (e.target === carouselContainer) {
-                carouselContainer.style.opacity = '0';
-                setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
-                resetCarouselState();
-            }
-        });
-
-        // Update your existing close listeners to also reset the animation state
-        closeCarousel.addEventListener('click', () => {
-            carouselContainer.style.opacity = '0';
-            setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
-            resetCarouselState();
-        });
-
-        carouselContainer.addEventListener('click', (e) => {
-            if (e.target === carouselContainer) {
-                carouselContainer.style.opacity = '0';
-                setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
-                resetCarouselState();
-            }
-        });
-
-        closeCarousel.addEventListener('click', () => {
-            carouselContainer.style.opacity = '0';
-            setTimeout(() => {
-                carouselContainer.style.display = 'none';
-            }, 500);
-        });
-
-        carouselContainer.addEventListener('click', (e) => {
-            // Check if the exact element clicked was the background container itself
-            if (e.target === carouselContainer) {
-                carouselContainer.style.opacity = '0';
-                setTimeout(() => {
-                    carouselContainer.style.display = 'none';
-                }, 500);
-            }
-        });
+        if (closeCarouselBottom) {
+            closeCarouselBottom.addEventListener('click', closeCarouselAction);
+        }
 
         // --- Original Accurate Rover Assembly ---
         const rover = new THREE.Group();
@@ -1471,7 +1378,7 @@
         });
 
         let scrollPercent = 0;
-        const MAX_TRAVEL_Z = -3800;
+        const MAX_TRAVEL_Z = -2200; // Shorter distance
 
         function updateScrollPercent() {
             const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1488,7 +1395,8 @@
 
         function getPathPosition(progress) {
             const targetZ = progress * MAX_TRAVEL_Z;
-            const targetX = Math.cos((targetZ / -700) * Math.PI) * 60;
+            // Smoothed the S-Curve to prevent aggressive weaving
+            const targetX = Math.cos((targetZ / -500) * Math.PI) * 60;
             return { x: targetX, z: targetZ };
         }
 
@@ -1611,12 +1519,13 @@
                 }
             });
 
+            // Adjusted buffer zones for transitions so they don't overlap with About Us section
             const distToTanks = Math.abs(currentRoverPos.z - TANK_BASE_Z);
-            const isNearTanks = distToTanks < 400;
+            const isNearTanks = distToTanks < 250; 
             const clusterData = tankGroup.children[0].userData;
 
             const distToEvents = Math.abs(currentRoverPos.z - EVENTS_BASE_Z);
-            const isNearEvents = distToEvents < 350;
+            const isNearEvents = distToEvents < 250;
 
             if(machineGroup.userData.core) {
                 machineGroup.userData.core.rotation.y = time;
@@ -1672,9 +1581,8 @@
                 }
 
             } else if (isAtFooter) {
-                // FIXED: Camera robotic motion implemented via smooth Slerp
                 const dummy = new THREE.Object3D();
-                dummy.rotation.y = (Math.floor(time * 2) % 3 - 1) * 0.6; // Creates sharp robotic steps 
+                dummy.rotation.y = (Math.floor(time * 2) % 3 - 1) * 0.6;  
                 dummy.rotation.x = (Math.floor(time * 3) % 2) * 0.3;     
                 scannerGroup.quaternion.slerp(dummy.quaternion, 0.25);
                 if(laserMat.opacity > 0) laserMat.opacity -= 0.05;
@@ -1709,7 +1617,6 @@
                 }
 
             } else {
-                // FIXED: Properly slerping the Object3D to avoid Gimbal glitches / aiming into the ground.
                 const dummy = new THREE.Object3D();
                 dummy.rotation.y = Math.sin(time * 1.5) * 0.4;
                 dummy.rotation.x = Math.sin(time * 1.2) * 0.2;
@@ -1720,7 +1627,8 @@
                 document.body.style.cursor = 'default';
             }
 
-            if (distToTanks < 400) {
+            // Tighter bounds to prevent colliding with About Us section
+            if (distToTanks < 250) {
                 const markerPos = tankGroup.children[0].position.clone();
                 markerPos.y += 28; 
                 
@@ -1737,7 +1645,8 @@
                     const xT = (projTitle.x * 0.5 + 0.5) * window.innerWidth;
                     const yT = (projTitle.y * -0.5 + 0.5) * window.innerHeight;
                     
-                    if(!scanActive && scanProgress === 0 && distToTanks < 200) {
+                    // Reduced appearance radius from 200 to 120 so it doesnt show during "About"
+                    if(!scanActive && scanProgress === 0 && distToTanks < 120) {
                         const marker = document.getElementById('scan-marker');
                         marker.style.display = 'block';
                         marker.style.left = `${xM}px`;
@@ -1747,7 +1656,7 @@
                     }
                     
                     const title = document.getElementById('tank-title');
-                    if (distToTanks < 150) { 
+                    if (distToTanks < 120) { 
                         title.style.display = 'block';
                         title.style.left = `${xT}px`;
                         title.style.top = `${yT}px`;
@@ -1799,7 +1708,7 @@
                 document.getElementById('events-title').style.display = 'none';
             }
 
-            // Smooth Cinematic Camera Rig Transition
+            // Fixed Cinematic Camera Rig Transition
             const isMobile = window.innerWidth <= 768;
             let targetCamPos = new THREE.Vector3();
             let targetLookAt = new THREE.Vector3();
@@ -1808,15 +1717,18 @@
                 targetLookAt.set(currentRoverPos.x, currentRoverPos.y + 5, currentRoverPos.z);
                 targetCamPos.set(currentRoverPos.x + 12, currentRoverPos.y + 6, currentRoverPos.z + 18);
             } else if (isNearTanks) {
-                const midX = (tankGroup.children[0].position.x + currentRoverPos.x) / 2;
-                targetLookAt.set(midX, currentRoverPos.y + 10, currentRoverPos.z - 20);
-                targetCamPos.set(currentRoverPos.x, currentRoverPos.y + 35, currentRoverPos.z + 70);
+                // Fixed dramatic direct angle on the tanks
+                const tankPos = tankGroup.children[0].position;
+                targetLookAt.set(tankPos.x, tankPos.y + 15, tankPos.z);
+                targetCamPos.set(currentRoverPos.x + 10, currentRoverPos.y + 25, currentRoverPos.z + 50);
             } else if (isNearEvents) {
-                const midX = (machineGroup.position.x + currentRoverPos.x) / 2;
-                targetLookAt.set(midX, currentRoverPos.y + 20, currentRoverPos.z - 20);
-                targetCamPos.set(currentRoverPos.x - 35, currentRoverPos.y + 40, currentRoverPos.z + 85); 
-            } else if (currentRoverPos.z < EVENTS_BASE_Z - 300) {
-                let t = Math.min(1, Math.max(0, ((EVENTS_BASE_Z - 300) - currentRoverPos.z) / 800));
+                // Fixed dramatic direct angle on the terminal event box
+                const eventPos = machineGroup.position;
+                targetLookAt.set(eventPos.x, eventPos.y + 25, eventPos.z);
+                targetCamPos.set(currentRoverPos.x - 40, currentRoverPos.y + 30, currentRoverPos.z + 55);
+            } else if (currentRoverPos.z < EVENTS_BASE_Z - 150) {
+                // Transition towards the massive digital billboard
+                let t = Math.min(1, Math.max(0, ((EVENTS_BASE_Z - 150) - currentRoverPos.z) / 400));
 
                 const defLookX = currentRoverPos.x;
                 const defLookY = currentRoverPos.y;
@@ -1825,12 +1737,12 @@
                 const defCamY = currentRoverPos.y + 30;
                 const defCamZ = currentRoverPos.z + 75;
 
-                const billLookX = billboardGroup.position.x + 40;
-                const billLookY = billboardGroup.position.y + 80;
+                const billLookX = billboardGroup.position.x;
+                const billLookY = billboardGroup.position.y + 60;
                 const billLookZ = billboardGroup.position.z;
-                const billCamX = currentRoverPos.x + 80;
+                const billCamX = currentRoverPos.x + (isMobile ? 0 : 50);
                 const billCamY = currentRoverPos.y + 35;
-                const billCamZ = currentRoverPos.z + 280;
+                const billCamZ = currentRoverPos.z + 180;
 
                 targetLookAt.set(
                     (1-t)*defLookX + t*billLookX,
@@ -1844,7 +1756,6 @@
                     (1-t)*defCamZ + t*billCamZ
                 );
             } else {
-                // Lift the camera's target focus higher up on mobile so it doesn't stare at the ground
                 const lookYOffset = isMobile ? 2 : 0; 
                 
                 if (currentRoverPos.z > -800) {
@@ -1871,74 +1782,58 @@
             renderer.render(scene, camera);
         }
 
-        // --- 3D Navigation Coordinates ---
-// Map your menu href links to specific Z-coordinates in your 3D scene
-const sceneLocations = {
-    '#home': 0,
-    '#about': -500,         // Custom stop for About section
-    '#brochure': -1400,     // TANK_BASE_Z (Archives)
-    '#events': -2300,       // EVENTS_BASE_Z (Terminal)
-    '#speakers': -3400,     // SPEAKERS_BASE_Z (Billboard)
-    '#campus': -3800        // End of the track / Footer
-};
+        // --- 3D Navigation Coordinates Adjusted For Shorter Distance ---
+        const sceneLocations = {
+            '#home': 0,
+            '#about': -300,
+            '#brochure': -800,
+            '#events': -1400,
+            '#speakers': -2000,
+            '#campus': -2200
+        };
 
-// Intercept clicks on the navigation menu
-document.querySelectorAll('.main-nav a').forEach(link => {
-    link.addEventListener('click', function(e) {
-        const targetHash = this.getAttribute('href');
-        
-        // If the clicked link is in our coordinates map
-        if (sceneLocations[targetHash] !== undefined) {
-            e.preventDefault(); // Stop standard instant HTML jumping
-            
-            const targetZ = sceneLocations[targetHash];
-            
-            // 1. Figure out what percentage of the max travel distance this is
-            const progress = targetZ / MAX_TRAVEL_Z; 
-            
-            // 2. Convert that percentage into actual page scroll pixels
-            const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const targetScrollY = progress * docHeight;
-            
-            // 3. Smoothly scroll the window to that point (rover will drive there automatically!)
-            window.scrollTo({
-                top: targetScrollY,
-                behavior: 'smooth'
+        document.querySelectorAll('.main-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetHash = this.getAttribute('href');
+                
+                if (sceneLocations[targetHash] !== undefined) {
+                    e.preventDefault();
+                    const targetZ = sceneLocations[targetHash];
+                    const progress = targetZ / MAX_TRAVEL_Z; 
+                    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    const targetScrollY = progress * docHeight;
+                    
+                    window.scrollTo({
+                        top: targetScrollY,
+                        behavior: 'smooth'
+                    });
+                }
             });
-        }
-    });
-});
+        });
 
         animate();
     </script>
 
 <script>
-    // Global Authentication Check & URL Param Interceptor
     document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('esummit_token');
         const profileIcon = document.querySelector('.nav-profile-icon');
         const currentPath = window.location.pathname;
 
-        // --- QR DIRECT LINK LOGIC ---
         const urlParams = new URLSearchParams(window.location.search);
         const targetEvent = urlParams.get('register_event');
         
         if (targetEvent) {
             if (token) {
-                // If logged in, instantly register for the event
                 registerEvent(targetEvent);
             } else {
-                // If not logged in, save their intent and send to register page
                 sessionStorage.setItem('pendingEventRegistration', targetEvent);
                 window.location.href = "register.html";
             }
-            // Clear the param from the URL cleanly so it doesn't fire again if they refresh
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-        // -----------------------------
 
         if (token) {
-            // --- USER IS LOGGED IN ---
             const heroLoginBtn = document.querySelector('.hero-actions .btn-login');
             const heroRegBtn = document.querySelector('.hero-actions .btn-register');
 
@@ -1957,7 +1852,6 @@ document.querySelectorAll('.main-nav a').forEach(link => {
                 profileIcon.style.setProperty('background', 'var(--primary-gold)', 'important');
             }
         } else {
-            // --- USER IS NOT LOGGED IN ---
             if (profileIcon) {
                 profileIcon.href = 'register.html';
                 profileIcon.title = 'User Login';
@@ -2004,7 +1898,6 @@ document.querySelectorAll('.main-nav a').forEach(link => {
                     btnElement.style.backgroundColor = '#2ecc71';
                     btnElement.style.borderColor = '#2ecc71';
                 } else {
-                    // Alert used for automatic background registrations via QR links
                     alert(`ACCESS GRANTED: You have successfully enrolled in ${eventName}!`);
                 }
             } else {
