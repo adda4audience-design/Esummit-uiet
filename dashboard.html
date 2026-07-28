@@ -261,7 +261,7 @@
                     <!-- TEAMS MANAGEMENT SECTION -->
                     <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #9b59b6; margin-top: 20px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <label style="margin: 0;"><i class="fa-solid fa-users"></i> My Teams & Invites</label>
+                            <label style="margin: 0;"><i class="fa-solid fa-users"></i> My Teams & Invites<b>(Refresh the page if invite is not visible)</b></label>
                             <button class="btn-action" style="background: rgba(155, 89, 182, 0.1); color: #9b59b6; border-color: #9b59b6; margin: 0;" onclick="openCreateTeamModal()"><i class="fa-solid fa-plus"></i> Create Team</button>                        </div>
                         
                         <div id="teams-container" style="display: flex; flex-direction: column; gap: 15px;">
@@ -442,7 +442,7 @@
                             hostelDisplay.style.color = 'var(--text-main)';
                         }
                     } else {
-                        hostelDisplay.innerText = 'NOT REQUESTED';
+                        hostelDisplay.innerText = 'NOT REQUESTED (Can be changed in Edit)';
                         hostelDisplay.style.color = 'var(--text-muted)';
                     }
                     

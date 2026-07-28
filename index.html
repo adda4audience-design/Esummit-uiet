@@ -233,7 +233,15 @@
             transform: translateX(-50%) scale(1.15);
         }
 
-        /* --- Footer --- */
+        /* --- Footer Sponsors --- */
+        .footer-sponsors-section { text-align: center; margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .footer-sponsors-title { color: var(--text-main); font-size: 1.2rem; font-weight: 900; letter-spacing: 6px; margin-bottom: 2rem; text-transform: uppercase; }
+        .sponsor-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1000px; margin: 0 auto; }
+        .sponsor-box { width: 160px; height: 80px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #666; font-family: monospace; font-weight: 700; transition: all 0.3s ease; cursor: pointer; }
+        .sponsor-box:hover { background: rgba(255, 255, 255, 0.1); color: var(--text-main); border-color: var(--primary-gold); box-shadow: 0 0 20px rgba(255, 170, 0, 0.2); transform: translateY(-3px); }
+        .sponsor-box img { max-width: 80%; max-height: 80%; object-fit: contain; filter: grayscale(100%) opacity(0.7); transition: all 0.3s ease; }
+        .sponsor-box:hover img { filter: grayscale(0%) opacity(1); }
+        
         .site-footer { background: #000205; padding: 5rem 10% 2rem; position: relative; z-index: 10; pointer-events: auto; color: #a0a0a0; font-family: 'Montserrat', sans-serif; overflow: hidden; }
         .footer-divider { display: flex; align-items: center; text-align: center; color: #ff9900; font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; margin-bottom: 4rem; }
         .footer-divider::before, .footer-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 153, 0, 0.3); }
@@ -355,7 +363,6 @@
     <div id="events-carousel-container" class="carousel-container">
         <div class="carousel-track" id="carousel-track">
             
-            <!-- Event 1: Hackathon -->
             <div class="event-card-wrapper" style="--theme-color: #00f0ff;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -376,7 +383,6 @@
                 </div>
             </div>
 
-            <!-- Event 2: ENTRE-MUN -->
             <div class="event-card-wrapper" style="--theme-color: #ff3300;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -397,7 +403,6 @@
                 </div>
             </div>
 
-            <!-- Event 3: IPL Auction -->
             <div class="event-card-wrapper" style="--theme-color: #ffaa00;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -418,7 +423,6 @@
                 </div>
             </div>
 
-            <!-- Event 4: Stock Market -->
             <div class="event-card-wrapper" style="--theme-color: #00ff66;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -439,7 +443,6 @@
                 </div>
             </div>
 
-            <!-- Event 5: Big Bang Theory -->
             <div class="event-card-wrapper" style="--theme-color: #ff003c;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -460,7 +463,6 @@
                 </div>
             </div>
 
-            <!-- Event 6: Term Sheet -->
             <div class="event-card-wrapper" style="--theme-color: #9b59b6;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -481,7 +483,6 @@
                 </div>
             </div>
 
-            <!-- Event 7: Pitch Please -->
             <div class="event-card-wrapper" style="--theme-color: #ff00ff;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -502,7 +503,6 @@
                 </div>
             </div>
 
-            <!-- Event 8: Golden Pitch -->
             <div class="event-card-wrapper" style="--theme-color: #ffd700;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -523,7 +523,6 @@
                 </div>
             </div>
 
-            <!-- Event 9: Network Arena -->
             <div class="event-card-wrapper" style="--theme-color: #3498db;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -544,7 +543,6 @@
                 </div>
             </div>
 
-            <!-- Event 10: Speaker Session -->
             <div class="event-card-wrapper" style="--theme-color: #e67e22;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -567,7 +565,6 @@
             
         </div>
         
-        <!-- Beautiful bottom centered close button -->
         <div id="close-carousel-bottom" class="carousel-close-btn" title="Close Events">
             <i class="fa-solid fa-xmark"></i>
         </div>
@@ -643,47 +640,60 @@
         <div class="spacer"></div>
     </main>
 
-    <!-- Professional Recreated Footer -->
-<footer class="site-footer">
-    
-    <div class="footer-divider">
-        <span>MADE BY E-SUMMIT'S TECH TEAM</span>
-    </div>
-    
-    <div class="footer-bottom-grid">
-        <div class="footer-col brand-col">
-            <h3 class="brand-logo">E-SUMMIT 26'</h3>
-            <p>Igniting the shift in technology and entrepreneurship. Join the revolution.</p>
-            <div class="footer-socials-new">
-                <a href="https://www.instagram.com/esummit_uietkuk/" title="Instagram" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://www.linkedin.com/company/esummituietkuk/posts/?feedView=all" title="LinkedIn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in"></i></a>
-                <a href="https://x.com/ESUMMIT26" title="X / Twitter" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i></a>
+    <footer class="site-footer">
+        
+        <div class="footer-sponsors-section">
+            <h4 class="footer-sponsors-title">Our Proud Sponsors</h4>
+            <div class="sponsor-grid">
+                <div class="sponsor-box">BRAND 1</div>
+                <div class="sponsor-box">BRAND 2</div>
+                <div class="sponsor-box">BRAND 3</div>
+                <div class="sponsor-box">BRAND 4</div>
+                <div class="sponsor-box">BRAND 5</div>
+                <div class="sponsor-box">BRAND 6</div>
+                <div class="sponsor-box">BRAND 7</div>
+                <div class="sponsor-box">BRAND 8</div>
             </div>
         </div>
-        <div class="footer-col links-col">
-            <h4>Quick Links</h4>
-            <a href="#about">About Us</a>
-            <a href="#brochure">Brochure</a>
-            <a href="#speakers">Speakers</a>
-            <a href="campus.html">Campus</a>
+
+        <div class="footer-divider">
+            <span>MADE BY E-SUMMIT'S TECH TEAM</span>
         </div>
-        <div class="footer-col legal-col">
-            <h4>Legal</h4>
-            <a href="legal.html">Privacy Policy</a>
-            <a href="legal.html">Terms & Conditions</a>
-            <a href="legal.html">Refund Policy</a>
-            <a href="legal.html">Cookie Policy</a>
+        
+        <div class="footer-bottom-grid">
+            <div class="footer-col brand-col">
+                <h3 class="brand-logo">E-SUMMIT 26'</h3>
+                <p>Igniting the shift in technology and entrepreneurship. Join the revolution.</p>
+                <div class="footer-socials-new">
+                    <a href="https://www.instagram.com/esummit_uietkuk/" title="Instagram" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/esummituietkuk/posts/?feedView=all" title="LinkedIn" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://x.com/ESUMMIT26" title="X / Twitter" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-col links-col">
+                <h4>Quick Links</h4>
+                <a href="#about">About Us</a>
+                <a href="#brochure">Brochure</a>
+                <a href="#speakers">Speakers</a>
+                <a href="campus.html">Campus</a>
+            </div>
+            <div class="footer-col legal-col">
+                <h4>Legal</h4>
+                <a href="legal.html">Privacy Policy</a>
+                <a href="legal.html">Terms & Conditions</a>
+                <a href="legal.html">Refund Policy</a>
+                <a href="legal.html">Cookie Policy</a>
+            </div>
+            <div class="footer-col contact-col">
+                <h4>Contact Us</h4>
+                <p>>esummit.uietkuk026@gmail.com</p>
+                <p>>+91 9193626076</p>
+            </div>
         </div>
-        <div class="footer-col contact-col">
-            <h4>Contact Us</h4>
-            <p>>esummit.uietkuk026@gmail.com</p>
-            <p>>+91 9193626076</p>
+        <div class="footer-copyright">
+            &copy; 2026 UIET KUK E-Summit. All systems nominal
         </div>
-    </div>
-    <div class="footer-copyright">
-        &copy; 2026 UIET KUK E-Summit. All systems nominal
-    </div>
-</footer>
+    </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
@@ -700,7 +710,6 @@
         const mainNav = document.getElementById('main-nav');
         const navLinks = document.querySelectorAll('.main-nav a');
 
-        // Toggle menu open/close
         hamburger.addEventListener('click', function() {
             mainNav.classList.toggle('active');
             if(mainNav.classList.contains('active')) {
@@ -765,7 +774,6 @@
         const buildingMaterial = new THREE.LineBasicMaterial({ color: 0x445566, transparent: true, opacity: 0.5 });
         const accentMaterial = new THREE.LineBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.7 });
 
-        // --- Terrain ---
         function getTerrainHeight(x, z) {
             const dune1 = Math.sin(x * 0.005) * Math.cos(z * 0.005) * 45;
             const dune2 = Math.sin(z * 0.002) * 25;
@@ -802,7 +810,6 @@
             return new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), material);
         }
 
-        // --- Restored Background Buildings (Shifted Z-Coordinates for Shorter Exploration) ---
         function createGiantFactoryComplex(x, z, scale = 1, rotation = 0) {
             const group = new THREE.Group();
             
@@ -859,9 +866,8 @@
         createTower(400, -750);
         createTower(-250, -1250);
 
-        // --- Tanks Cluster ---
         const tankGroup = new THREE.Group();
-        const TANK_BASE_Z = -800; // Shorter distance
+        const TANK_BASE_Z = -800; 
 
         function createBarrelCluster(x, z) {
             const cluster = new THREE.Group();
@@ -957,9 +963,8 @@
         scene.add(laser);
 
 
-        // --- Futuristic Terminal / Crate Machine ---
         const machineGroup = new THREE.Group();
-        const EVENTS_BASE_Z = -1400; // Shorter distance
+        const EVENTS_BASE_Z = -1400; 
 
         function createTerminalMachine(x, z) {
             const whiteMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
@@ -1049,11 +1054,9 @@
 
         createTerminalMachine(160, EVENTS_BASE_Z);
 
-        // ==========================================
-        // --- MASSIVE 3D DIGITAL BILLBOARD ---
-        // ==========================================
+
         const billboardGroup = new THREE.Group();
-        const SPEAKERS_BASE_Z = -2000; // Shorter distance
+        const SPEAKERS_BASE_Z = -2000; 
 
         function createBillboard(x, z) {
             const whiteWireMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
@@ -1090,8 +1093,136 @@
         }
         
         createBillboard(-140, SPEAKERS_BASE_Z);
+        
+        const sponsorSigns = [];
 
-        // --- Billboard Digital Swapping Logic ---
+        function createSponsorSign(x, z, title, colorHex, logoUrls = []) {
+            const group = new THREE.Group();
+            const color = new THREE.Color(colorHex);
+
+            const solidMat = new THREE.MeshBasicMaterial({ color: 0x0a0a0a });
+            const edgeMat = new THREE.LineBasicMaterial({ color: color, transparent: true, opacity: 0.8 });
+
+            const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(20, 2, 15), solidMat);
+            const baseWire = createWireframe(new THREE.BoxGeometry(20, 2, 15), edgeMat);
+            baseMesh.add(baseWire); baseMesh.position.y = 1; group.add(baseMesh);
+
+            const poleMesh = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 40, 16), solidMat);
+            const poleWire = createWireframe(new THREE.CylinderGeometry(1.5, 1.5, 40, 16), edgeMat);
+            poleMesh.add(poleWire); poleMesh.position.y = 20; group.add(poleMesh);
+
+            const frameMesh = new THREE.Mesh(new THREE.BoxGeometry(44, 64, 4), solidMat);
+            const frameWire = createWireframe(new THREE.BoxGeometry(44, 64, 4), edgeMat);
+            frameMesh.add(frameWire); frameMesh.position.y = 72; group.add(frameMesh);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 400; canvas.height = 600; 
+            const ctx = canvas.getContext('2d');
+            const tex = new THREE.CanvasTexture(canvas);
+            const boardMat = new THREE.MeshBasicMaterial({ map: tex });
+
+            // Array to store loaded HTML Image objects
+            const loadedImages = [];
+            let currentIndex = 0;
+
+            // Dedicated function to draw the current state of the board
+            function renderBoard() {
+                // 1. Clear background
+                ctx.fillStyle = '#ffffff'; 
+                ctx.fillRect(0, 0, 400, 600);
+                
+                // 2. Draw Header
+                ctx.fillStyle = '#000000'; 
+                ctx.font = '900 35px "Montserrat", sans-serif';
+                ctx.textAlign = 'center'; 
+                ctx.fillText(title, 200, 80);
+
+                // 3. Draw Divider Line
+                ctx.strokeStyle = colorHex; 
+                ctx.lineWidth = 6;
+                ctx.beginPath(); ctx.moveTo(50, 110); ctx.lineTo(350, 110); ctx.stroke();
+
+                // 4. Draw Logo (or Placeholder)
+                if (loadedImages.length > 0) {
+                    const img = loadedImages[currentIndex];
+                    
+                    // Math to scale the image cleanly without stretching it
+                    const maxW = 400; 
+                    const maxH = 600;
+                    let drawW = img.width;
+                    let drawH = img.height;
+
+                    
+                    
+                    const drawX = 200 - (drawW / 2);
+                    const drawY = 360 - (drawH / 2); 
+                    
+                    ctx.drawImage(img, drawX, drawY, drawW, drawH);
+                } else {
+                    // Fallback to a single large placeholder if no images exist
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                    ctx.fillRect(50, 150, 300, 400);
+                    ctx.fillStyle = '#000000'; 
+                    ctx.font = 'bold 30px monospace';
+                    ctx.fillText(`BRAND ${currentIndex + 1}`, 200, 360);
+                }
+
+                // Tell Three.js to push the updated canvas to the 3D model
+                tex.needsUpdate = true;
+            }
+
+            // Load all provided URLs into Image objects
+            if (logoUrls && logoUrls.length > 0) {
+                logoUrls.forEach(url => {
+                    const img = new Image();
+                    img.crossOrigin = "Anonymous"; 
+                    img.src = url;
+                    img.onload = () => {
+                        loadedImages.push(img);
+                        if (loadedImages.length === 1) renderBoard(); // Render immediately on first load
+                    };
+                });
+            }
+
+            // Initial render call
+            renderBoard();
+
+            // Set up the infinite swapping loop (5 seconds)
+            const cycleCount = (logoUrls && logoUrls.length > 0) ? logoUrls.length : 3;
+            setInterval(() => {
+                if (loadedImages.length > 0) {
+                    // If images loaded, strictly cycle only through the successful ones
+                    currentIndex = (currentIndex + 1) % loadedImages.length;
+                } else {
+                    // If NO images loaded (broken links), cycle through the 3 placeholders
+                    currentIndex = (currentIndex + 1) % 3;
+                }
+                renderBoard();
+            }, 5000);
+
+            const boardFront = new THREE.Mesh(new THREE.PlaneGeometry(40, 60), boardMat);
+            boardFront.position.set(0, 72, 2.1); group.add(boardFront);
+
+            const boardBack = new THREE.Mesh(new THREE.PlaneGeometry(40, 60), boardMat);
+            boardBack.rotation.y = Math.PI; boardBack.position.set(0, 72, -2.1); group.add(boardBack);
+
+            group.position.set(x, getTerrainHeight(x, z), z);
+            group.rotation.y = x > 0 ? -Math.PI / 6 : Math.PI / 6;
+
+            scene.add(group);
+            sponsorSigns.push(group);
+        }
+
+        createSponsorSign(65, -1500, 'SPECIAL PARTNERS', '#00f0ff', [
+            'https://res.cloudinary.com/di10wvjn8/image/upload/v1785276281/Capture_xjpnqv.png', 
+            'https://res.cloudinary.com/di10wvjn8/image/upload/v1785276280/Aqua_dzyhpc.png'
+        ]);  
+        
+        createSponsorSign(-155, -950, 'SPECIAL PARTNERS', '#ffaa00', [
+            'https://res.cloudinary.com/di10wvjn8/image/upload/v1785276281/Capture_xjpnqv.png', 
+            'https://res.cloudinary.com/di10wvjn8/image/upload/v1785276280/Aqua_dzyhpc.png'
+        ]); 
+
         let speakerIndex = 1;
         
         const profileImg = new Image();
@@ -1260,17 +1391,14 @@
             tuneAnimFrame = requestAnimationFrame(drawOscilloscope);
         }
 
-        // --- NEW INFINITE CSS SCROLL CAROUSEL ---
         const eventTrack = document.getElementById('carousel-track');
 
-        // Duplicate the cards dynamically to create a seamless infinite CSS loop
         const cards = Array.from(eventTrack.children);
         cards.forEach(card => {
             const clone = card.cloneNode(true);
             eventTrack.appendChild(clone);
         });
 
-        // Tap to Lock & Pause Animation on Mobile
         eventTrack.addEventListener('click', function(e) {
             if (e.target.tagName.toLowerCase() === 'button' || e.target.tagName.toLowerCase() === 'a' || e.target.closest('button') || e.target.closest('a')) return;
 
@@ -1279,36 +1407,30 @@
 
             const isCurrentlyActive = clickedCard.classList.contains('mobile-active');
             
-            // Reset all cards
             document.querySelectorAll('.event-card-wrapper').forEach(c => c.classList.remove('mobile-active'));
             
             if (!isCurrentlyActive) {
                 clickedCard.classList.add('mobile-active');
                 eventTrack.style.setProperty('animation-play-state', 'paused', 'important');
                 
-                // Force the card to snap to the center of the screen
                 clickedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             } else {
                 eventTrack.style.setProperty('animation-play-state', 'running', 'important');
             }
         });
 
-        // Ensure scrolling resumes and styles are cleaned up
         const resetCarouselState = () => {
             eventTrack.style.setProperty('animation-play-state', 'running', 'important');
             
-            // Remove the active class
             document.querySelectorAll('.event-card-wrapper').forEach(c => {
                 c.classList.remove('mobile-active');
                 
-                // Force-reset styles to ensure no blur remains
                 c.style.filter = 'none'; 
                 c.style.opacity = '1';
                 c.style.transform = 'scale(1)';
             });
         };
 
-        // Allow users to close the carousel ONLY by clicking on the beautiful close button
         const closeCarouselAction = () => {
             carouselContainer.style.opacity = '0';
             setTimeout(() => { carouselContainer.style.display = 'none'; }, 500);
@@ -1319,7 +1441,6 @@
             closeCarouselBottom.addEventListener('click', closeCarouselAction);
         }
 
-        // --- Original Accurate Rover Assembly ---
         const rover = new THREE.Group();
         rover.rotation.order = 'YXZ';
 
@@ -1356,7 +1477,6 @@
         rover.add(scannerGroup);
         scene.add(rover);
 
-        // --- Dust Particles Restored ---
         const particleCount = 50;
         const particles = [];
         const particleMaterial = new THREE.MeshBasicMaterial({ color: 0x667788, wireframe: true, transparent: true });
@@ -1378,7 +1498,7 @@
         });
 
         let scrollPercent = 0;
-        const MAX_TRAVEL_Z = -2200; // Shorter distance
+        const MAX_TRAVEL_Z = -2200; 
 
         function updateScrollPercent() {
             const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1395,7 +1515,6 @@
 
         function getPathPosition(progress) {
             const targetZ = progress * MAX_TRAVEL_Z;
-            // Smoothed the S-Curve to prevent aggressive weaving
             const targetX = Math.cos((targetZ / -500) * Math.PI) * 60;
             return { x: targetX, z: targetZ };
         }
@@ -1519,13 +1638,12 @@
                 }
             });
 
-            // Adjusted buffer zones for transitions so they don't overlap with About Us section
             const distToTanks = Math.abs(currentRoverPos.z - TANK_BASE_Z);
-            const isNearTanks = distToTanks < 250; 
+            const isNearTanks = distToTanks < 150; 
             const clusterData = tankGroup.children[0].userData;
 
             const distToEvents = Math.abs(currentRoverPos.z - EVENTS_BASE_Z);
-            const isNearEvents = distToEvents < 250;
+            const isNearEvents = distToEvents < 150;
 
             if(machineGroup.userData.core) {
                 machineGroup.userData.core.rotation.y = time;
@@ -1627,8 +1745,10 @@
                 document.body.style.cursor = 'default';
             }
 
-            // Tighter bounds to prevent colliding with About Us section
-            if (distToTanks < 250) {
+            const aboutRect = document.getElementById('about').getBoundingClientRect();
+            const isAboutBlocking = aboutRect.bottom > 90;
+
+            if (distToTanks < 250 && !isAboutBlocking) {
                 const markerPos = tankGroup.children[0].position.clone();
                 markerPos.y += 28; 
                 
@@ -1645,7 +1765,6 @@
                     const xT = (projTitle.x * 0.5 + 0.5) * window.innerWidth;
                     const yT = (projTitle.y * -0.5 + 0.5) * window.innerHeight;
                     
-                    // Reduced appearance radius from 200 to 120 so it doesnt show during "About"
                     if(!scanActive && scanProgress === 0 && distToTanks < 120) {
                         const marker = document.getElementById('scan-marker');
                         marker.style.display = 'block';
@@ -1708,27 +1827,25 @@
                 document.getElementById('events-title').style.display = 'none';
             }
 
-            // Fixed Cinematic Camera Rig Transition
             const isMobile = window.innerWidth <= 768;
             let targetCamPos = new THREE.Vector3();
             let targetLookAt = new THREE.Vector3();
+
+            const isNearSpeakers = currentRoverPos.z < (SPEAKERS_BASE_Z + 300) && currentRoverPos.z > (SPEAKERS_BASE_Z - 50);
 
             if (isAtFooter) {
                 targetLookAt.set(currentRoverPos.x, currentRoverPos.y + 5, currentRoverPos.z);
                 targetCamPos.set(currentRoverPos.x + 12, currentRoverPos.y + 6, currentRoverPos.z + 18);
             } else if (isNearTanks) {
-                // Fixed dramatic direct angle on the tanks
                 const tankPos = tankGroup.children[0].position;
                 targetLookAt.set(tankPos.x, tankPos.y + 15, tankPos.z);
                 targetCamPos.set(currentRoverPos.x + 10, currentRoverPos.y + 25, currentRoverPos.z + 50);
             } else if (isNearEvents) {
-                // Fixed dramatic direct angle on the terminal event box
                 const eventPos = machineGroup.position;
                 targetLookAt.set(eventPos.x, eventPos.y + 25, eventPos.z);
                 targetCamPos.set(currentRoverPos.x - 40, currentRoverPos.y + 30, currentRoverPos.z + 55);
-            } else if (currentRoverPos.z < EVENTS_BASE_Z - 150) {
-                // Transition towards the massive digital billboard
-                let t = Math.min(1, Math.max(0, ((EVENTS_BASE_Z - 150) - currentRoverPos.z) / 400));
+            } else if (isNearSpeakers) {
+                let t = Math.min(1, Math.max(0, ((SPEAKERS_BASE_Z + 300) - currentRoverPos.z) / 300));
 
                 const defLookX = currentRoverPos.x;
                 const defLookY = currentRoverPos.y;
@@ -1757,7 +1874,6 @@
                 );
             } else {
                 const lookYOffset = isMobile ? 2 : 0; 
-                
                 if (currentRoverPos.z > -800) {
                     const uiSide = currentRoverPos.x > 0 ? 1 : -1;
                     targetLookAt.set(uiSide * 15, currentRoverPos.y + lookYOffset, currentRoverPos.z - 20);
@@ -1782,7 +1898,6 @@
             renderer.render(scene, camera);
         }
 
-        // --- 3D Navigation Coordinates Adjusted For Shorter Distance ---
         const sceneLocations = {
             '#home': 0,
             '#about': -300,
@@ -1861,6 +1976,35 @@
             }
         }
     });
+
+    // ==========================================
+        // --- DEVELOPER SIGNATURE (CONSOLE) ---
+        // ==========================================
+        setTimeout(() => {
+            const titleStyle = "font-size: 26px; font-weight: 900; color: #ff3300; font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 0px #000;";
+            const subtitleStyle = "font-size: 16px; font-weight: bold; color: #00f0ff; font-family: monospace; background: #000; padding: 5px 10px; border-radius: 4px; border: 1px solid #00f0ff;";
+            const systemStyle = "font-size: 12px; color: #ffaa00; font-family: monospace; font-style: italic;";
+
+            console.log("%c🚀 THE SHIFT IS ACTIVE", titleStyle);
+            console.log("%cArchitected and Engineered by", subtitleStyle);
+            console.log("%cAll systems nominal. Mainframe telemetry online. 📡", systemStyle);
+            
+            // Optional ASCII Art
+            console.log(
+`%c
+ __   __  ___  __   __  _______  _______  __   __
+|  | |  ||   ||  |_|  ||       ||       ||  | |  |
+|  |_|  ||   ||       ||    ___||  _____||  |_|  |
+|       ||   ||       ||   |___ | |_____ |       |
+|   _   ||   || ||_|| ||    ___||_____  ||   _   |
+|  | |  ||   || |   | ||   |___  _____| ||  | |  |
+|__| |__||___||_|   |_||_______||_______||__| |__|
+
+`, "color: #ff3300; font-weight: bold; font-family: monospace;"
+            );
+        }, 1000); 
+
+
 </script>
 
 <script>
