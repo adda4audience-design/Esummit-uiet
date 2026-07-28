@@ -93,6 +93,12 @@
         input:hover, select:hover { border-color: var(--primary-gold); }
         select option { background: var(--bg-black); color: white; }
 
+        #toggle-password {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: var(--text-muted); font-size: 1rem; transition: color 0.3s;
+        }
+        #toggle-password:hover { color: var(--primary-gold); }
+
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 10px; cursor: pointer; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
         .checkbox-group input { cursor: pointer; width: 18px; height: 18px; accent-color: var(--primary-orange);}
 
@@ -174,26 +180,38 @@
         <form id="auth-form">
             <div class="form-group reg-only" style="animation-delay: 0.05s;">
                 <label>Full Name</label>
-                <input type="text" id="inp-name" placeholder="Enter your name">
+                <input type="text" id="inp-name" placeholder="Enter your name" required>
             </div>
             <div class="form-group reg-only" style="animation-delay: 0.1s;">
                 <label>Phone Number</label>
-                <input type="tel" id="inp-phone" placeholder="10 Digit Number" pattern="[0-9]{10}">
+                <input type="tel" id="inp-phone" placeholder="10 Digit Number" pattern="[0-9]{10}" required>
+            </div>
+            <div class="form-group reg-only" style="animation-delay: 0.12s;">
+                <label>Gender</label>
+                <select id="inp-gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
             <div class="form-group" style="animation-delay: 0.15s;">
                 <label>Email ID</label>
                 <input type="email" id="inp-email" placeholder="agent@domain.com" required>
             </div>
-            <div class="form-group" style="animation-delay: 0.2s;">
+            <div class="form-group" style="animation-delay: 0.2s; position: relative;">
                 <label>Password</label>
-                <input type="password" id="inp-password" placeholder="••••••••" required>
+                <div style="position: relative;">
+                    <input type="password" id="inp-password" placeholder="••••••••" required style="padding-right: 40px;">
+                    <i class="fa-solid fa-eye" id="toggle-password" title="Toggle Password Visibility"></i>
+                </div>
             </div>
 
             <div class="reg-only">
                 <!-- Role Selection -->
                 <div class="form-group" style="animation-delay: 0.25s;">
                     <label>Primary Role</label>
-                    <select id="main-role" onchange="updateFormLogic()">
+                    <select id="main-role" onchange="updateFormLogic()" required>
                         <option value="student">Student</option>
                         <option value="non-student">Non-Student</option>
                     </select>
@@ -203,30 +221,22 @@
                 <div id="non-student-details" class="dynamic-panel" style="animation-delay: 0s;">
                     <div class="form-group" style="animation-delay: 0s;">
                         <label>Specify Role</label>
-                        <input type="text" id="inp-role" placeholder="e.g. Investor, Alumni, Staff">
+                        <input type="text" id="inp-role" placeholder="e.g. Investor, Alumni, Staff" required>
                     </div>
                     <div class="form-group" style="animation-delay: 0s;">
-                        <label>Company Name (Optional)</label>
-                        <input type="text" id="inp-company" placeholder="Organization / Company">
+                        <label>Company Name</label>
+                        <input type="text" id="inp-company" placeholder="Organization / Company" required>
                     </div>
                     <div class="input-row">
-                        <div class="form-group" style="animation-delay: 0s;"><label>City</label><input type="text" id="ns-city" placeholder="City"></div>
-                        <div class="form-group" style="animation-delay: 0s;"><label>State</label><input type="text" id="ns-state" placeholder="State"></div>
-                    </div>
-                    <div class="form-group" style="margin-top: 15px; animation-delay: 0s;">
-                        <label>Gender</label>
-                        <select id="ns-gender">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
+                        <div class="form-group" style="animation-delay: 0s;"><label>City</label><input type="text" id="ns-city" placeholder="City" required></div>
+                        <div class="form-group" style="animation-delay: 0s;"><label>State</label><input type="text" id="ns-state" placeholder="State" required></div>
                     </div>
                 </div>
 
                 <!-- Student Type Selection -->
                 <div class="form-group" id="student-type-box" style="animation-delay: 0.3s;">
                     <label>University / College Type</label>
-                    <select id="student-type" onchange="updateFormLogic()">
+                    <select id="student-type" onchange="updateFormLogic()" required>
                         <option value="kuk">KUK University</option>
                         <option value="other">Other College</option>
                     </select>
@@ -235,7 +245,7 @@
                 <!-- KUK University Dropdown -->
                 <div class="form-group" id="kuk-college-box" style="animation-delay: 0s;">
                     <label>KUK Department</label>
-                    <select id="kuk-college" onchange="updateFormLogic()">
+                    <select id="kuk-college" onchange="updateFormLogic()" required>
                         <option value="uiet">UIET</option>
                         <option value="iihs">IIHS</option>
                         <option value="law">Law</option>
@@ -249,13 +259,14 @@
                     <!-- Specify Other Department -->
                     <div class="form-group" id="kuk-other-dept-box" style="animation-delay: 0s; display: none;">
                         <label>Specify Department</label>
-                        <input type="text" id="inp-kuk-other-dept" placeholder="Enter department name">
+                        <input type="text" id="inp-kuk-other-dept" placeholder="Enter department name" required>
                     </div>
 
                     <!-- UIET Branch Dropdown -->
                     <div class="form-group" id="uiet-branch-box" style="animation-delay: 0s;">
                         <label>Branch</label>
-                        <select id="uiet-branch">
+                        <select id="uiet-branch" required>
+                            <option value="" disabled selected>Select Branch</option>
                             <option value="Cse">Cse</option>
                             <option value="Aiml">Aiml</option>
                             <option value="ECO">ECO</option>
@@ -269,13 +280,14 @@
                     <!-- Branch Typebox for IIHS, Law, Others -->
                     <div class="form-group" id="kuk-other-branch-box" style="animation-delay: 0s; display: none;">
                         <label>Branch / Course</label>
-                        <input type="text" id="kuk-other-branch" placeholder="Enter your branch">
+                        <input type="text" id="kuk-other-branch" placeholder="Enter your branch" required>
                     </div>
 
                     <div class="input-row">
                         <div class="form-group" style="animation-delay: 0s;">
                             <label>Year</label>
-                            <select id="kuk-year">
+                            <select id="kuk-year" required>
+                                <option value="" disabled selected>Select Year</option>
                                 <option value="1st">1st Year</option>
                                 <option value="2nd">2nd Year</option>
                                 <option value="3rd">3rd Year</option>
@@ -283,7 +295,7 @@
                                 <option value="5th">5th Year</option>
                             </select>
                         </div>
-                        <div class="form-group" style="animation-delay: 0s;"><label>Roll Number</label><input type="text" id="kuk-roll" placeholder="University Roll No"></div>
+                        <div class="form-group" style="animation-delay: 0s;"><label>Roll Number</label><input type="text" id="kuk-roll" placeholder="University Roll No" required></div>
                     </div>
                 </div>
 
@@ -291,23 +303,15 @@
                 <div id="external-college-details" class="dynamic-panel">
                     <div class="form-group" style="animation-delay: 0s;">
                         <label>College/University Name</label>
-                        <input type="text" id="ext-college" placeholder="Enter institution name">
+                        <input type="text" id="ext-college" placeholder="Enter institution name" required>
                     </div>
                     <div class="form-group" style="animation-delay: 0s;">
                         <label>Branch / Course</label>
-                        <input type="text" id="ext-branch" placeholder="Enter your branch">
+                        <input type="text" id="ext-branch" placeholder="Enter your branch" required>
                     </div>
                     <div class="input-row">
-                        <div class="form-group" style="animation-delay: 0s;"><label>City</label><input type="text" id="ext-city" placeholder="City"></div>
-                        <div class="form-group" style="animation-delay: 0s;"><label>State</label><input type="text" id="ext-state" placeholder="State"></div>
-                    </div>
-                    <div class="form-group" style="margin-top: 15px; animation-delay: 0s;">
-                        <label>Gender</label>
-                        <select id="ext-gender">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
+                        <div class="form-group" style="animation-delay: 0s;"><label>City</label><input type="text" id="ext-city" placeholder="City" required></div>
+                        <div class="form-group" style="animation-delay: 0s;"><label>State</label><input type="text" id="ext-state" placeholder="State" required></div>
                     </div>
                 </div>
 
@@ -330,6 +334,15 @@
         const API_URL = "https://esummit-backend-gonf.onrender.com/api";
         let isLogin = false;
 
+        // Toggle Password Visibility
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordInput = document.getElementById('inp-password');
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
         function showMessage(msg, isSuccess) {
             const msgBox = document.getElementById('api-message');
             const icon = isSuccess ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-triangle-exclamation"></i>';
@@ -338,6 +351,16 @@
             msgBox.style.display = 'flex';
             document.querySelector('.auth-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+
+        // Helper to show/hide panels and disable inputs so hidden required fields don't block submission
+        const togglePanel = (panel, show) => {
+            if (panel) {
+                panel.style.display = show ? 'block' : 'none';
+                panel.querySelectorAll('input, select').forEach(el => {
+                    el.disabled = !show;
+                });
+            }
+        };
 
         function updateFormLogic() {
             if(isLogin) return;
@@ -358,42 +381,42 @@
             const extCollegeBox = document.getElementById('external-college-details');
             const hostelBox = document.getElementById('hostel-options');
 
-            // Reset visibility
-            studentTypeBox.style.display = 'none';
-            nonStudentBox.style.display = 'none';
-            kukCollegeBox.style.display = 'none';
-            kukDetailsBox.style.display = 'none';
-            extCollegeBox.style.display = 'none';
-            hostelBox.style.display = 'none';
+            // Reset visibility & disable all dynamic fields temporarily
+            togglePanel(studentTypeBox, false);
+            togglePanel(nonStudentBox, false);
+            togglePanel(kukCollegeBox, false);
+            togglePanel(kukDetailsBox, false);
+            togglePanel(extCollegeBox, false);
+            togglePanel(hostelBox, false);
 
             if (mainRole === 'non-student') {
-                nonStudentBox.style.display = 'block';
-                hostelBox.style.display = 'block';
+                togglePanel(nonStudentBox, true);
+                togglePanel(hostelBox, true);
             } else {
-                studentTypeBox.style.display = 'block';
+                togglePanel(studentTypeBox, true);
                 
                 if (studentType === 'kuk') {
-                    kukCollegeBox.style.display = 'block';
-                    kukDetailsBox.style.display = 'block';
-                    hostelBox.style.display = 'block';
+                    togglePanel(kukCollegeBox, true);
+                    togglePanel(kukDetailsBox, true);
+                    togglePanel(hostelBox, true);
 
                     if (kukCollege === 'uiet') {
-                        kukOtherDeptBox.style.display = 'none';
-                        uietBranchBox.style.display = 'block';
-                        kukOtherBranchBox.style.display = 'none';
-                        hostelBox.style.display = 'none'; // Optional: hide hostel for UIET specifically
+                        togglePanel(kukOtherDeptBox, false);
+                        togglePanel(uietBranchBox, true);
+                        togglePanel(kukOtherBranchBox, false);
+                        togglePanel(hostelBox, false); // Optional: hide hostel for UIET specifically
                     } else if (kukCollege === 'iihs' || kukCollege === 'law') {
-                        kukOtherDeptBox.style.display = 'none';
-                        uietBranchBox.style.display = 'none';
-                        kukOtherBranchBox.style.display = 'block';
+                        togglePanel(kukOtherDeptBox, false);
+                        togglePanel(uietBranchBox, false);
+                        togglePanel(kukOtherBranchBox, true);
                     } else if (kukCollege === 'other') {
-                        kukOtherDeptBox.style.display = 'block';
-                        uietBranchBox.style.display = 'none';
-                        kukOtherBranchBox.style.display = 'block';
+                        togglePanel(kukOtherDeptBox, true);
+                        togglePanel(uietBranchBox, false);
+                        togglePanel(kukOtherBranchBox, true);
                     }
                 } else {
-                    extCollegeBox.style.display = 'block';
-                    hostelBox.style.display = 'block';
+                    togglePanel(extCollegeBox, true);
+                    togglePanel(hostelBox, true);
                 }
             }
         }
@@ -408,20 +431,20 @@
 
             if(isLogin) {
                 title.innerHTML = "<span>Login</span>";
-                regOnlyElements.forEach(el => el.style.display = 'none');
+                regOnlyElements.forEach(el => {
+                    el.style.display = 'none';
+                    el.querySelectorAll('input, select').forEach(input => input.disabled = true);
+                });
                 btn.innerText = "Login";
                 toggleHint.innerHTML = 'Need clearance? <a onclick="toggleForm()">Register here</a>';
-
-                document.getElementById('inp-name').removeAttribute('required');
-                document.getElementById('inp-phone').removeAttribute('required');
             } else {
                 title.innerHTML = "<span>Profile</span>";
-                regOnlyElements.forEach(el => el.style.display = 'block');
+                regOnlyElements.forEach(el => {
+                    el.style.display = 'block';
+                    el.querySelectorAll('input, select').forEach(input => input.disabled = false);
+                });
                 btn.innerText = "Register";
                 toggleHint.innerHTML = 'Already have access? <a onclick="toggleForm()">Login here</a>';
-
-                document.getElementById('inp-name').setAttribute('required', 'true');
-                document.getElementById('inp-phone').setAttribute('required', 'true');
                 updateFormLogic();
             }
         }
@@ -479,7 +502,7 @@
                     let institutionName = 'N/A';
                     let finalCity = 'Kurukshetra';
                     let finalState = 'Haryana';
-                    let finalGender = 'Other';
+                    let finalGender = document.getElementById('inp-gender').value; // Unified Gender Fetch
                     let finalBranch = 'N/A';
                     let finalYear = 'N/A';
                     let finalRoll = 'N/A';
@@ -492,7 +515,6 @@
                         finalCompany = document.getElementById('inp-company').value;
                         finalCity = document.getElementById('ns-city').value;
                         finalState = document.getElementById('ns-state').value;
-                        finalGender = document.getElementById('ns-gender').value;
                     } else {
                         if (studentType === 'kuk') {
                             if (kukCollege === 'other') {
@@ -514,7 +536,6 @@
                             finalBranch = document.getElementById('ext-branch').value;
                             finalCity = document.getElementById('ext-city').value;
                             finalState = document.getElementById('ext-state').value;
-                            finalGender = document.getElementById('ext-gender').value;
                         }
                     }
 

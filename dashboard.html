@@ -256,6 +256,23 @@
                         </div>
                     </div>
                     <div class="data-group highlight span-2" id="hostel-spec"><label><i class="fa-solid fa-bed"></i> Accomodation Status</label><div class="value" id="d-hostel">--</div></div>
+                    <!-- HOSTEL APPLY BUTTON (Dynamically shown) -->
+                    <div class="data-group span-2" id="hostel-apply-box" style="display: none; background: rgba(255, 170, 0, 0.05); border-left-color: var(--primary-gold); text-align: center;">
+                        <p style="margin-bottom: 10px; font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Decided you need accommodation?</p>
+                        <button class="btn-action btn-edit" style="margin: 0;" onclick="applyForHostel()"><i class="fa-solid fa-bed"></i> Apply for Hostel Now</button>
+                    </div>
+
+                    <!-- TEAMS MANAGEMENT SECTION -->
+                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #9b59b6; margin-top: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <label style="margin: 0;"><i class="fa-solid fa-users"></i> My Teams & Invites</label>
+                            <button class="btn-action" style="background: rgba(155, 89, 182, 0.1); color: #9b59b6; border-color: #9b59b6; margin: 0;" onclick="promptCreateTeam()"><i class="fa-solid fa-plus"></i> Create Team</button>
+                        </div>
+                        
+                        <div id="teams-container" style="display: flex; flex-direction: column; gap: 15px;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Loading teams...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -621,6 +638,147 @@
             }, 250);
         }
         
+        // --- HOSTEL APPLICATION ---
+        async function applyForHostel() {
+            if(!confirm("Are you sure you want to apply for a hostel? This cannot be undone.")) return;
+            
+            try {
+                const res = await fetch(`${API_URL}/auth/apply-hostel`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert("Hostel application submitted!");
+                    loadProfile(); // Reload to update UI
+                } else { alert(data.error); }
+            } catch (err) { console.error(err); }
+        }
+
+        // Adjust loadProfile() to show/hide the button
+        // Inside your existing loadProfile() function, look for the "// Accomodation Logic" block and modify the 'else' condition to look like this:
+        /*
+            } else {
+                hostelDisplay.innerText = 'NOT REQUESTED';
+                hostelDisplay.style.color = 'var(--text-muted)';
+                document.getElementById('hostel-apply-box').style.display = 'block'; // SHOW BUTTON
+            }
+        */
+
+        // --- TEAMS MANAGEMENT ---
+        async function loadTeams() {
+            try {
+                const res = await fetch(`${API_URL}/teams/my-teams`, { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await res.json();
+                
+                const container = document.getElementById('teams-container');
+                if (!data.success || data.data.length === 0) {
+                    container.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">You are not part of any teams yet.</span>';
+                    return;
+                }
+
+                container.innerHTML = data.data.map(team => {
+                    const isLeader = team.leader._id === currentUserData._id;
+                    const myMemberData = team.members.find(m => m.user._id === currentUserData._id);
+                    const isPending = myMemberData && myMemberData.status === 'Pending';
+
+                    let actionsHtml = '';
+                    if (isPending) {
+                        actionsHtml = `
+                            <div style="margin-top: 10px;">
+                                <button class="btn-action btn-edit" style="font-size: 0.7rem; padding: 5px 10px; margin-left: 0;" onclick="respondToInvite('${team._id}', 'accept')">Accept Invite</button>
+                                <button class="btn-action btn-logout" style="font-size: 0.7rem; padding: 5px 10px;" onclick="respondToInvite('${team._id}', 'reject')">Decline</button>
+                            </div>
+                        `;
+                    } else if (isLeader) {
+                        actionsHtml = `
+                            <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                <input type="text" id="invite-input-${team._id}" placeholder="Pass ID or Phone" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #9b59b6; color: white; border-radius: 3px; font-size: 0.75rem;">
+                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #9b59b6; color: white; border: none;" onclick="inviteToTeam('${team._id}')">Invite</button>
+                                
+                                <input type="text" id="event-input-${team._id}" placeholder="Event Name" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem;">
+                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #3498db; color: white; border: none;" onclick="registerTeamEvent('${team._id}')">Opt Event</button>
+                            </div>
+                        `;
+                    }
+
+                    const membersList = team.members.map(m => `<span style="font-size: 0.75rem; color: ${m.status === 'Accepted' ? '#2ecc71' : '#fca311'};">${m.user.fullName} (${m.status})</span>`).join(', ');
+
+                    return `
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                            <h4 style="margin: 0 0 5px 0; color: #9b59b6; text-transform: uppercase;">${team.teamName} ${isLeader ? '<i class="fa-solid fa-crown" style="color: var(--primary-gold); font-size: 0.8rem;"></i>' : ''}</h4>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Leader: ${team.leader.fullName}</p>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Members: ${membersList || 'None yet'}</p>
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Events: <span style="color: #3498db; font-weight: bold;">${team.events.join(', ') || 'None'}</span></p>
+                            ${actionsHtml}
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) { console.error(err); }
+        }
+
+        async function promptCreateTeam() {
+            const teamName = prompt("Enter a name for your new team:");
+            if (!teamName) return;
+
+            try {
+                const res = await fetch(`${API_URL}/teams/create`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ teamName })
+                });
+                const data = await res.json();
+                if(data.success) loadTeams(); else alert(data.error);
+            } catch (err) { console.error(err); }
+        }
+
+        async function inviteToTeam(teamId) {
+            const identifier = document.getElementById(`invite-input-${teamId}`).value;
+            if(!identifier) return alert("Enter a Ticket ID or Phone Number");
+
+            try {
+                const res = await fetch(`${API_URL}/teams/invite`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ teamId, identifier })
+                });
+                const data = await res.json();
+                alert(data.success ? data.message : data.error);
+                if(data.success) loadTeams();
+            } catch (err) { console.error(err); }
+        }
+
+        async function registerTeamEvent(teamId) {
+            const eventName = document.getElementById(`event-input-${teamId}`).value;
+            if(!eventName) return alert("Enter an Event Name");
+
+            try {
+                const res = await fetch(`${API_URL}/teams/register-event`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ teamId, eventName })
+                });
+                const data = await res.json();
+                alert(data.success ? data.message : data.error);
+                if(data.success) loadTeams();
+            } catch (err) { console.error(err); }
+        }
+
+        async function respondToInvite(teamId, action) {
+            try {
+                const res = await fetch(`${API_URL}/teams/respond`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ teamId, action })
+                });
+                const data = await res.json();
+                if(data.success) loadTeams(); else alert(data.error);
+            } catch (err) { console.error(err); }
+        }
+
+        // Call loadTeams() inside your existing loadProfile() success block, right after rendering events.
+        // e.g., loadTeams();
+
         function logout() {
             localStorage.removeItem('esummit_token');
             window.location.href = "register.html";
