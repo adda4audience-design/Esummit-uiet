@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>User Dashboard | E-SUMMIT '26 UIET KUK</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
@@ -30,8 +30,9 @@
             overflow-x: hidden; position: relative;
         }
 
+        /* Fixed Canvas dimensions to prevent horizontal scrolling */
         #webgl-canvas {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; pointer-events: none;
         }
 
@@ -72,6 +73,7 @@
             display: flex; justify-content: center; position: relative; z-index: 10;
         }
 
+        /* 1fr 400px forces it to the right on laptop */
         .dashboard-wrapper { width: 100%; max-width: 1200px; display: grid; grid-template-columns: 1fr 400px; gap: 40px; }
 
         .glass-panel {
@@ -100,7 +102,7 @@
         .data-group.highlight { border-left-color: var(--primary-gold); background: rgba(255, 170, 0, 0.05); }
         .data-group label { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; font-weight: 700; letter-spacing: 1px;}
         .data-group label i { margin-right: 5px; color: var(--primary-gold); }
-        .data-group .value { font-size: 1.1rem; font-weight: 600; word-break: break-word; color: var(--text-main); }
+        .data-group .value { font-size: 1.1rem; font-weight: 600; word-break: break-word; color: var(--text-main); display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
         .span-2 { grid-column: span 2; }
 
         .ticket-wrapper { border-top: 4px solid var(--primary-gold); display: flex; flex-direction: column; align-items: center; justify-content: center;}
@@ -161,7 +163,7 @@
             letter-spacing: 3px;
         }
 
-       @media (max-width: 992px) {
+        @media (max-width: 992px) {
             .hamburger { display: block; position: relative; z-index: 100; }
             .nav-header { background: rgba(0, 3, 10, 0.85); backdrop-filter: blur(12px); }
             .main-nav { 
@@ -178,37 +180,75 @@
             .main-nav a { font-size: 1.3rem; font-weight: 900; letter-spacing: 4px; text-align: center; }
             
             /* --- DASHBOARD HIERARCHY FIX --- */
+            /* Switch to 1 column so the ticket drops below */
             .dashboard-wrapper { 
-                display: flex; /* Switch to flex on mobile for easy reordering */
-                flex-direction: column; 
-                gap: 30px; 
+                grid-template-columns: 1fr; 
             }
             .ticket-wrapper {
-                order: -1; /* Elevates the Pass to the very top */
+                margin: 0 auto; 
+                width: 100%;
+                max-width: 380px; /* Constrains the width to make it a neat square grid */
             }
             .span-2 { grid-column: span 1; }
-        }
+        } /* <--- This bracket was missing before and broke everything! */
 
         @media (max-width: 768px) {
-            .container { padding: 90px 15px 30px; }
-            .dashboard-wrapper { gap: 20px; }
-            .glass-panel { padding: 20px 15px; }
+            .container { padding: 90px 10px 30px; overflow-x: hidden; }
+            .dashboard-wrapper { gap: 20px; width: 100%; }
+            .glass-panel { padding: 20px 15px; width: 100%; box-sizing: border-box; }
             
-            /* Space out the top header on mobile */
             .header { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
             .header h1 { font-size: 1.5rem; }
-            .header div { display: flex; width: 100%; justify-content: center; gap: 10px; }
-            .header .btn-action { margin: 0; font-size: 0.75rem; padding: 10px 16px; flex: 1; }
+            .header div { display: flex; flex-direction: column; width: 100%; gap: 10px; }
+            .header .btn-action { margin: 0; width: 100%; padding: 12px; font-size: 0.85rem; }
 
-            /* Streamline the details grid */
-            .details-grid { grid-template-columns: 1fr; gap: 15px; }
-            #uiet-specs { grid-template-columns: 1fr; }
-            .data-group { padding: 12px 15px; border-left-width: 3px; }
-            .data-group label { font-size: 0.7rem; margin-bottom: 8px;}
-            .data-group .value { font-size: 1rem; }
+            /* Grid Configuration - Maintains 2 columns on mobile to allow specific hierarchy */
+            .details-grid { 
+                display: grid !important; 
+                grid-template-columns: 1fr 1fr !important; 
+                gap: 15px; 
+                width: 100%; 
+            }
             
-            /* Referral input fix for small screens */
-            .data-group input { font-size: 0.9rem !important; padding: 8px !important; }
+            .data-group { padding: 15px 12px; border-left-width: 3px; box-sizing: border-box; }
+            .data-group label { font-size: 0.65rem; margin-bottom: 6px;}
+            .data-group .value { font-size: 0.95rem; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
+
+            /* Sizing & Mobile Hierarchy Setup */
+            .dg-name, .dg-email, .dg-location, .dg-college, .dg-roll, .dg-events, .dg-hostel, .dg-referral, .dg-teams {
+                grid-column: span 2;
+            }
+            .dg-phone, .dg-gender, .dg-role, .dg-branch {
+                grid-column: span 1;
+            }
+
+            /* Custom Explicit Ordering for Mobile */
+            .dg-name { order: 1; }
+            .dg-email { order: 2; }
+            .dg-phone { order: 3; }
+            .dg-gender { order: 4; }
+            .dg-location { order: 5; }
+            .dg-college { order: 6; }
+            .dg-role { order: 7; }
+            .dg-branch { order: 8; }
+            .dg-roll { order: 9; }
+            .dg-events { order: 10; }
+            .dg-hostel { order: 11; }
+            .dg-referral { order: 12; }
+            .dg-teams { order: 13; }
+            
+            /* UI Fixes for Buttons in narrow panels */
+            .dg-referral > div:nth-child(2), 
+            .dg-teams > div:nth-child(1) {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .dg-referral input, .dg-referral button, .dg-teams button {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                margin: 0 !important;
+            }
             
             .btn-download { padding: 12px; font-size: 0.85rem; }
             .modal-content { padding: 20px; width: 95%; }
@@ -247,47 +287,55 @@
                     </div>
                 </div>
 
-                <!-- Comprehensive Details Grid based on user data -->
                 <div class="details-grid">
-                    <div class="data-group"><label><i class="fa-solid fa-user"></i> Full Name</label><div class="value" id="d-name">--</div></div>
-                    <div class="data-group"><label><i class="fa-solid fa-envelope"></i> Email</label><div class="value" id="d-email">--</div></div>
-                    <div class="data-group"><label><i class="fa-solid fa-phone"></i> Phone</label><div class="value" id="d-phone">--</div></div>
-                    <div class="data-group"><label><i class="fa-solid fa-venus-mars"></i> Gender</label><div class="value" id="d-gender">--</div></div>
-                    <div class="data-group"><label><i class="fa-solid fa-location-dot"></i> Location</label><div class="value" id="d-location">--</div></div>
-                    <div class="data-group"><label><i class="fa-solid fa-briefcase"></i> Role / Desc</label><div class="value" id="d-role">--</div></div>
+                    <div class="data-group dg-name"><label><i class="fa-solid fa-user"></i> Full Name</label><div class="value" id="d-name">--</div></div>
+                    <div class="data-group dg-email"><label><i class="fa-solid fa-envelope"></i> Email</label><div class="value" id="d-email">--</div></div>
                     
-                    <div class="data-group span-2" id="college-box"><label><i class="fa-solid fa-building-columns"></i> Institution</label><div class="value" id="d-college">--</div></div>
+                    <div class="data-group dg-phone"><label><i class="fa-solid fa-phone"></i> Phone</label><div class="value" id="d-phone">--</div></div>
+                    <div class="data-group dg-gender"><label><i class="fa-solid fa-venus-mars"></i> Gender</label><div class="value" id="d-gender">--</div></div>
                     
-                    <div id="uiet-specs" style="display: none; grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                        <div class="data-group"><label><i class="fa-solid fa-code-branch"></i> Branch & Year</label><div class="value" id="d-branch">--</div></div>
-                        <div class="data-group"><label><i class="fa-solid fa-id-badge"></i> Roll Number</label><div class="value" id="d-roll">--</div></div>
-                    </div>
+                    <div class="data-group dg-location"><label><i class="fa-solid fa-location-dot"></i> Location</label><div class="value" id="d-location">--</div></div>
                     
-                    <!-- Secure Enrolled Events Panel -->
-                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: var(--neon-blue);">
+                    <div class="data-group span-2 dg-college" id="college-box"><label><i class="fa-solid fa-building-columns"></i> Institution</label><div class="value" id="d-college">--</div></div>
+                    
+                    <div class="data-group dg-role"><label><i class="fa-solid fa-briefcase"></i> Role / Desc</label><div class="value" id="d-role">--</div></div>
+                    
+                    <div class="data-group dg-branch" id="group-branch" style="display: none;"><label><i class="fa-solid fa-code-branch"></i> Branch & Year</label><div class="value" id="d-branch">--</div></div>
+                    <div class="data-group span-2 dg-roll" id="group-roll" style="display: none;"><label><i class="fa-solid fa-id-badge"></i> Roll Number</label><div class="value" id="d-roll">--</div></div>
+                    
+                    <div class="data-group span-2 dg-events" style="background: rgba(255, 255, 255, 0.02); border-left-color: var(--neon-blue);">
                         <label><i class="fa-solid fa-calendar-check"></i> Registered Events</label>
                         <div id="event-grid" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
-                            <!-- Events will be safely injected here -->
                         </div>
                     </div>
-                    <div class="data-group highlight span-2" id="hostel-spec"><label><i class="fa-solid fa-bed"></i> Accomodation Status</label><div class="value" id="d-hostel">--</div></div>
-                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #ffaa00; margin-top: 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                    
+                    <div class="data-group highlight span-2 dg-hostel" id="hostel-spec">
+                        <label><i class="fa-solid fa-bed"></i> Accommodation Status</label>
+                        <div class="value" id="d-hostel" style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px; width: 100%;">
+                        </div>
+                    </div>
+                    
+                    <div class="data-group span-2 dg-referral" style="background: rgba(255, 255, 255, 0.02); border-left-color: #ffaa00; margin-top: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                             <label style="margin: 0;"><i class="fa-solid fa-share-nodes"></i> My Referral Hub</label>
                             <div style="font-size: 1.2rem; font-weight: 800; color: #ffaa00;">
                                 <i class="fa-solid fa-users"></i> <span id="d-ref-count">0</span> Referrals
                             </div>
                         </div>
-                        <div style="margin-top: 15px; display: flex; gap: 10px;">
-                            <input type="text" id="d-ref-code" readonly style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #ffaa00; color: var(--text-main); font-family: monospace; font-size: 1.1rem; letter-spacing: 2px;">
-                            <button class="btn-action" style="background: rgba(46, 204, 113, 0.1); color: #ffaa00; border-color: #ffaa00;" onclick="navigator.clipboard.writeText(document.getElementById('d-ref-code').value)"><i class="fa-regular fa-copy"></i> Copy</button>
+                        <div style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
+                            <input type="text" id="d-ref-code" readonly style="flex: 1; min-width: 200px; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #ffaa00; color: var(--text-main); font-family: monospace; font-size: 1.1rem; letter-spacing: 2px;">
+                            <button class="btn-action" style="flex: 1; max-width: 150px; background: rgba(176, 176, 176, 0.1); color: #ffaa00; border-color: #ffaa00; margin-left: 0;" onclick="navigator.clipboard.writeText(document.getElementById('d-ref-code').value)"><i class="fa-regular fa-copy"></i> Copy</button>
                         </div>
                     </div>
-                    <!-- TEAMS MANAGEMENT SECTION -->
-                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #ffaa00; margin-top: 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <label style="margin: 0;"><i class="fa-solid fa-users"></i> My Teams & Invites<b>(Refresh the page if invite is not visible)</b></label>
-                            <button class="btn-action" style="background: rgba(155, 89, 182, 0.1); color: #ffaa00; border-color: #9b59b6; margin: 0;" onclick="openCreateTeamModal()"><i class="fa-solid fa-plus"></i> Create Team</button>                        </div>
+
+                    <div class="data-group span-2 dg-teams" style="background: rgba(255, 255, 255, 0.02); border-left-color: #ffaa00; margin-top: 20px;">
+                        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 15px;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="margin: 0;"><i class="fa-solid fa-users"></i> My Teams & Invites</label>
+                                <span style="font-size: 0.7rem; color: var(--primary-gold); display: block; margin-top: 5px; font-weight: 600;">* Note: Refresh the page if invite is not visible</span>
+                            </div>
+                            <button class="btn-action" style="background: rgba(155, 89, 182, 0.1); color: #ffaa00; border-color: #ffaa00; margin: 0; min-width: 140px;" onclick="openCreateTeamModal()"><i class="fa-solid fa-plus"></i> Create Team</button>                        
+                        </div>
                         
                         <div id="teams-container" style="display: flex; flex-direction: column; gap: 15px;">
                             <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Loading teams...</span>
@@ -367,14 +415,6 @@
                 </div>
                 <div class="form-group" style="grid-column: span 2;"><label>Roll Number</label><input type="text" id="edit-roll"></div>
             </div>
-            
-            <div class="form-group" style="margin-top: 15px;">
-                <label>Accommodation Requirement</label>
-                <select id="edit-hostel">
-                    <option value="false">No, I do not need a hostel</option>
-                    <option value="true">Yes, I need a hostel</option>
-                </select>
-            </div>
 
             <div style="display: flex; gap: 15px; margin-top: 25px;">
                 <button class="btn-action btn-logout" style="flex: 1; margin: 0; padding: 12px;" onclick="closeEditModal()">Cancel</button>
@@ -384,7 +424,6 @@
     </div>
 
     <script>
-        // Header interaction & Transparency Scroll
         const hamburger = document.getElementById('hamburger-menu');
         const mainNav = document.getElementById('main-nav');
         const navbar = document.getElementById('navbar');
@@ -414,6 +453,24 @@
 
         if (!token) window.location.href = "register.html";
 
+        async function updateHostelStatus(needsHostel) {
+            if (!confirm(needsHostel ? "Are you sure you want to request accommodation?" : "Are you sure you want to cancel your accommodation request?")) return;
+            
+            try {
+                const res = await fetch(`${API_URL}/auth/profile`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ needHostel: needsHostel })
+                });
+                const data = await res.json();
+                if(data.success) { 
+                    loadProfile(); 
+                } else { 
+                    alert(data.error); 
+                }
+            } catch (err) { alert("Network modification failure."); }
+        }
+
         async function loadProfile() {
             try {
                 const res = await fetch(`${API_URL}/auth/profile`, { headers: { 'Authorization': `Bearer ${token}` } });
@@ -425,7 +482,6 @@
                     
                     document.getElementById('dashboard').style.display = 'grid';
                     
-                    // Map Comprehensive Fields
                     document.getElementById('d-name').innerText = user.fullName || '--';
                     document.getElementById('d-email').innerText = user.email || '--';
                     document.getElementById('d-phone').innerText = user.phoneNumber || '--';
@@ -434,7 +490,6 @@
                     const loc = [user.city, user.state].filter(Boolean).join(', ');
                     document.getElementById('d-location').innerText = loc || '--';
 
-                    // Role details logic
                     let roleStr = user.role ? user.role.toUpperCase() : 'USER';
                     if(user.specificRole && user.specificRole !== 'Student') roleStr += ` (${user.specificRole})`;
                     if(user.company) roleStr += ` - ${user.company}`;
@@ -442,40 +497,44 @@
 
                     if (user.role === 'non-student') {
                         document.getElementById('college-box').style.display = 'none';
-                        document.getElementById('uiet-specs').style.display = 'none';
+                        document.getElementById('group-branch').style.display = 'none';
+                        document.getElementById('group-roll').style.display = 'none';
                     } else {
                         document.getElementById('college-box').style.display = 'block';
                         document.getElementById('d-college').innerText = user.collegeName || '--';
                         
                         if(user.delegateStatus === 'yes') {
-                            document.getElementById('uiet-specs').style.display = 'grid';
+                            document.getElementById('group-branch').style.display = 'block';
+                            document.getElementById('group-roll').style.display = 'block';
                             document.getElementById('d-branch').innerText = `${user.branch || 'N/A'} / ${user.year || 'N/A'}`;
                             document.getElementById('d-roll').innerText = user.rollNo || 'N/A';
                         } else {
-                            document.getElementById('uiet-specs').style.display = 'none';
+                            document.getElementById('group-branch').style.display = 'none';
+                            document.getElementById('group-roll').style.display = 'none';
                         }
                     }
 
-                    // Accomodation Logic
                     const hostelDisplay = document.getElementById('d-hostel');
                     if (user.needHostel) {
                         if (user.hostelAllocated) {
-                            hostelDisplay.innerText = `ALLOCATED: ${user.allocatedHostelName || 'TBD'}`;
-                            hostelDisplay.style.color = 'var(--primary-gold)';
+                            hostelDisplay.innerHTML = `<span style="color: var(--primary-gold);">ALLOCATED: ${user.allocatedHostelName || 'TBD'}</span>`;
                         } else {
-                            hostelDisplay.innerText = 'WAITLISTED / PENDING';
-                            hostelDisplay.style.color = 'var(--text-main)';
+                            hostelDisplay.innerHTML = `
+                                <span style="color: var(--text-main);">WAITLISTED / PENDING</span>
+                                <button class="btn-action btn-logout" style="font-size: 0.75rem; padding: 6px 12px; margin-left: auto;" onclick="updateHostelStatus(false)">Cancel Request</button>
+                            `;
                         }
                     } else {
-                        hostelDisplay.innerText = 'NOT REQUESTED (Can be changed in Edit)';
-                        hostelDisplay.style.color = 'var(--text-muted)';
+                        hostelDisplay.innerHTML = `
+                            <span style="color: var(--text-muted);">NOT REQUESTED</span>
+                            <button class="btn-action btn-edit" style="font-size: 0.75rem; padding: 6px 12px; margin-left: auto;" onclick="updateHostelStatus(true)">Request Accomm.</button>
+                        `;
                     }
+
                     document.getElementById('d-ref-code').value = user.ticketId || 'PASS PENDING';
                     document.getElementById('d-ref-count').innerText = user.referralCount || 0;
                     
-                    // --- SECURE EVENT RENDERING ---
                     const eventGrid = document.getElementById('event-grid');
-
                     if (user.registeredEvents && user.registeredEvents.length > 0) {
                         eventGrid.innerHTML = ''; 
                         user.registeredEvents.forEach(eventName => {
@@ -488,10 +547,8 @@
                         eventGrid.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">NO EVENTS REGISTERED YET.</span>';
                     }
 
-                    // Trigger team loading
                     loadTeams();
 
-                    // --- DIRECT TICKET GENERATION ---
                     const ticketArea = document.getElementById('ticket-render-area');
                     const pdfTicket = document.getElementById('pdf-ticket');
 
@@ -500,7 +557,7 @@
                             <div style="text-align: center;">
                                 <i class="fa-solid fa-ticket" style="font-size: 3.5rem; color: var(--primary-gold); margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,170,0,0.4));"></i>
                                 <h2 style="margin: 0 0 10px 0; color: var(--primary-gold); letter-spacing: 4px; font-weight: 900; text-shadow: 0 0 10px rgba(255, 170, 0, 0.4);">PASS GRANTED</h2>
-                                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.9rem; font-weight: 600;">Your official E-Summit 2026 digital pass is Available.</p>
+                                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.9rem; font-weight: 600;">Your official digital pass is Available.</p>
                                 <button class="btn-download" style="width: auto; padding: 15px 35px; background: transparent; border: 1px solid var(--primary-gold); color: var(--primary-gold);" onmouseover="this.style.background='rgba(255, 170, 0, 0.1)'; this.style.boxShadow='0 0 20px rgba(255, 170, 0, 0.4)'" onmouseout="this.style.background='transparent'; this.style.boxShadow='none'" onclick="openTicketModal()">
                                     <i class="fa-solid fa-eye"></i> View Pass
                                 </button>
@@ -565,7 +622,6 @@
             document.getElementById('edit-name').value = currentUserData.fullName || '';
             document.getElementById('edit-phone').value = currentUserData.phoneNumber || '';
             document.getElementById('edit-city').value = currentUserData.city || '';
-            document.getElementById('edit-hostel').value = currentUserData.needHostel ? "true" : "false";
             document.getElementById('edit-state').value = currentUserData.state || '';
 
             if(currentUserData.role === 'non-student') {
@@ -596,8 +652,7 @@
                 fullName: document.getElementById('edit-name').value,
                 phoneNumber: document.getElementById('edit-phone').value,
                 city: document.getElementById('edit-city').value,
-                state: document.getElementById('edit-state').value,
-                needHostel: document.getElementById('edit-hostel').value === "true"
+                state: document.getElementById('edit-state').value
             };
 
             if(currentUserData.role === 'non-student') {
@@ -680,7 +735,6 @@
             }, 250);
         }
 
-        // --- TEAMS MANAGEMENT ---
         async function loadTeams() {
             try {
                 const res = await fetch(`${API_URL}/teams/my-teams`, { headers: { 'Authorization': `Bearer ${token}` } });
@@ -709,9 +763,9 @@
                         actionsHtml = `
                             <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
                                 <input type="text" id="invite-input-${team._id}" placeholder="Pass ID or Phone" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #9b59b6; color: white; border-radius: 3px; font-size: 0.75rem;">
-                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #9b59b6; color: white; border: none;" onclick="inviteToTeam('${team._id}')">Invite</button>
+                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #9b59b6; color: white; border: none; margin-left: 0;" onclick="inviteToTeam('${team._id}')">Invite</button>
                                 
-                                <select id="event-input-${team._id}" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem;">
+                                <select id="event-input-${team._id}" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem; flex: 1; min-width: 150px;">
                                     <option value="" disabled selected>Select Event...</option>
                                     <option value="36 hours hackathon">36 Hours Hackathon</option>
                                     <option value="ENTRE-mun">ENTRE-MUN</option>
@@ -724,7 +778,7 @@
                                     <option value="network arena">Network Arena</option>
                                     <option value="Speaker session">Speaker Session</option>
                                 </select>
-                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #3498db; color: white; border: none;" onclick="registerTeamEvent('${team._id}')">Opt Event</button>
+                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #3498db; color: white; border: none; margin-left: 0;" onclick="registerTeamEvent('${team._id}')">Opt Event</button>
                             </div>
                         `;
                     }
@@ -826,7 +880,6 @@
             window.location.href = "register.html";
         }
 
-        // --- 3D Background Logic (Rover infinite drive) ---
         const canvas = document.querySelector('#webgl-canvas');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x00050f); 
@@ -1021,51 +1074,36 @@
     </script>
 
     <script>
-    // Global Authentication Check
     document.addEventListener('DOMContentLoaded', () => {
-        // 1. Check if the user has an active token in localStorage
         const token = localStorage.getItem('esummit_token');
         const profileIcon = document.querySelector('.nav-profile-icon');
         const currentPath = window.location.pathname;
 
         if (token) {
-            // --- USER IS LOGGED IN ---
-            
-            // If they accidentally navigate to register.html while logged in, redirect them
             if (currentPath.endsWith('register.html')) {
                 window.location.href = 'dashboard.html';
                 return; 
             }
 
-            // Update the navigation icon to act as a Dashboard button
             if (profileIcon) {
                 profileIcon.href = 'dashboard.html';
                 profileIcon.title = 'Dashboard';
-                
-                // Apply the active gold styling to indicate they are logged in
                 profileIcon.style.setProperty('opacity', '1', 'important');
                 profileIcon.style.setProperty('color', 'var(--bg-black)', 'important');
                 profileIcon.style.setProperty('background', 'var(--primary-gold)', 'important');
             }
             
-            // Optional: Update the hero buttons on index.html if you want them to shift too
             const loginBtn = document.querySelector('.btn-login');
             const regBtn = document.querySelector('.btn-register');
             if (loginBtn && regBtn && currentPath.endsWith('index.html') || currentPath === '/') {
                 loginBtn.href = 'dashboard.html';
                 loginBtn.innerText = 'Go to Dashboard';
-                regBtn.style.display = 'none'; // Hide register button if already logged in
+                regBtn.style.display = 'none'; 
             }
-
         } else {
-            // --- USER IS NOT LOGGED IN ---
-            
-            // Ensure the icon points to the login page (Default state)
             if (profileIcon) {
                 profileIcon.href = 'register.html';
                 profileIcon.title = 'User Login';
-                
-                // Reset to default transparent styling
                 profileIcon.style.removeProperty('color');
                 profileIcon.style.removeProperty('background');
                 profileIcon.style.opacity = '0.8';
