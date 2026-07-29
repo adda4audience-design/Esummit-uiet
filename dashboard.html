@@ -161,7 +161,7 @@
             letter-spacing: 3px;
         }
 
-        @media (max-width: 992px) {
+       @media (max-width: 992px) {
             .hamburger { display: block; position: relative; z-index: 100; }
             .nav-header { background: rgba(0, 3, 10, 0.85); backdrop-filter: blur(12px); }
             .main-nav { 
@@ -176,25 +176,39 @@
             .main-nav ul li { display: block !important; }
             .main-nav ul li:last-child { order: -1; margin-bottom: 1rem; }
             .main-nav a { font-size: 1.3rem; font-weight: 900; letter-spacing: 4px; text-align: center; }
-            .dashboard-wrapper { grid-template-columns: 1fr; }
+            
+            /* --- DASHBOARD HIERARCHY FIX --- */
+            .dashboard-wrapper { 
+                display: flex; /* Switch to flex on mobile for easy reordering */
+                flex-direction: column; 
+                gap: 30px; 
+            }
+            .ticket-wrapper {
+                order: -1; /* Elevates the Pass to the very top */
+            }
             .span-2 { grid-column: span 1; }
         }
 
         @media (max-width: 768px) {
-            .container { padding: 100px 15px 30px; }
+            .container { padding: 90px 15px 30px; }
             .dashboard-wrapper { gap: 20px; }
             .glass-panel { padding: 20px 15px; }
             
-            .header { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .header h1 { font-size: 1.4rem; }
-            .header div { display: flex; width: 100%; justify-content: flex-start; gap: 10px; }
-            .header .btn-action { margin: 0; font-size: 0.75rem; padding: 8px 12px; }
+            /* Space out the top header on mobile */
+            .header { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+            .header h1 { font-size: 1.5rem; }
+            .header div { display: flex; width: 100%; justify-content: center; gap: 10px; }
+            .header .btn-action { margin: 0; font-size: 0.75rem; padding: 10px 16px; flex: 1; }
 
-            .details-grid { grid-template-columns: 1fr; gap: 12px; }
+            /* Streamline the details grid */
+            .details-grid { grid-template-columns: 1fr; gap: 15px; }
             #uiet-specs { grid-template-columns: 1fr; }
             .data-group { padding: 12px 15px; border-left-width: 3px; }
-            .data-group label { font-size: 0.65rem; }
+            .data-group label { font-size: 0.7rem; margin-bottom: 8px;}
             .data-group .value { font-size: 1rem; }
+            
+            /* Referral input fix for small screens */
+            .data-group input { font-size: 0.9rem !important; padding: 8px !important; }
             
             .btn-download { padding: 12px; font-size: 0.85rem; }
             .modal-content { padding: 20px; width: 95%; }
@@ -257,23 +271,23 @@
                         </div>
                     </div>
                     <div class="data-group highlight span-2" id="hostel-spec"><label><i class="fa-solid fa-bed"></i> Accomodation Status</label><div class="value" id="d-hostel">--</div></div>
-                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #2ecc71; margin-top: 20px;">
+                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #ffaa00; margin-top: 20px;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <label style="margin: 0;"><i class="fa-solid fa-share-nodes"></i> My Referral Hub</label>
-                            <div style="font-size: 1.2rem; font-weight: 800; color: #2ecc71;">
+                            <div style="font-size: 1.2rem; font-weight: 800; color: #ffaa00;">
                                 <i class="fa-solid fa-users"></i> <span id="d-ref-count">0</span> Referrals
                             </div>
                         </div>
                         <div style="margin-top: 15px; display: flex; gap: 10px;">
-                            <input type="text" id="d-ref-code" readonly style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #2ecc71; color: var(--text-main); font-family: monospace; font-size: 1.1rem; letter-spacing: 2px;">
-                            <button class="btn-action" style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; border-color: #2ecc71;" onclick="navigator.clipboard.writeText(document.getElementById('d-ref-code').value)"><i class="fa-regular fa-copy"></i> Copy</button>
+                            <input type="text" id="d-ref-code" readonly style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #ffaa00; color: var(--text-main); font-family: monospace; font-size: 1.1rem; letter-spacing: 2px;">
+                            <button class="btn-action" style="background: rgba(46, 204, 113, 0.1); color: #ffaa00; border-color: #ffaa00;" onclick="navigator.clipboard.writeText(document.getElementById('d-ref-code').value)"><i class="fa-regular fa-copy"></i> Copy</button>
                         </div>
                     </div>
                     <!-- TEAMS MANAGEMENT SECTION -->
-                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #9b59b6; margin-top: 20px;">
+                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #ffaa00; margin-top: 20px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <label style="margin: 0;"><i class="fa-solid fa-users"></i> My Teams & Invites<b>(Refresh the page if invite is not visible)</b></label>
-                            <button class="btn-action" style="background: rgba(155, 89, 182, 0.1); color: #9b59b6; border-color: #9b59b6; margin: 0;" onclick="openCreateTeamModal()"><i class="fa-solid fa-plus"></i> Create Team</button>                        </div>
+                            <button class="btn-action" style="background: rgba(155, 89, 182, 0.1); color: #ffaa00; border-color: #9b59b6; margin: 0;" onclick="openCreateTeamModal()"><i class="fa-solid fa-plus"></i> Create Team</button>                        </div>
                         
                         <div id="teams-container" style="display: flex; flex-direction: column; gap: 15px;">
                             <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Loading teams...</span>
