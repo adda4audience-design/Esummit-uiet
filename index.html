@@ -419,7 +419,7 @@
 
     <div id="tank-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 100;">
         <div id="tank-title" style="position: absolute; transform: translate(-50%, -100%); display: none; color: var(--text-main); font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.5rem); letter-spacing: 8px; text-shadow: 0 0 20px rgba(255, 170, 0, 0.8), 2px 2px 0px rgba(0,0,0,1); pointer-events: none; text-align: center; width: max-content;">
-            BROCHURE & INFO.
+            BROCHURE & IMP. INFO.
         </div>
         <div id="scan-marker" style="position: absolute; transform: translate(-50%, -50%); display: none; pointer-events: auto; text-align: center;">
             <div id="overlay-scan-btn" style="width: 50px; height: 50px; border: 1px dashed var(--primary-gold); border-radius: 50%; margin: 0 auto 8px; animation: pulse-ring 2s infinite; display: flex; align-items: center; justify-content: center; background: rgba(255,170,0,0.1); color: var(--primary-gold); cursor: pointer; transition: all 0.3s ease;">
@@ -855,24 +855,76 @@
             tooltip.style.top = event.clientY + 'px';
         });
 
+        // Browsers (Chrome, Edge, Firefox, Safari) silently block the 2nd/3rd
+        // auto-triggered download from a single click - only the first one
+        // (or first two) go through. Showing a small panel where the user
+        // clicks each file link themselves avoids that block entirely, since
+        // every download is now the direct result of a real user click.
+        function showDownloadPanel(files) {
+            const existing = document.getElementById('download-panel-overlay');
+            if (existing) existing.remove();
+
+            const overlay = document.createElement('div');
+            overlay.id = 'download-panel-overlay';
+            overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,3,10,0.85);display:flex;align-items:center;justify-content:center;z-index:5000;backdrop-filter:blur(6px);';
+
+            const panel = document.createElement('div');
+            panel.style.cssText = 'background:rgba(15,15,15,0.97);border:1px solid var(--primary-gold);border-radius:10px;padding:2rem 2.2rem;max-width:360px;width:90%;box-shadow:0 0 40px rgba(255,170,0,0.25);position:relative;';
+
+            const closeBtn = document.createElement('div');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.cssText = 'position:absolute;top:8px;right:14px;cursor:pointer;color:var(--text-muted);font-size:1.5rem;line-height:1;';
+            closeBtn.onclick = () => overlay.remove();
+            panel.appendChild(closeBtn);
+
+            const title = document.createElement('div');
+            title.textContent = 'Download Files';
+            title.style.cssText = 'color:var(--primary-gold);font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:0.9rem;margin-bottom:1.2rem;';
+            panel.appendChild(title);
+
+            const hint = document.createElement('div');
+            hint.textContent = 'Click each file to download:';
+            hint.style.cssText = 'color:var(--text-muted);font-size:0.7rem;margin-bottom:1rem;letter-spacing:0.5px;';
+            panel.appendChild(hint);
+
+            files.forEach(file => {
+                const link = document.createElement('a');
+                link.href = file.url;
+                link.download = file.name;
+                link.target = '_blank';
+                link.innerHTML = '<i class="fa-solid fa-file-pdf"></i> ' + file.name;
+                link.style.cssText = 'display:flex;align-items:center;gap:10px;color:var(--text-main);text-decoration:none;font-size:0.85rem;font-weight:700;padding:12px 14px;margin-bottom:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:6px;transition:all 0.25s ease;';
+                link.onmouseenter = () => { link.style.borderColor = 'var(--primary-gold)'; link.style.background = 'rgba(255,170,0,0.08)'; };
+                link.onmouseleave = () => { link.style.borderColor = 'rgba(255,255,255,0.1)'; link.style.background = 'rgba(255,255,255,0.04)'; };
+                panel.appendChild(link);
+            });
+
+            overlay.appendChild(panel);
+            overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+            document.body.appendChild(overlay);
+        }
+
         window.addEventListener('click', () => {
-            if (scanProgress >= 1.2 || document.body.style.cursor === 'pointer') { 
-                raycaster.setFromCamera(mouse, camera);
-                const intersects = raycaster.intersectObjects(all3DFiles, false);
+    if (scanProgress >= 1.2 || document.body.style.cursor === 'pointer') { 
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(all3DFiles, false);
+        
+        if (intersects.length > 0) {
+            const obj = intersects[0].object;
+            if (obj.userData.isDownloadable) {
                 
-                if (intersects.length > 0) {
-                    const obj = intersects[0].object;
-                    if (obj.userData.isDownloadable) {
-                        const link = document.createElement('a');
-                        link.href = obj.userData.url;
-                        link.download = obj.userData.filename;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    }
-                }
+                // Define all three files to be downloaded
+                const filesToDownload = [
+                    { name: 'Brochure.pdf', url: 'https://drive.google.com/uc?export=download&id=1BvLnnFaPSukuC23-idCvqfpGxLQXjika' },
+                    { name: 'SOP.pdf', url: 'https://drive.google.com/uc?export=download&id=1W3e69dAfgsnnk70Qj8_VCSVMQemi0DG5' },
+                    { name: 'Events Brochure.pdf', url: 'https://drive.google.com/uc?export=download&id=1ryfpW5LBeesxHA0A-IJY5nHwYi7-qmui' }
+                ];
+
+                showDownloadPanel(filesToDownload);
             }
-        });
+        }
+    }
+});
 
         const gridMaterial = new THREE.MeshBasicMaterial({ vertexColors: true, wireframe: true, transparent: true, opacity: 0.2 });
         const roverOrangeMaterial = new THREE.LineBasicMaterial({ color: 0xff3300 }); 
