@@ -148,16 +148,69 @@
         
         .carousel-track { 
             display: flex; gap: 40px; width: max-content; padding-left: 40px;
-            animation: scrollMarquee 40s linear infinite; cursor: default;
         }
         
-        .carousel-track:hover { animation-play-state: paused; }
         .carousel-track:hover .event-card-wrapper:not(:hover) { filter: blur(5px); opacity: 0.5; transform: scale(0.95); }
 
-        @keyframes scrollMarquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-50% - 20px)); }
-        }
+        /* --- NEW CAROUSEL WRAPPER & ARROWS --- */
+.carousel-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Allows touch swiping on mobile */
+    scroll-behavior: auto; /* JS will handle the smooth scrolling */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.carousel-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 240, 255, 0.1);
+    border: 2px solid var(--theme-color, #00f0ff);
+    border-radius: 50%;
+    color: var(--text-main);
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(5px);
+}
+
+.carousel-arrow:hover {
+    background: #00f0ff;
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+    transform: translateY(-50%) scale(1.15);
+}
+
+.carousel-arrow-left { left: 30px; }
+.carousel-arrow-right { right: 30px; }
+
+/* Modify the track slightly to ensure symmetric padding for seamless looping */
+.carousel-track { 
+    display: flex; 
+    gap: 40px; 
+    width: max-content; 
+    padding: 0 40px; /* Changed from padding-left to symmetric padding */
+    cursor: default;
+}
+
+@media (max-width: 768px) {
+    .carousel-arrow { width: 40px; height: 40px; font-size: 1.2rem; }
+    .carousel-arrow-left { left: 10px; }
+    .carousel-arrow-right { right: 10px; }
+}
+
 
         .event-card-wrapper { 
             background-color: transparent; width: 320px; height: 480px; perspective: 1000px; 
@@ -319,6 +372,43 @@
             #speakers { height: 250vh !important; }
             .spacer { height: 150vh !important; }
         }
+
+        .hero-sub-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 0.5rem;
+    margin-left: 5px;
+}
+
+.hero-logos {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.hero-logos img {
+    height: 35px;
+    object-fit: contain;
+    filter: grayscale(100%) brightness(0.8);
+    transition: all 0.3s ease;
+}
+
+.hero-logos img:hover {
+    filter: grayscale(0%) brightness(1);
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .hero-sub-wrapper {
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -329,7 +419,7 @@
 
     <div id="tank-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 100;">
         <div id="tank-title" style="position: absolute; transform: translate(-50%, -100%); display: none; color: var(--text-main); font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.5rem); letter-spacing: 8px; text-shadow: 0 0 20px rgba(255, 170, 0, 0.8), 2px 2px 0px rgba(0,0,0,1); pointer-events: none; text-align: center; width: max-content;">
-            BROCHURE & STUFF
+            BROCHURE & INFO.
         </div>
         <div id="scan-marker" style="position: absolute; transform: translate(-50%, -50%); display: none; pointer-events: auto; text-align: center;">
             <div id="overlay-scan-btn" style="width: 50px; height: 50px; border: 1px dashed var(--primary-gold); border-radius: 50%; margin: 0 auto 8px; animation: pulse-ring 2s infinite; display: flex; align-items: center; justify-content: center; background: rgba(255,170,0,0.1); color: var(--primary-gold); cursor: pointer; transition: all 0.3s ease;">
@@ -360,13 +450,20 @@
         </div>
     </div>
 
-    <div id="events-carousel-container" class="carousel-container">
-        <div class="carousel-track" id="carousel-track">
+<div id="events-carousel-container" class="carousel-container">
+        
+        <!-- NEW: Navigation Sliders -->
+        <button id="carousel-prev" class="carousel-arrow carousel-arrow-left"><i class="fa-solid fa-chevron-left"></i></button>
+        <button id="carousel-next" class="carousel-arrow carousel-arrow-right"><i class="fa-solid fa-chevron-right"></i></button>
+
+        <!-- NEW: Scroll Wrapper -->
+        <div class="carousel-scroll-wrapper" id="carousel-scroll-wrapper">
+            <div class="carousel-track" id="carousel-track">
             
             <div class="event-card-wrapper" style="--theme-color: #00f0ff;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="36 hours hackathon"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/36_Hackathon_images_page_1_fshvzp.jpg" alt="36 hours hackathon"></div>
                         <div class="card-title"><h4>36 Hours Hackathon</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -386,7 +483,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ff3300;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="ENTRE-mun"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318032/MUN_images_page_1_sdwfif.jpg" alt="ENTRE-mun"></div>
                         <div class="card-title"><h4>ENTRE-MUN</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -406,7 +503,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ffaa00;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="IPL Auction simulation"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/r_images_page_1_e8lzcb.jpg" alt="IPL Auction simulation"></div>
                         <div class="card-title"><h4>IPL Auction</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -426,7 +523,7 @@
             <div class="event-card-wrapper" style="--theme-color: #00ff66;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="Virtual stock market simulation"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318031/UIET_KURUKSHETRA_images_page_1_eyzbck.jpg" alt="Virtual stock market simulation"></div>
                         <div class="card-title"><h4>Virtual Stock Market</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -446,7 +543,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ff003c;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="The Big Bang theory"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/The_Big_Brand_Theory_E-Summit_Brochure_images_page_1_f87es7.jpg" alt="The Big Bang theory"></div>
                         <div class="card-title"><h4>The Big Bang Theory</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -466,7 +563,7 @@
             <div class="event-card-wrapper" style="--theme-color: #9b59b6;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="Workshop-mastering the term sheet"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/E-Summit_Workshop_Mastering_the_Team_Sheet-1_images_page_1_paxmyj.jpg" alt="Workshop-mastering the term sheet"></div>
                         <div class="card-title"><h4>"Mastering Term Sheet" Workshop</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -486,7 +583,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ff00ff;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="Pitch please competition"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318031/pitch_please_competition_images_page_1_f1tosi.jpg" alt="Pitch please competition"></div>
                         <div class="card-title"><h4>Pitch Please</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -506,7 +603,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ffd700;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="The golden pitch"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318031/THE_GOLDEN_PITCH_images_page_1_x3awes.jpg" alt="The golden pitch"></div>
                         <div class="card-title"><h4>The Golden Pitch</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -526,7 +623,7 @@
             <div class="event-card-wrapper" style="--theme-color: #3498db;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="network arena"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318032/Network_images_page_1_t31n20.jpg" alt="network arena"></div>
                         <div class="card-title"><h4>Network Arena</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -546,7 +643,7 @@
             <div class="event-card-wrapper" style="--theme-color: #e67e22;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png" alt="Speaker session"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/eSummit_Speaker_Session_Premium_Entrepreneurship_Dialogue_images_page_1_iftyy7.jpg" alt="Speaker session"></div>
                         <div class="card-title"><h4>Speaker Session</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -563,6 +660,7 @@
                 </div>
             </div>
             
+        </div>
         </div>
         
         <div id="close-carousel-bottom" class="carousel-close-btn" title="Close Events">
@@ -610,7 +708,15 @@
             <div class="hero-text-block" id="hero-content">
                 <h3 class="hero-mid">Uiet Kurukshetra's</h3>
                 <h1 class="hero-main"><span class="g-3">E-Su</span><span class="g-1">mmit</span></h1>
-                <p class="hero-sub">igniting the Shift</p>
+                <div class="hero-sub-wrapper">
+                    <p class="hero-sub">igniting the Shift</p>
+                    <div class="hero-logos">
+                        <img src="logo_kuk.png" alt="Sponsor 1">
+                        <img src="iic_logo.png" alt="Sponsor 2">
+                        <img src="kutic_logo.png" alt="Sponsor 3">
+                        <img src="cell_logo.png" alt="Sponsor 4">
+                    </div>
+                </div>
                 <div class="hero-actions"><a href="register.html" class="hero-btn btn-login">Login</a><a href="register.html" class="hero-btn btn-register">Register</a></div>
                 <div class="hero-dates"><span class="date-label">// SYSTEM ENGAGEMENT //</span><span class="date-value">OCTOBER 7 & 8, 2026</span></div>
                 <div class="hero-stats">
@@ -919,9 +1025,9 @@
             const fileMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.8, side: THREE.DoubleSide });
             const wireMat = new THREE.LineBasicMaterial({ color: 0xffffff });
             const fileData = [
-                { name: 'Brochure.pdf', url: 'files/brochure.pdf' },
-                { name: 'Rulebook.pdf', url: 'files/rulebook.pdf' },
-                { name: 'CampusMap.pdf', url: 'files/campus_map.pdf' }
+                { name: 'Brochure.pdf', url: 'https://drive.google.com/uc?export=download&id=1BvLnnFaPSukuC23-idCvqfpGxLQXjika' },
+                { name: 'SOP.pdf', url: 'https://drive.google.com/uc?export=download&id=1W3e69dAfgsnnk70Qj8_VCSVMQemi0DG5' },
+                { name: 'Events Brochure.pdf', url: 'https://drive.google.com/uc?export=download&id=1ryfpW5LBeesxHA0A-IJY5nHwYi7-qmui' }
             ];
 
             for(let i=0; i<3; i++) {
@@ -1391,14 +1497,77 @@
             tuneAnimFrame = requestAnimationFrame(drawOscilloscope);
         }
 
-        const eventTrack = document.getElementById('carousel-track');
+const eventTrack = document.getElementById('carousel-track');
+        const scrollWrapper = document.getElementById('carousel-scroll-wrapper');
+        const prevBtn = document.getElementById('carousel-prev');
+        const nextBtn = document.getElementById('carousel-next');
 
-        const cards = Array.from(eventTrack.children);
-        cards.forEach(card => {
+        // 1. Clone cards for seamless infinite loop
+        const originalCards = Array.from(eventTrack.children);
+        originalCards.forEach(card => {
             const clone = card.cloneNode(true);
             eventTrack.appendChild(clone);
         });
 
+        // 2. Auto-scroll & Manual Navigation Logic
+        let autoScrollSpeed = 1.0; // Adjust this to change auto-scroll speed
+        let isHoveringCarousel = false;
+        let isManualScrolling = false;
+        let isMobileActive = false;
+        let manualScrollTimeout;
+
+        function carouselAutoScroll() {
+            if (!isHoveringCarousel && !isManualScrolling && !isMobileActive) {
+                scrollWrapper.scrollLeft += autoScrollSpeed;
+                
+                // Seamless looping based on the first clone's exact physical position
+                const firstClone = eventTrack.children[originalCards.length];
+                if (firstClone && scrollWrapper.scrollLeft >= firstClone.offsetLeft) {
+                    scrollWrapper.scrollLeft -= firstClone.offsetLeft;
+                }
+            }
+            requestAnimationFrame(carouselAutoScroll);
+        }
+
+        // Start auto-scroll loop
+        carouselAutoScroll();
+
+        // Pause on hover
+        scrollWrapper.addEventListener('mouseenter', () => isHoveringCarousel = true);
+        scrollWrapper.addEventListener('mouseleave', () => isHoveringCarousel = false);
+
+        // 3. Arrow Controls
+        const getCardScrollWidth = () => {
+            const card = eventTrack.querySelector('.event-card-wrapper');
+            return card ? card.offsetWidth + 40 : 360; // Card width + gap
+        };
+
+        function handleManualScroll(direction) {
+            isManualScrolling = true;
+            clearTimeout(manualScrollTimeout);
+
+            const firstClone = eventTrack.children[originalCards.length];
+
+            // Prevent hitting the physical edge by jumping bounds invisibly before smooth scrolling
+            if (direction === -1 && scrollWrapper.scrollLeft < 10) {
+                scrollWrapper.scrollLeft += firstClone.offsetLeft;
+            } else if (direction === 1 && scrollWrapper.scrollLeft >= firstClone.offsetLeft - 10) {
+                scrollWrapper.scrollLeft -= firstClone.offsetLeft;
+            }
+
+            // Smooth scroll by exactly one card's width
+            scrollWrapper.scrollBy({ left: direction * getCardScrollWidth(), behavior: 'smooth' });
+
+            // Resume auto-scroll after the CSS transition completes
+            manualScrollTimeout = setTimeout(() => {
+                isManualScrolling = false;
+            }, 600); 
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', () => handleManualScroll(-1));
+        if (nextBtn) nextBtn.addEventListener('click', () => handleManualScroll(1));
+
+        // 4. Update Mobile Click/Focus Logic to use JS scrolling
         eventTrack.addEventListener('click', function(e) {
             if (e.target.tagName.toLowerCase() === 'button' || e.target.tagName.toLowerCase() === 'a' || e.target.closest('button') || e.target.closest('a')) return;
 
@@ -1411,20 +1580,20 @@
             
             if (!isCurrentlyActive) {
                 clickedCard.classList.add('mobile-active');
-                eventTrack.style.setProperty('animation-play-state', 'paused', 'important');
+                isMobileActive = true; // Pauses auto-scroll
                 
-                clickedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                // Scroll to center the clicked card visually
+                const scrollPos = clickedCard.offsetLeft - (scrollWrapper.clientWidth / 2) + (clickedCard.offsetWidth / 2);
+                scrollWrapper.scrollTo({ left: scrollPos, behavior: 'smooth' });
             } else {
-                eventTrack.style.setProperty('animation-play-state', 'running', 'important');
+                isMobileActive = false; // Resumes auto-scroll
             }
         });
 
         const resetCarouselState = () => {
-            eventTrack.style.setProperty('animation-play-state', 'running', 'important');
-            
+            isMobileActive = false; // Resume auto-scroll
             document.querySelectorAll('.event-card-wrapper').forEach(c => {
                 c.classList.remove('mobile-active');
-                
                 c.style.filter = 'none'; 
                 c.style.opacity = '1';
                 c.style.transform = 'scale(1)';
