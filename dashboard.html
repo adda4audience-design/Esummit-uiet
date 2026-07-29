@@ -257,7 +257,18 @@
                         </div>
                     </div>
                     <div class="data-group highlight span-2" id="hostel-spec"><label><i class="fa-solid fa-bed"></i> Accomodation Status</label><div class="value" id="d-hostel">--</div></div>
-
+                    <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #2ecc71; margin-top: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="margin: 0;"><i class="fa-solid fa-share-nodes"></i> My Referral Hub</label>
+                            <div style="font-size: 1.2rem; font-weight: 800; color: #2ecc71;">
+                                <i class="fa-solid fa-users"></i> <span id="d-ref-count">0</span> Referrals
+                            </div>
+                        </div>
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <input type="text" id="d-ref-code" readonly style="flex: 1; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #2ecc71; color: var(--text-main); font-family: monospace; font-size: 1.1rem; letter-spacing: 2px;">
+                            <button class="btn-action" style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; border-color: #2ecc71;" onclick="navigator.clipboard.writeText(document.getElementById('d-ref-code').value)"><i class="fa-regular fa-copy"></i> Copy</button>
+                        </div>
+                    </div>
                     <!-- TEAMS MANAGEMENT SECTION -->
                     <div class="data-group span-2" style="background: rgba(255, 255, 255, 0.02); border-left-color: #9b59b6; margin-top: 20px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -445,6 +456,8 @@
                         hostelDisplay.innerText = 'NOT REQUESTED (Can be changed in Edit)';
                         hostelDisplay.style.color = 'var(--text-muted)';
                     }
+                    document.getElementById('d-ref-code').value = user.ticketId || 'PASS PENDING';
+                    document.getElementById('d-ref-count').innerText = user.referralCount || 0;
                     
                     // --- SECURE EVENT RENDERING ---
                     const eventGrid = document.getElementById('event-grid');

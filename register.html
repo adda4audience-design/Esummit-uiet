@@ -207,6 +207,11 @@
                 </div>
             </div>
 
+            <div class="form-group reg-only" style="animation-delay: 0.22s;">
+                <label>Referral Code (Optional)</label>
+                <input type="text" id="inp-referral" placeholder="Enter Pass ID if referred">
+            </div>
+
             <div class="reg-only">
                 <!-- Role Selection -->
                 <div class="form-group" style="animation-delay: 0.25s;">
@@ -555,7 +560,8 @@
                         gender: finalGender,
                         branch: finalBranch,
                         year: finalYear,
-                        rollNo: finalRoll
+                        rollNo: finalRoll,
+                        referredBy: document.getElementById('inp-referral').value.trim() || undefined
                     };
 
                     const res = await fetch(`${API_URL}/auth/register`, {
