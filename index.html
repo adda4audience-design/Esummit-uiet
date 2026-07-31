@@ -35,15 +35,47 @@
         main { position: relative; z-index: 1; }
         section { min-height: 100vh; width: 100%; padding: 5rem 8%; display: flex; flex-direction: column; justify-content: center; position: relative; pointer-events: none; }
 
-        /* --- Header & Navigation --- */
+        #header-logo-img {
+    height: 60px; 
+    width: auto;
+    object-fit: contain;
+    position: relative;
+    left: 50px; /* Use a negative number to push it left, positive to push right */
+    top: 0px;    /* You can also move it up or down using top */
+}
+
+#header-uietlogo-img {
+    height: 60px; 
+    width: auto;
+    object-fit: contain;
+    position: relative;
+    left: -180px;  /* Positive number pushes it right */
+    top: 0px; 
+}
+
+        #hero-main-img {
+            width: 100%;
+            max-width: 900px; /* Adjust this value to make the desktop logo larger or smaller */
+            height: auto;
+            filter: saturate(120%) contrast(120%) brightness(105%);
+            display: block;
+            margin-bottom: -100px;
+            margin-top: -50px;
+            margin-left: -60px;
+        }
+
         .nav-header { position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; pointer-events: auto; }
-        .logo { font-size: 1rem; font-weight: 900; color: var(--text-main); text-decoration: none; letter-spacing: 2px; }
+        .logo { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; /* This controls the space between the two logos */
+    text-decoration: none; 
+}
         .hamburger { display: none; color: #ffffff; font-size: 1.5rem; cursor: pointer; transition: transform 0.3s; }
         .hamburger:hover { transform: scale(1.1); }
         .main-nav ul { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
         .main-nav a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.65; transition: opacity 0.3s, color 0.3s, text-shadow 0.3s; }
         .main-nav a:hover { opacity: 1; color: var(--primary-gold); }
-
         .nav-profile-icon { font-size: 1.1rem !important; color: var(--primary-gold) !important; opacity: 0.8 !important; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.3); transition: all 0.3s ease !important; }
         .nav-profile-icon:hover { background: var(--primary-gold); color: var(--bg-black) !important; box-shadow: 0 0 15px rgba(255, 170, 0, 0.5); transform: scale(1.1); opacity: 1 !important; }
 
@@ -329,9 +361,44 @@
         }
         @media (max-width: 768px) {
             section { padding: 6rem 5% 4rem 5%; }
+           #header-logo-img, 
+            #header-uietlogo-img {
+                left: 0;          
+                top: 0;
+                height: 40px;     
+            }
+
+            #header-uietlogo-img {
+                order: -1; /* This forces the KUK logo to the left position */
+            }
+
+/* 2. Reset the Main Hero Image */
+           #hero-main-img {
+    max-width: 100%;
+    margin: 0 auto 0 auto; /* Keep margins safely at 0 */
+    transform: scale(1.17) translateY(-14px); /* translateY moves it up safely */
+}
+
+            .hero-sub-wrapper {
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+            .hero-logos {
+        transform: translate(0px, 0px) !important; /* Negative number shifts it slightly left */
+        justify-content: center;
+        gap: 5px;
+        width: 100%;
+    }
+
+            .hero-actions {
+                margin-top: 0px; /* Removes the gap above the dashboard button */
+            }
             .hero-text-block { margin-left: 0px; margin-top: 14px; text-align: center; margin-bottom: 22vh; }
             .hero-mid { font-size: 0.75rem; margin-left: 0; }
-            .hero-main { font-size: clamp(3.5rem, 12vw, 6rem); margin-left: 0; letter-spacing: 0; }
             
             .event-card-wrapper { width: 280px; height: 450px; scroll-snap-align: center; scroll-snap-stop: always; flex-shrink: 0; }
             .event-card-back { padding: 1.5rem 1rem; justify-content: flex-start; }
@@ -370,7 +437,7 @@
             .footer-socials-new { justify-content: center; }
             
             #speakers { height: 250vh !important; }
-            .spacer { height: 150vh !important; }
+            .spacer { height: 700vh !important; }
         }
 
         .hero-sub-wrapper {
@@ -384,13 +451,13 @@
 .hero-logos {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: -10px;
+    transform: translate(510px, 0px);
 }
 
 .hero-logos img {
-    height: 35px;
+    height:50px;
     object-fit: contain;
-    filter: grayscale(100%) brightness(0.8);
     transition: all 0.3s ease;
 }
 
@@ -419,7 +486,7 @@
 
     <div id="tank-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 100;">
         <div id="tank-title" style="position: absolute; transform: translate(-50%, -100%); display: none; color: var(--text-main); font-weight: 900; font-size: clamp(1.2rem, 3vw, 2.5rem); letter-spacing: 8px; text-shadow: 0 0 20px rgba(255, 170, 0, 0.8), 2px 2px 0px rgba(0,0,0,1); pointer-events: none; text-align: center; width: max-content;">
-            BROCHURE & IMP. INFO.
+            BROCHURE & INFO.
         </div>
         <div id="scan-marker" style="position: absolute; transform: translate(-50%, -50%); display: none; pointer-events: auto; text-align: center;">
             <div id="overlay-scan-btn" style="width: 50px; height: 50px; border: 1px dashed var(--primary-gold); border-radius: 50%; margin: 0 auto 8px; animation: pulse-ring 2s infinite; display: flex; align-items: center; justify-content: center; background: rgba(255,170,0,0.1); color: var(--primary-gold); cursor: pointer; transition: all 0.3s ease;">
@@ -687,9 +754,13 @@
     </div>
 
     <header class="nav-header">
-        <a href="#" class="logo">E-SUMMIT 26'</a>
+        <a href="#" class="logo">
+            <img src="hero_logo.png" alt="E-Summit Logo" id="header-logo-img">
+            <img src="logo_kuk.png" alt="Second Logo" id="header-uietlogo-img">
+        </a>
         <div class="hamburger" id="hamburger-menu"><i class="fa-solid fa-bars"></i></div>
         <nav class="main-nav" id="main-nav">
+
             <ul>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -706,12 +777,9 @@
         <section id="hero">
             <div class="film-lines-container"><div class="film-line"></div><div class="film-line"></div><div class="film-line"></div><div class="film-line"></div></div>
             <div class="hero-text-block" id="hero-content">
-                <h3 class="hero-mid">Uiet Kurukshetra's</h3>
-                <h1 class="hero-main"><span class="g-3">E-Su</span><span class="g-1">mmit</span></h1>
+                <img src="hero_logo.png" alt="E-Summit Main Logo" id="hero-main-img">
                 <div class="hero-sub-wrapper">
-                    <p class="hero-sub">igniting the Shift</p>
                     <div class="hero-logos">
-                        <img src="logo_kuk.png" alt="Sponsor 1">
                         <img src="iic_logo.png" alt="Sponsor 2">
                         <img src="kutic_logo.png" alt="Sponsor 3">
                         <img src="cell_logo.png" alt="Sponsor 4">
@@ -2093,15 +2161,17 @@ const eventTrack = document.getElementById('carousel-track');
                     (1-t)*defCamY + t*billCamY,
                     (1-t)*defCamZ + t*billCamZ
                 );
-            } else {
+            }  else {
                 const lookYOffset = isMobile ? 2 : 0; 
                 if (currentRoverPos.z > -800) {
                     const uiSide = currentRoverPos.x > 0 ? 1 : -1;
                     targetLookAt.set(uiSide * 15, currentRoverPos.y + lookYOffset, currentRoverPos.z - 20);
-                    targetCamPos.set(uiSide * 25, currentRoverPos.y + (isMobile? 18 : 30), currentRoverPos.z + (isMobile? 40 : 65));
+                    // Increased mobile Y (height) from 18 to 25, and Z (distance) from 40 to 65
+                    targetCamPos.set(uiSide * 25, currentRoverPos.y + (isMobile? 25 : 30), currentRoverPos.z + (isMobile? 80 : 65));
                 } else {
                     targetLookAt.set(currentRoverPos.x, currentRoverPos.y + lookYOffset, currentRoverPos.z - 20);
-                    targetCamPos.set(currentRoverPos.x + 15, currentRoverPos.y + (isMobile? 18 : 30), currentRoverPos.z + (isMobile? 45 : 75));
+                    // Increased mobile Y (height) from 18 to 25, and Z (distance) from 45 to 70
+                    targetCamPos.set(currentRoverPos.x + 15, currentRoverPos.y + (isMobile? 25 : 30), currentRoverPos.z + (isMobile? 70 : 75));
                 }
             }
             
