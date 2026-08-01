@@ -29,7 +29,7 @@
             overflow-x: hidden; position: relative;
         }
 
-        /* --- 3D BACKGROUND --- */
+        
         #bg-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; display: block; pointer-events: none; }
 
         .back-icon-top {
@@ -39,7 +39,7 @@
         }
         .back-icon-top:hover { background: rgba(255, 51, 0, 0.1); color: var(--primary-orange); border-color: var(--primary-orange); transform: translateX(-5px); box-shadow: 0 0 15px rgba(255, 51, 0, 0.4); }
 
-        /* --- SYSTEM HUD ACCENTS --- */
+        
         .hud-corner {
             position: fixed; z-index: 5; font-family: monospace; font-size: 0.7rem; color: var(--neon-blue);
             opacity: 0.7; text-shadow: 0 0 6px var(--neon-blue); pointer-events: none; line-height: 1.6;
@@ -51,7 +51,7 @@
         @keyframes blinkDot { 50% { opacity: 0.2; } }
         @media (max-width: 760px) { .hud-corner { display: none; } }
 
-        /* --- AUTH CONTAINER --- */
+        
         .auth-container {
             background: linear-gradient(145deg, rgba(10,10,10,0.85), rgba(3,3,3,0.95));
             backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); border-top: 4px solid var(--primary-orange);
@@ -165,7 +165,7 @@
 
     <a href="index.html" class="back-icon-top" title="Return Home"><i class="fa-solid fa-arrow-left"></i></a>
 
-    <div class="hud-corner hud-tr">SYS.AUTH // ONLINE<br>NODE: UIET-KUK-01</div>
+    <div class="hud-corner hud-tr">SYS.AUTH 
     <div class="hud-corner hud-bl"><span class="pulse"></span>SECURE CHANNEL ESTABLISHED</div>
 
     <div class="auth-container">
@@ -213,7 +213,7 @@
             </div>
 
             <div class="reg-only">
-                <!-- Role Selection -->
+                
                 <div class="form-group" style="animation-delay: 0.25s;">
                     <label>Primary Role</label>
                     <select id="main-role" onchange="updateFormLogic()" required>
@@ -222,7 +222,7 @@
                     </select>
                 </div>
 
-                <!-- Non-Student specific -->
+                
                 <div id="non-student-details" class="dynamic-panel" style="animation-delay: 0s;">
                     <div class="form-group" style="animation-delay: 0s;">
                         <label>Specify Role</label>
@@ -238,7 +238,7 @@
                     </div>
                 </div>
 
-                <!-- Student Type Selection -->
+                
                 <div class="form-group" id="student-type-box" style="animation-delay: 0.3s;">
                     <label>University / College Type</label>
                     <select id="student-type" onchange="updateFormLogic()" required>
@@ -247,7 +247,7 @@
                     </select>
                 </div>
 
-                <!-- KUK University Dropdown -->
+                
                 <div class="form-group" id="kuk-college-box" style="animation-delay: 0s;">
                     <label>KUK Department</label>
                     <select id="kuk-college" onchange="updateFormLogic()" required>
@@ -258,16 +258,16 @@
                     </select>
                 </div>
 
-                <!-- KUK Specific Details -->
+                
                 <div id="kuk-details" class="dynamic-panel">
                     
-                    <!-- Specify Other Department -->
+                    
                     <div class="form-group" id="kuk-other-dept-box" style="animation-delay: 0s; display: none;">
                         <label>Specify Department</label>
                         <input type="text" id="inp-kuk-other-dept" placeholder="Enter department name" required>
                     </div>
 
-                    <!-- UIET Branch Dropdown -->
+                    
                     <div class="form-group" id="uiet-branch-box" style="animation-delay: 0s;">
                         <label>Branch</label>
                         <select id="uiet-branch" required>
@@ -282,7 +282,7 @@
                         </select>
                     </div>
                     
-                    <!-- Branch Typebox for IIHS, Law, Others -->
+                    
                     <div class="form-group" id="kuk-other-branch-box" style="animation-delay: 0s; display: none;">
                         <label>Branch / Course</label>
                         <input type="text" id="kuk-other-branch" placeholder="Enter your branch" required>
@@ -304,7 +304,7 @@
                     </div>
                 </div>
 
-                <!-- External College specifics -->
+                
                 <div id="external-college-details" class="dynamic-panel">
                     <div class="form-group" style="animation-delay: 0s;">
                         <label>College/University Name</label>
@@ -339,7 +339,7 @@
         const API_URL = "https://esummit-backend-gonf.onrender.com/api";
         let isLogin = false;
 
-        // Toggle Password Visibility
+        
         const togglePassword = document.getElementById('toggle-password');
         const passwordInput = document.getElementById('inp-password');
         togglePassword.addEventListener('click', function () {
@@ -357,7 +357,7 @@
             document.querySelector('.auth-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Helper to show/hide panels and disable inputs so hidden required fields don't block submission
+        
         const togglePanel = (panel, show) => {
             if (panel) {
                 panel.style.display = show ? 'block' : 'none';
@@ -386,7 +386,7 @@
             const extCollegeBox = document.getElementById('external-college-details');
             const hostelBox = document.getElementById('hostel-options');
 
-            // Reset visibility & disable all dynamic fields temporarily
+            
             togglePanel(studentTypeBox, false);
             togglePanel(nonStudentBox, false);
             togglePanel(kukCollegeBox, false);
@@ -409,7 +409,7 @@
                         togglePanel(kukOtherDeptBox, false);
                         togglePanel(uietBranchBox, true);
                         togglePanel(kukOtherBranchBox, false);
-                        togglePanel(hostelBox, false); // Optional: hide hostel for UIET specifically
+                        togglePanel(hostelBox, false); 
                     } else if (kukCollege === 'iihs' || kukCollege === 'law') {
                         togglePanel(kukOtherDeptBox, false);
                         togglePanel(uietBranchBox, false);
@@ -480,7 +480,7 @@
                     if(data.success) {
                         localStorage.setItem('esummit_token', data.token);
                         
-                        // --- AUTO ENROLLMENT LOGIC START ---
+                        
                         const pendingEvent = sessionStorage.getItem('pendingEventRegistration');
                         if (pendingEvent) {
                             try {
@@ -492,7 +492,7 @@
                                 sessionStorage.removeItem('pendingEventRegistration');
                             } catch (e) { console.error("Auto-enroll failed:", e); }
                         }
-                        // --- AUTO ENROLLMENT LOGIC END ---
+                        
 
                         showMessage("Successful, Redirecting...", true);
                         setTimeout(() => window.location.href = "dashboard.html", 1500);
@@ -507,7 +507,7 @@
                     let institutionName = 'N/A';
                     let finalCity = 'Kurukshetra';
                     let finalState = 'Haryana';
-                    let finalGender = document.getElementById('inp-gender').value; // Unified Gender Fetch
+                    let finalGender = document.getElementById('inp-gender').value; 
                     let finalBranch = 'N/A';
                     let finalYear = 'N/A';
                     let finalRoll = 'N/A';
@@ -580,7 +580,7 @@
                         const loginData = await loginRes.json();
                         localStorage.setItem('esummit_token', loginData.token);
 
-                        // --- AUTO ENROLLMENT LOGIC START ---
+                        
                         const pendingEvent = sessionStorage.getItem('pendingEventRegistration');
                         if (pendingEvent) {
                             try {
@@ -592,7 +592,7 @@
                                 sessionStorage.removeItem('pendingEventRegistration');
                             } catch (e) { console.error("Auto-enroll failed:", e); }
                         }
-                        // --- AUTO ENROLLMENT LOGIC END ---
+                        
 
                         showMessage("Registration Successful! Redirecting...", true);
                         setTimeout(() => window.location.href = "dashboard.html", 1500);
@@ -613,7 +613,7 @@
 
         updateFormLogic();
 
-        /* ================= IMMERSIVE 3D BACKGROUND (ROVER & TERRAIN) ================= */
+        
         const canvas = document.querySelector('#bg-canvas');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x00050f); 
@@ -625,14 +625,14 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
         
-        // Materials
+        
         const gridMaterial = new THREE.MeshBasicMaterial({ vertexColors: true, wireframe: true, transparent: true, opacity: 0.2 });
         const roverOrangeMaterial = new THREE.LineBasicMaterial({ color: 0xff3300 }); 
         const roverYellowMaterial = new THREE.LineBasicMaterial({ color: 0xffcc00 });
         const buildingMaterial = new THREE.LineBasicMaterial({ color: 0x445566, transparent: true, opacity: 0.5 });
         const accentMaterial = new THREE.LineBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.7 });
 
-        // --- Terrain ---
+        
         function getTerrainHeight(x, z) {
             const dune1 = Math.sin(x * 0.005) * Math.cos(z * 0.005) * 45;
             const dune2 = Math.sin(z * 0.002) * 25;
@@ -669,7 +669,7 @@
             return new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), material);
         }
 
-        // --- Background Buildings ---
+        
         function createGiantFactoryComplex(x, z, scale = 1, rotation = 0) {
             const group = new THREE.Group();
             
@@ -705,7 +705,7 @@
         createGiantFactoryComplex(600, -1500, 0.7, -Math.PI / 4);
         createGiantFactoryComplex(-150, -2500, 0.8, Math.PI / 3); 
 
-        // --- Original Accurate Rover Assembly ---
+        
         const rover = new THREE.Group();
         rover.rotation.order = 'YXZ';
 
@@ -742,7 +742,7 @@
         rover.add(scannerGroup);
         scene.add(rover);
 
-        // --- Dust Particles ---
+        
         const particleCount = 50;
         const particles = [];
         const particleMaterial = new THREE.MeshBasicMaterial({ color: 0x667788, wireframe: true, transparent: true });
@@ -754,34 +754,34 @@
         }
         let particleIndex = 0;
 
-        // --- Animation Loop ---
+        
         const clock = new THREE.Clock();
         let roverZ = 0;
         let currentRoverPos = { x: 60, y: getTerrainHeight(60, 0), z: 0 };
         const neonYellowColor = new THREE.Color(0xffcc00);
         const terrainColorAttribute = terrainGeo.attributes.color;
 
-        let driveDirection = 1; // 1 = Forward, -1 = Backward
+        let driveDirection = 1; 
 
         function animate() {
             requestAnimationFrame(animate);
             const time = clock.getElapsedTime();
 
-            // Reverse direction if we hit boundaries
+            
             if (roverZ < -7000) driveDirection = -1;
             if (roverZ > 0) driveDirection = 1;
 
-            // Auto drive rover
+            
             roverZ -= 1.2 * driveDirection;
             currentRoverPos.z = roverZ;
             
-            // Wider sweep so it goes outside the center form (max width 500px)
+            
             currentRoverPos.x = Math.sin(roverZ * 0.0015) * 65; 
             currentRoverPos.y = getTerrainHeight(currentRoverPos.x, currentRoverPos.z) - 1.5;
             
             rover.position.set(currentRoverPos.x, currentRoverPos.y, currentRoverPos.z);
 
-            // Dynamic Terrain coloring
+            
             for (let i = 0; i < positionAttribute.count; i++) {
                 let vx = positionAttribute.getX(i);
                 let vz = positionAttribute.getZ(i);
@@ -804,7 +804,7 @@
             }
             terrainColorAttribute.needsUpdate = true;
 
-            // Rover pitch/roll to match terrain
+            
             const wheelBase = 16, trackWidth = 20; 
             const yaw = rover.rotation.y;
             const fx = currentRoverPos.x + Math.sin(yaw) * (wheelBase/2);
@@ -825,7 +825,7 @@
             rover.rotation.x += (targetPitch - rover.rotation.x) * 0.15;
             rover.rotation.z += (targetRoll - rover.rotation.z) * 0.15;
 
-            // Turn rover based on path trajectory (accounting for forward/backward drive)
+            
             const nextZ = roverZ - (15 * driveDirection);
             const nextX = Math.sin(nextZ * 0.0015) * 65;
             const targetYaw = Math.atan2(nextX - currentRoverPos.x, nextZ - currentRoverPos.z);
@@ -833,12 +833,12 @@
             let diff = targetYaw - rover.rotation.y;
             while (diff < -Math.PI) diff += Math.PI * 2;
             while (diff > Math.PI) diff -= Math.PI * 2;
-            rover.rotation.y += diff * 0.05; // smooth turning
+            rover.rotation.y += diff * 0.05; 
 
-            // Spin wheels relative to chassis
+            
             wheels.forEach(wheel => { wheel.rotation.x -= 0.15; });
 
-            // Dust (Math handles correct placement based on yaw)
+            
             if (Math.random() > 0.3) {
                 const centerBackX = rover.position.x - Math.sin(rover.rotation.y) * 10;
                 const centerBackZ = rover.position.z - Math.cos(rover.rotation.y) * 10;
@@ -874,17 +874,17 @@
                 }
             });
 
-            // Head animation
+            
             const dummy = new THREE.Object3D();
             dummy.rotation.y = Math.sin(time * 1.5) * 0.4;
             dummy.rotation.x = Math.sin(time * 1.2) * 0.2;
             scannerGroup.quaternion.slerp(dummy.quaternion, 0.1);
 
-            // Follow Camera: Subdued X tracking to let rover peek out behind the center UI
+            
             let targetCamPos = new THREE.Vector3(currentRoverPos.x * 0.2, currentRoverPos.y + 35, currentRoverPos.z + 80);
             
-            // Camera always looks towards -Z so when the rover turns around (driveDirection = -1), 
-            // it drives directly toward the camera, and the camera gracefully retreats backwards!
+            
+            
             let targetLookAt = new THREE.Vector3(currentRoverPos.x, currentRoverPos.y + 10, currentRoverPos.z - (20 * driveDirection));
 
             camera.position.lerp(targetCamPos, 0.05);

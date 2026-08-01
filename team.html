@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Orbital Team Matrix | E-SUMMIT '26</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS3DRenderer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/TrackballControls.js"></script>
+    
+    <style>
+        :root {
+            --bg-black: #00030a;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --primary-orange: #ff3300;
+            --primary-gold: #ffaa00;
+            --neon-blue: #00f0ff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background-color: var(--bg-black); 
+            color: var(--text-main); 
+            font-family: 'Montserrat', sans-serif; 
+            overflow: hidden; 
+            margin: 0;
+        }
+
+        
+  #header-logo-img {
+    height: 60px; 
+    width: auto;
+    object-fit: contain;
+    position: relative;
+    left: 50px; 
+    top: 0px;    
+}
+
+#header-uietlogo-img {
+    height: 60px; 
+    width: auto;
+    object-fit: contain;
+    position: relative;
+    left: -180px;  
+    top: 0px; 
+}
+
+
+        .nav-header { position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; pointer-events: auto; }
+        .logo { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    text-decoration: none; 
+}
+        .hamburger { display: none; color: #ffffff; font-size: 1.5rem; cursor: pointer; transition: transform 0.3s; }
+        .hamburger:hover { transform: scale(1.1); }
+        .main-nav ul { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+        .main-nav a { color: var(--text-main); text-decoration: none; font-weight: 700; font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.65; transition: opacity 0.3s, color 0.3s, text-shadow 0.3s; }
+        .main-nav a:hover { opacity: 1; color: var(--primary-gold); }
+        .nav-profile-icon { font-size: 1.1rem !important; color: var(--primary-gold) !important; opacity: 0.8 !important; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 170, 0, 0.1); border: 1px solid rgba(255, 170, 0, 0.3); transition: all 0.3s ease !important; }
+        .nav-profile-icon:hover { background: var(--primary-gold); color: var(--bg-black) !important; box-shadow: 0 0 15px rgba(255, 170, 0, 0.5); transform: scale(1.1); opacity: 1 !important; }
+
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+        #css-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none; }
+        #css-container > div { pointer-events: auto; }
+
+        
+        .team-card {
+            background: linear-gradient(145deg, rgba(10,10,10,0.85), rgba(3,3,3,0.95));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--neon-blue);
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .team-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 15px 50px rgba(0, 240, 255, 0.5);
+        }
+
+        .team-card.member-card { 
+            width: 240px; height: 340px; 
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+        }
+        .team-card.leader-card { 
+            width: 360px; height: 520px;
+            border-top: 6px solid var(--primary-gold);
+            background: linear-gradient(145deg, rgba(20,15,5,0.85), rgba(5,3,0,0.95));
+            box-shadow: 0 15px 40px rgba(255, 170, 0, 0.25);
+        }
+        .team-card.leader-card:hover {
+            border-color: var(--primary-gold);
+            box-shadow: 0 20px 60px rgba(255, 170, 0, 0.6);
+        }
+
+        .leader-badge {
+            position: absolute; top: 15px; right: 15px;
+            background: var(--primary-gold); color: var(--bg-black);
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; box-shadow: 0 0 20px rgba(255, 170, 0, 0.6); z-index: 2;
+        }
+
+        .card-image-wrapper {
+            width: 100%; overflow: hidden;
+            border-bottom: 1px solid rgba(255,255,255,0.05); position: relative;
+        }
+        
+        .member-card .card-image-wrapper { height: 240px; }
+        .leader-card .card-image-wrapper { height: 360px; }
+        
+        .card-image-wrapper img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(30%) contrast(110%);
+        }
+
+        .team-card h3 {
+            color: var(--text-main); font-weight: 900; text-transform: uppercase; 
+            letter-spacing: 2px; padding: 0 15px;
+        }
+        .member-card h3 { font-size: 1.1rem; margin: 15px 0 5px; }
+        .leader-card h3 { font-size: 1.65rem; margin: 25px 0 10px; }
+        
+        .team-card p {
+            color: var(--text-muted); text-transform: uppercase; font-weight: 700; 
+            letter-spacing: 2px; padding: 0 15px; margin: 0;
+        }
+        .member-card p { font-size: 0.75rem; }
+        .leader-card p { color: var(--primary-gold); font-size: 1.1rem; }
+
+        
+        #hud-menu {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            z-index: 100; display: flex; flex-direction: row; flex-wrap: wrap; 
+            justify-content: center; gap: 10px; background: rgba(0,0,0,0.6); 
+            padding: 15px 25px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); 
+            backdrop-filter: blur(10px); pointer-events: auto; width: max-content;
+            max-width: 95vw;
+        }
+
+        .hud-btn {
+            background: transparent; color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.1); padding: 10px 18px;
+            font-family: 'Montserrat', sans-serif; font-size: 0.7rem;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+            cursor: pointer; transition: all 0.3s; border-radius: 25px;
+        }
+
+        .hud-btn:hover, .hud-btn.active {
+            background: rgba(0, 240, 255, 0.1); color: var(--text-main);
+            border-color: var(--neon-blue); box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        #instruction {
+            position: absolute; top: 100px; left: 50%; transform: translateX(-50%);
+            color: var(--text-muted); font-size: 0.75rem; letter-spacing: 4px;
+            text-transform: uppercase; font-weight: 700; z-index: 100;
+            pointer-events: none; opacity: 0.8; text-align: center;
+        }
+        #instruction span { display: block; color: var(--primary-gold); margin-top: 5px;}
+
+        @media (max-width: 768px) {
+            
+            #header-logo-img, 
+            #header-uietlogo-img {
+                left: 0;          
+                top: 0;
+                height: 40px;     
+            }
+            #header-uietlogo-img {
+                order: -1; 
+            }
+
+            
+            #hud-menu {
+                bottom: 20px;
+                padding: 10px 15px;
+                gap: 6px;
+                width: 95vw;
+                border-radius: 20px;
+            }
+            .hud-btn {
+                padding: 8px 12px;
+                font-size: 0.6rem;
+                letter-spacing: 1px;
+            }
+
+            
+            .team-card.leader-card {
+                width: 260px; 
+                height: 380px;
+            }
+            .leader-card .card-image-wrapper {
+                height: 260px;
+            }
+            .leader-card h3 {
+                font-size: 1.2rem;
+                margin: 15px 0 5px;
+            }
+            .team-card.member-card {
+                width: 180px; 
+                height: 260px;
+            }
+            .member-card .card-image-wrapper {
+                height: 180px;
+            }
+            .member-card h3 {
+                font-size: 0.9rem;
+                margin: 10px 0 5px;
+            }
+
+            
+            #instruction {
+                top: 80px;
+                font-size: 0.65rem;
+                letter-spacing: 2px;
+                width: 90vw;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hamburger { display: block; position: relative; z-index: 1001; }
+            .main-nav { 
+                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+                background: rgba(0, 3, 10, 0.7); backdrop-filter: blur(25px) saturate(120%); 
+                display: flex; justify-content: center; align-items: center; z-index: 999; 
+                opacity: 0; visibility: hidden; pointer-events: none; transition: all 0.4s ease; 
+                border: none; border-radius: 0; padding: 0; box-shadow: none; 
+            }
+            .main-nav.active { opacity: 1; visibility: visible; pointer-events: auto; }
+            .main-nav ul { flex-direction: column; gap: 1.2rem; align-items: center; transform: translateY(20px); transition: transform 0.4s ease; }
+            .main-nav.active ul { transform: translateY(0); }
+            .main-nav ul li { display: block !important; }
+            .main-nav ul li:last-child { order: -1; margin-bottom: 1rem; }
+            .main-nav a { font-size: 1.3rem; font-weight: 900; letter-spacing: 4px; text-align: center; line-height: 0.5; }
+            .nav-profile-icon { width: 50px; height: 50px; font-size: 1.5rem !important; margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="nav-header">
+        <a href="#" class="logo">
+            <img src="hero_logo.png" alt="E-Summit Logo" id="header-logo-img">
+            <img src="logo_kuk.png" alt="Second Logo" id="header-uietlogo-img">
+        </a>
+        <div class="hamburger" id="hamburger-menu"><i class="fa-solid fa-bars"></i></div>
+        <nav class="main-nav" id="main-nav">
+
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#brochure">Brochure</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#speakers">Speakers</a></li>
+                <li><a href="campus.html">Campus</a></li>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="register.html" class="nav-profile-icon" title="User Login"><i class="fa-solid fa-user"></i></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div id="instruction">
+        <i class="fa-solid fa-arrows-spin"></i> Click & Drag to Rotate Matrix
+        <span><i class="fa-solid fa-computer-mouse"></i> Scroll to Change Sectors</span>
+    </div>
+
+    
+    <div id="hud-menu">
+        <button class="hud-btn active" data-target="Core">Core & Organizing</button>
+        <button class="hud-btn" data-target="Tech">Tech Team</button>
+        <button class="hud-btn" data-target="Operations">Operations</button>
+        <button class="hud-btn" data-target="Event Operations">Event Operations</button>
+        <button class="hud-btn" data-target="Sponsorship">Sponsorship</button>
+        <button class="hud-btn" data-target="Media & Design">Media & Design</button>
+        <button class="hud-btn" data-target="Ambassadors">Ambassadors</button>
+    </div>
+
+    <div id="canvas-container"></div>
+    <div id="css-container"></div>
+
+    <script>
+        
+        const teamData = {
+          "Core": [
+            {"name": "Riyanshi Varshney", "desig": "Leader", "img": "teams/Riyanshi_Varshney_No_Desig.jpg", "is_leader": true},
+            {"name": "Diksha", "desig": "Leader", "img": "teams/Diksha_No_Desig.jpg", "is_leader": true}
+          ],
+          "Tech": [
+            {"name": "Himesh", "desig": "Leader", "img": "teams/Himesh_No_Desig.jpg", "is_leader": true},
+            {"name": "Shubham", "desig": "Member", "img": "teams/Shubham_No_Desig.jpg", "is_leader": false},
+            {"name": "Neha", "desig": "Member", "img": "teams/Neha_No_Desig.jpg", "is_leader": false},
+            {"name": "Unknown", "desig": "Member", "img": "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png", "is_leader": false}
+          ],
+          "Operations": [
+            {"name": "Anjali", "desig": "Leader", "img": "teams/Anjali_No_Desig.jpg", "is_leader": true},
+            {"name": "Neha Yadav", "desig": "Member", "img": "teams/Neha_Yadav_No_Desig.jpg", "is_leader": false},
+            {"name": "Aditya Kumar", "desig": "Member", "img": "teams/Aditya_Kumar_No_Desig.jpg", "is_leader": false},
+            {"name": "Tushar Janghu", "desig": "Member", "img": "teams/Tushar_Janghu_No_Desig.jpg", "is_leader": false},
+            {"name": "Vijeta", "desig": "Member", "img": "teams/Vijeta_No_Desig.jpg", "is_leader": false}
+          ],
+          "Event Operations": [
+            {"name": "Neha Yadav", "desig": "Leader", "img": "teams/Neha_Yadav_No_Desig.jpg", "is_leader": true},
+            {"name": "BHUMIKA", "desig": "Member", "img": "teams/BHUMIKA_No_Desig.jpg", "is_leader": false},
+            {"name": "Akshansh Mishra", "desig": "Member", "img": "teams/Akshansh_Mishra_No_Desig.jpg", "is_leader": false},
+            {"name": "Himani Sharma", "desig": "Member", "img": "teams/Himani_Sharma_No_Desig.jpg", "is_leader": false},
+            {"name": "Amber Batra", "desig": "Member", "img": "teams/Amber_Batra_No_Desig.jpg", "is_leader": false}
+          ],
+          "Sponsorship": [
+            {"name": "Dhruv verma", "desig": "Leader", "img": "teams/Dhruv_verma_No_Desig.jpg", "is_leader": true},
+            {"name": "Prince", "desig": "Member", "img": "teams/Prince_No_Desig.jpg", "is_leader": false},
+            {"name": "Hemant", "desig": "Member", "img": "teams/Hemant_No_Desig.jpg", "is_leader": false},
+            {"name": "Aditya yadav", "desig": "Member", "img": "teams/Aditya_yadav_No_Desig.jpg", "is_leader": false},
+            {"name": "Tilak", "desig": "Member", "img": "teams/Tilak_No_Desig.jpg", "is_leader": false}
+          ],
+          "Media & Design": [
+            {"name": "Simran", "desig": "Leader", "img": "teams/Simran_No_Desig.jpg", "is_leader": true},
+            {"name": "Aayush", "desig": "Member", "img": "teams/Aayush_No_Desig.jpg", "is_leader": false},
+            {"name": "Ruhani mahla", "desig": "Member", "img": "teams/Ruhani_mahla_No_Desig.jpg", "is_leader": false},
+            {"name": "Sneha sharma", "desig": "Member", "img": "teams/Sneha_sharma_No_Desig.jpg", "is_leader": false},
+            {"name": "Yatin Mantoo", "desig": "Member", "img": "teams/Yatin_Mantoo_No_Desig.jpg", "is_leader": false},
+            {"name": "Harshit", "desig": "Member", "img": "teams/Harshit_No_Desig.jpg", "is_leader": false}
+          ],
+          "Ambassadors": [
+            {"name": "Mahima Aggarwal", "desig": "Member", "img": "teams/Mahima_Aggarwal_No_Desig.jpg", "is_leader": false},
+            {"name": "Ankita Gupta", "desig": "Member", "img": "teams/Ankita_Gupta_No_Desig.jpg", "is_leader": false},
+            {"name": "Vivek sharma", "desig": "Member", "img": "teams/Vivek_sharma_No_Desig.jpg", "is_leader": false},
+            {"name": "Ravi", "desig": "Member", "img": "teams/Ravi_No_Desig.jpg", "is_leader": false},
+            {"name": "Manisha", "desig": "Member", "img": "teams/Manisha_No_Desig.jpg", "is_leader": false}
+          ]
+        };
+
+        
+        let camera, sceneWebGL, sceneCSS, rendererWebGL, rendererCSS, controls;
+        const objects = []; 
+        let activeTeamCards = [];
+        let networkLines; 
+        
+        
+        const teamNames = Object.keys(teamData);
+        let currentTeamIndex = 0;
+        let isScrolling = false;
+
+        init();
+        animate();
+
+        
+        const hamburger = document.getElementById('hamburger-menu');
+        const mainNav = document.getElementById('main-nav');
+        const navLinks = document.querySelectorAll('.main-nav a');
+
+        hamburger.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            if(mainNav.classList.contains('active')) {
+                hamburger.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            } else {
+                hamburger.innerHTML = '<i class="fa-solid fa-bars"></i>';
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+                hamburger.innerHTML = '<i class="fa-solid fa-bars"></i>';
+            });
+        });
+
+        function init() {
+            camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 20000);
+            camera.position.z = 2500; 
+
+            
+            sceneWebGL = new THREE.Scene();
+            sceneWebGL.fog = new THREE.FogExp2(0x00050f, 0.00035); 
+            
+            
+            const gridHelperBottom = new THREE.GridHelper(10000, 100, 0x00f0ff, 0x00f0ff);
+            gridHelperBottom.position.y = -800;
+            gridHelperBottom.material.opacity = 0.15;
+            gridHelperBottom.material.transparent = true;
+            sceneWebGL.add(gridHelperBottom);
+
+            
+            const gridHelperTop = new THREE.GridHelper(10000, 100, 0x00f0ff, 0x00f0ff);
+            gridHelperTop.position.y = 800;
+            gridHelperTop.material.opacity = 0.08;
+            gridHelperTop.material.transparent = true;
+            sceneWebGL.add(gridHelperTop);
+
+            
+            const lineMat = new THREE.LineBasicMaterial({ 
+                color: 0x00f0ff, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending 
+            });
+            const MAX_LINES = 100; 
+            const lineGeo = new THREE.BufferGeometry();
+            const positions = new Float32Array(MAX_LINES * 2 * 3); 
+            lineGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            networkLines = new THREE.LineSegments(lineGeo, lineMat);
+            sceneWebGL.add(networkLines);
+
+            
+            sceneCSS = new THREE.Scene();
+
+            
+            rendererWebGL = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            rendererWebGL.setClearColor(0x00030a);
+            rendererWebGL.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(rendererWebGL.domElement);
+
+            rendererCSS = new THREE.CSS3DRenderer();
+            rendererCSS.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('css-container').appendChild(rendererCSS.domElement);
+
+            
+            controls = new THREE.TrackballControls(camera, rendererCSS.domElement);
+            controls.minDistance = 1000;
+            controls.maxDistance = 5000;
+            controls.noPan = true;
+            controls.noZoom = true; 
+            controls.rotateSpeed = 1.2;
+
+            createCards();
+            
+            
+            document.querySelectorAll('.hud-btn').forEach((btn, index) => {
+                btn.addEventListener('click', function() {
+                    currentTeamIndex = index;
+                    updateActiveTeam();
+                });
+            });
+
+            
+            window.addEventListener('wheel', handleScrollEvent, { passive: false });
+            window.addEventListener('resize', onWindowResize);
+
+            filterTeam(teamNames[currentTeamIndex]);
+        }
+
+        function createCards() {
+            for (const [teamName, members] of Object.entries(teamData)) {
+                members.forEach(member => {
+                    const el = document.createElement('div');
+                    el.className = `team-card ${member.is_leader ? 'leader-card' : 'member-card'}`;
+                    
+                    let badgeHTML = member.is_leader ? `<div class="leader-badge" title="Team Leader"><i class="fa-solid fa-crown"></i></div>` : '';
+                    
+                    el.innerHTML = `
+                        ${badgeHTML}
+                        <div class="card-image-wrapper"><img src="${member.img}" alt="${member.name}" onerror="this.src='https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png'"></div>
+                        <h3>${member.name}</h3>
+                        <p>${member.desig}</p>
+                    `;
+
+                    const cssObj = new THREE.CSS3DObject(el);
+                    cssObj.position.set(0, 0, -10000); 
+                    sceneCSS.add(cssObj);
+                    
+                    objects.push({
+                        cssObj: cssObj,
+                        team: teamName,
+                        isLeader: member.is_leader,
+                        targetX: 0,
+                        targetY: 0,
+                        targetZ: 0
+                    });
+                });
+            }
+        }
+
+        
+        function handleScrollEvent(e) {
+            e.preventDefault(); 
+            
+            if (isScrolling) return; 
+            
+            if (e.deltaY > 0) {
+                currentTeamIndex = (currentTeamIndex + 1) % teamNames.length;
+            } else if (e.deltaY < 0) {
+                currentTeamIndex = (currentTeamIndex - 1 + teamNames.length) % teamNames.length;
+            }
+            
+            updateActiveTeam();
+            
+            isScrolling = true;
+            setTimeout(() => { isScrolling = false; }, 800);
+        }
+
+        function updateActiveTeam() {
+            const nextTeam = teamNames[currentTeamIndex];
+            document.querySelectorAll('.hud-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.hud-btn[data-target="${nextTeam}"]`).classList.add('active');
+            filterTeam(nextTeam);
+        }
+
+        
+        function filterTeam(targetTeam) {
+            activeTeamCards = [];
+            let inactiveCount = 0;
+            const inactiveObjects = [];
+            let leaderCount = 0;
+            let memberCount = 0;
+
+            controls.target.set(0,0,0);
+
+            
+            objects.forEach((obj) => {
+                if (obj.team === targetTeam) {
+                    let index = obj.isLeader ? leaderCount++ : memberCount++;
+                    activeTeamCards.push({
+                        cssObj: obj.cssObj,
+                        isLeader: obj.isLeader,
+                        index: index,
+                        angleOffset: 0 
+                    });
+                    
+                    
+                    obj.cssObj.element.style.opacity = "1";
+                    obj.cssObj.element.style.pointerEvents = "auto";
+                    obj.cssObj.element.style.filter = "none";
+                    obj.cssObj.element.style.zIndex = "10";
+                } else {
+                    inactiveObjects.push(obj);
+                    
+                    
+                    obj.cssObj.element.style.opacity = "0.5"; 
+                    obj.cssObj.element.style.pointerEvents = "none";
+                    obj.cssObj.element.style.filter = "blur(10px) brightness(0.7)";
+                    obj.cssObj.element.style.zIndex = "1";
+                }
+            });
+
+            
+            activeTeamCards.forEach(card => {
+                if (!card.isLeader && memberCount > 0) {
+                    card.angleOffset = (card.index / memberCount) * Math.PI * 2;
+                }
+                card.totalLeaders = leaderCount;
+            });
+
+          
+            const isMobile = window.innerWidth <= 768;
+            const bgRadius = isMobile ? 1000 : 1600; 
+            const bgSpread = isMobile ? 200 : 400;
+            
+            const totalInactive = inactiveObjects.length;
+            inactiveObjects.forEach((obj, i) => {
+                const phi = Math.acos(-1 + (2 * i) / totalInactive);
+                const theta = Math.sqrt(totalInactive * Math.PI) * phi;
+                
+                const r = bgRadius + Math.random() * bgSpread; 
+                
+                obj.targetX = r * Math.cos(theta) * Math.sin(phi);
+                obj.targetY = r * Math.sin(theta) * Math.sin(phi);
+                obj.targetZ = r * Math.cos(phi);
+            });
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            rendererWebGL.setSize(window.innerWidth, window.innerHeight);
+            rendererCSS.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+
+            const time = performance.now() * 0.0005;
+            const LERP_SPEED = 0.06; 
+            
+            const leaderPositions = [];
+            const memberPositions = [];
+
+           
+            const isMobile = window.innerWidth <= 768;
+            const leaderSpread = isMobile ? 220 : 400;   
+            const orbitRadius = isMobile ? 450 : 1000;   
+            const orbitIncline = isMobile ? 120 : 250;   
+
+            objects.forEach(obj => {
+                const activeData = activeTeamCards.find(c => c.cssObj === obj.cssObj);
+                let tx, ty, tz;
+
+                if (activeData) {
+                    if (activeData.isLeader) {
+                        tx = (activeData.index - (activeData.totalLeaders - 1) / 2) * leaderSpread; 
+                        ty = Math.sin(time * 2 + activeData.index) * 20;
+                        tz = 0;
+                    } else {
+                        const angle = (time * 0.4) + activeData.angleOffset;
+                        
+                        tx = Math.cos(angle) * orbitRadius;
+                        ty = Math.sin(angle * 2) * orbitIncline; 
+                        tz = Math.sin(angle) * orbitRadius;
+                    }
+                } else {
+                    
+                    tx = obj.targetX + Math.sin(time + obj.targetX) * 100;
+                    ty = obj.targetY + Math.cos(time + obj.targetY) * 100;
+                    tz = obj.targetZ;
+                }
+
+                
+                obj.cssObj.position.x += (tx - obj.cssObj.position.x) * LERP_SPEED;
+                obj.cssObj.position.y += (ty - obj.cssObj.position.y) * LERP_SPEED;
+                obj.cssObj.position.z += (tz - obj.cssObj.position.z) * LERP_SPEED;
+
+                obj.cssObj.lookAt(camera.position);
+
+                
+                if (activeData) {
+                    if (activeData.isLeader) leaderPositions.push(obj.cssObj.position.clone());
+                    else memberPositions.push(obj.cssObj.position.clone());
+                }
+            });
+
+            
+            const positions = networkLines.geometry.attributes.position.array;
+            let pIndex = 0;
+            
+            if (leaderPositions.length > 0) {
+                memberPositions.forEach(mPos => {
+                    leaderPositions.forEach(lPos => {
+                        
+                        for(let offset = -1; offset <= 1; offset++) {
+                            positions[pIndex++] = lPos.x + offset*3; positions[pIndex++] = lPos.y + offset*3; positions[pIndex++] = lPos.z;
+                            positions[pIndex++] = mPos.x + offset*3; positions[pIndex++] = mPos.y + offset*3; positions[pIndex++] = mPos.z;
+                        }
+                    });
+                });
+            } else {
+                memberPositions.forEach(mPos => {
+                    for(let offset = -1; offset <= 1; offset++) {
+                        positions[pIndex++] = offset*3; positions[pIndex++] = offset*3; positions[pIndex++] = 0;
+                        positions[pIndex++] = mPos.x + offset*3; positions[pIndex++] = mPos.y + offset*3; positions[pIndex++] = mPos.z;
+                    }
+                });
+            }
+
+            for(let i = pIndex; i < positions.length; i++) {
+                positions[i] = 0;
+            }
+            networkLines.geometry.attributes.position.needsUpdate = true;
+
+            rendererWebGL.render(sceneWebGL, camera);
+            rendererCSS.render(sceneCSS, camera);
+        }
+    </script>
+</body>
+</html>

@@ -30,13 +30,13 @@
             overflow-x: hidden; position: relative;
         }
 
-        /* Fixed Canvas dimensions to prevent horizontal scrolling */
+        
         #webgl-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; pointer-events: none;
         }
 
-        /* --- Transparent Header & Navigation --- */
+        
         .nav-header {
             position: fixed; top: 0; left: 0; width: 100%;
             padding: 1.2rem 5%; display: flex; justify-content: space-between; 
@@ -58,6 +58,24 @@
         }
         .main-nav a:hover { opacity: 1; color: var(--primary-gold); }
 
+            #header-logo-img {
+    height: 60px; 
+    width: auto;
+    object-fit: contain;
+    position: relative;
+    left: 50px; 
+    top: 0px;    
+}
+
+#header-uietlogo-img {
+    height: 60px; 
+    width: auto;
+    object-fit: contain;
+    position: relative;
+    left: -180px;  
+    top: 0px; 
+}
+
         .nav-profile-icon {
             font-size: 1.1rem !important; color: var(--primary-gold) !important; opacity: 0.8 !important;
             display: flex; align-items: center; justify-content: center;
@@ -67,13 +85,13 @@
         }
         .nav-profile-icon:hover { background: var(--primary-gold); color: var(--bg-black) !important; box-shadow: 0 0 15px rgba(255, 170, 0, 0.5); transform: scale(1.1); opacity: 1 !important; }
 
-        /* --- Dashboard Specific Styles --- */
+        
         .container {
             width: 100%; padding: 120px 5% 40px; 
             display: flex; justify-content: center; position: relative; z-index: 10;
         }
 
-        /* 1fr 400px forces it to the right on laptop */
+        
         .dashboard-wrapper { width: 100%; max-width: 1200px; display: grid; grid-template-columns: 1fr 400px; gap: 40px; }
 
         .glass-panel {
@@ -123,7 +141,7 @@
         .form-group input:focus, .form-group select:focus { border-color: var(--primary-gold); outline: none; background: rgba(255, 170, 0, 0.05);}
         .form-group select option { background: var(--bg-black); }
 
-        /* --- TICKET MODAL STYLES --- */
+        
         .ticket-modal-container { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,3,10,0.95); z-index: 2000; display: none; 
@@ -179,30 +197,40 @@
             .main-nav ul li:last-child { order: -1; margin-bottom: 1rem; }
             .main-nav a { font-size: 1.3rem; font-weight: 900; letter-spacing: 4px; text-align: center; }
             
-            /* --- DASHBOARD HIERARCHY FIX --- */
-            /* Switch to 1 column so the ticket drops below */
+            
+            
             .dashboard-wrapper { 
                 grid-template-columns: 1fr; 
             }
             .ticket-wrapper {
                 margin: 0 auto; 
                 width: 100%;
-                max-width: 380px; /* Constrains the width to make it a neat square grid */
+                max-width: 380px; 
             }
             .span-2 { grid-column: span 1; }
-        } /* <--- This bracket was missing before and broke everything! */
+        } 
 
         @media (max-width: 768px) {
             .container { padding: 90px 10px 30px; overflow-x: hidden; }
             .dashboard-wrapper { gap: 20px; width: 100%; }
             .glass-panel { padding: 20px 15px; width: 100%; box-sizing: border-box; }
+            #header-logo-img, 
+            #header-uietlogo-img {
+                left: 0;          
+                top: 0;
+                height: 40px;     
+            }
+
+            #header-uietlogo-img {
+                order: -1; 
+            }
             
             .header { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
             .header h1 { font-size: 1.5rem; }
             .header div { display: flex; flex-direction: column; width: 100%; gap: 10px; }
             .header .btn-action { margin: 0; width: 100%; padding: 12px; font-size: 0.85rem; }
 
-            /* Grid Configuration - Maintains 2 columns on mobile to allow specific hierarchy */
+            
             .details-grid { 
                 display: grid !important; 
                 grid-template-columns: 1fr 1fr !important; 
@@ -214,7 +242,7 @@
             .data-group label { font-size: 0.65rem; margin-bottom: 6px;}
             .data-group .value { font-size: 0.95rem; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
 
-            /* Sizing & Mobile Hierarchy Setup */
+            
             .dg-name, .dg-email, .dg-location, .dg-college, .dg-roll, .dg-events, .dg-hostel, .dg-referral, .dg-teams {
                 grid-column: span 2;
             }
@@ -222,7 +250,7 @@
                 grid-column: span 1;
             }
 
-            /* Custom Explicit Ordering for Mobile */
+            
             .dg-name { order: 1; }
             .dg-email { order: 2; }
             .dg-phone { order: 3; }
@@ -237,7 +265,7 @@
             .dg-referral { order: 12; }
             .dg-teams { order: 13; }
             
-            /* UI Fixes for Buttons in narrow panels */
+            
             .dg-referral > div:nth-child(2), 
             .dg-teams > div:nth-child(1) {
                 flex-direction: column !important;
@@ -261,7 +289,10 @@
     <canvas id="webgl-canvas"></canvas>
 
     <header class="nav-header" id="navbar">
-        <a href="index.html" class="logo">E-SUMMIT 26'</a>
+         <a href="#" class="logo">
+            <img src="hero_logo.png" alt="E-Summit Logo" id="header-logo-img">
+            <img src="logo_kuk.png" alt="Second Logo" id="header-uietlogo-img">
+        </a>
         <div class="hamburger" id="hamburger-menu"><i class="fa-solid fa-bars"></i></div>
         <nav class="main-nav" id="main-nav">
             <ul>
@@ -271,6 +302,7 @@
                 <li><a href="index.html#events">Events</a></li>
                 <li><a href="index.html#speakers">Speakers</a></li>
                 <li><a href="campus.html">Campus</a></li>
+                <li><a href="team.html">Team</a></li>
                 <li><a href="dashboard.html" class="nav-profile-icon" title="Dashboard" style="opacity: 1; color: var(--bg-black) !important; background: var(--primary-gold);"><i class="fa-solid fa-user"></i></a></li>
             </ul>
         </nav>
@@ -344,13 +376,13 @@
                 </div>
             </div>
 
-            <!-- Pass Render Area -->
+            
             <div class="glass-panel ticket-wrapper" id="ticket-render-area">
             </div>
         </div>
     </div>
 
-    <!-- Hidden Pass PDF Generator Modal -->
+    
     <div class="ticket-modal-container" id="pass-modal">
         <i class="fa-solid fa-xmark close-ticket-btn" onclick="closeTicketModal()"></i>
         
@@ -364,7 +396,7 @@
         </button>
     </div>
 
-    <!-- Create Team Modal -->
+    
     <div class="modal-overlay" id="create-team-modal">
         <div class="modal-content">
             <h2>Create <span>Team</span></h2>
@@ -381,7 +413,7 @@
         </div>
     </div>
 
-    <!-- Edit Profile Modal -->
+    
     <div class="modal-overlay" id="edit-modal">
         <div class="modal-content">
             <h2>Edit <span>Profile</span></h2>

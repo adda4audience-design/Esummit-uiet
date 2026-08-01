@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-SUMMIT '26 UIET KUK | The Shift</title>
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap');
 
@@ -40,8 +40,8 @@
     width: auto;
     object-fit: contain;
     position: relative;
-    left: 50px; /* Use a negative number to push it left, positive to push right */
-    top: 0px;    /* You can also move it up or down using top */
+    left: 50px; 
+    top: 0px;    
 }
 
 #header-uietlogo-img {
@@ -49,13 +49,13 @@
     width: auto;
     object-fit: contain;
     position: relative;
-    left: -180px;  /* Positive number pushes it right */
+    left: -180px;  
     top: 0px; 
 }
 
         #hero-main-img {
             width: 100%;
-            max-width: 900px; /* Adjust this value to make the desktop logo larger or smaller */
+            max-width: 900px; 
             height: auto;
             filter: saturate(120%) contrast(120%) brightness(105%);
             display: block;
@@ -68,7 +68,7 @@
         .logo { 
     display: flex; 
     align-items: center; 
-    gap: 15px; /* This controls the space between the two logos */
+    gap: 15px; 
     text-decoration: none; 
 }
         .hamburger { display: none; color: #ffffff; font-size: 1.5rem; cursor: pointer; transition: transform 0.3s; }
@@ -148,7 +148,6 @@
         .wheel { width: 4px; height: 8px; background-color: var(--primary-gold); border-radius: 4px; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); animation: scroll 1.5s infinite; }
         @keyframes scroll { 0% { top: 10px; opacity: 1; } 100% { top: 30px; opacity: 0; } }
 
-        /* Adjusted Heights for Shorter Exploration */
         .spacer { height: 20vh; }
         #speakers { height: 80vh !important; }
 
@@ -157,7 +156,7 @@
         .collage-img.img1 { top: 0; right: 10%; z-index: 1; }
         .collage-img.img2 { bottom: 0; right: 40%; z-index: 2; }
         .collage-img:hover { filter: grayscale(0%) brightness(1); transform: scale(1.1); z-index: 10 !important; box-shadow: 0 15px 30px rgba(255, 170, 0, 0.4); border-color: var(--primary-orange); }
-        
+
         @keyframes pulse-ring { 0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 170, 0, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(255, 170, 0, 0); } 100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(255, 170, 0, 0); } }
         @keyframes pulse-ring-blue { 0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); } 70% { transform: scale(1.1); box-shadow: 0 0 0 15px rgba(0, 240, 255, 0); } 100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); } }
 
@@ -175,25 +174,22 @@
         .status-scanning { color: var(--primary-gold); }
         .status-matched { color: #00ff66; text-shadow: 0 0 10px #00ff66; animation: blink 0.5s infinite alternate; }
 
-        /* --- EVENT CAROUSEL STYLES --- */
-        .carousel-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 5, 15, 0.9); backdrop-filter: blur(8px); z-index: 600; display: none; align-items: center; overflow: hidden; opacity: 0; transition: opacity 0.5s ease; /* Cursor defaults to normal now to suggest it DOES NOT close on click */ }
-        
+        .carousel-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 5, 15, 0.9); backdrop-filter: blur(8px); z-index: 600; display: none; align-items: center; overflow: hidden; opacity: 0; transition: opacity 0.5s ease;  }
+
         .carousel-track { 
             display: flex; gap: 40px; width: max-content; padding-left: 40px;
         }
-        
+
         .carousel-track:hover .event-card-wrapper:not(:hover) { filter: blur(5px); opacity: 0.5; transform: scale(0.95); }
 
-        /* --- NEW CAROUSEL WRAPPER & ARROWS --- */
 .carousel-scroll-wrapper {
     width: 100%;
-    overflow-x: auto; /* Allows touch swiping on mobile */
-    scroll-behavior: auto; /* JS will handle the smooth scrolling */
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    overflow-x: auto; 
+    scroll-behavior: auto; 
+    -ms-overflow-style: none;  
+    scrollbar-width: none;  
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
 .carousel-scroll-wrapper::-webkit-scrollbar {
     display: none;
 }
@@ -228,12 +224,11 @@
 .carousel-arrow-left { left: 30px; }
 .carousel-arrow-right { right: 30px; }
 
-/* Modify the track slightly to ensure symmetric padding for seamless looping */
 .carousel-track { 
     display: flex; 
     gap: 40px; 
     width: max-content; 
-    padding: 0 40px; /* Changed from padding-left to symmetric padding */
+    padding: 0 40px; 
     cursor: default;
 }
 
@@ -243,40 +238,39 @@
     .carousel-arrow-right { right: 10px; }
 }
 
-
         .event-card-wrapper { 
             background-color: transparent; width: 320px; height: 480px; perspective: 1000px; 
             cursor: pointer; transition: all 0.4s ease; 
             --theme-color: #00f0ff; position: relative;
         }
-        
+
         .event-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
         .event-card-wrapper:hover { z-index: 10; }
         .event-card-wrapper:hover .event-card-inner { transform: rotateY(180deg) scale(1.05); }
-        
+
         .event-card-front, .event-card-back { 
             position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; 
             border-radius: 8px; border: 1px solid var(--theme-color); 
             box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,0,0,0.5); 
             backdrop-filter: blur(10px); display: flex; flex-direction: column; overflow: hidden; background: rgba(5, 10, 20, 0.9); 
         }
-        
+
         .event-card-front { padding: 12px; }
         .card-poster { flex: 1; width: 100%; border-radius: 4px; overflow: hidden; background: #000; position: relative; z-index: 1; }
-        
+
         .card-poster img { width: 100%; height: 100%; object-fit: cover; transition: 0.4s ease; }
         .event-card-wrapper:hover .card-poster img { transform: scale(1.05); }
-        
+
         .card-title { height: 65px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border-top: 1px solid var(--theme-color); margin-top: 12px; border-radius: 4px; position: relative; z-index: 1; }
         .card-title h4 { color: var(--theme-color); font-size: 1.25rem; text-transform: uppercase; letter-spacing: 2px; margin: 0; text-shadow: 0 0 8px var(--theme-color); }
-        
+
         .event-card-back { transform: rotateY(180deg); padding: 2.5rem 2rem; justify-content: center; align-items: center; text-align: center; }
         .event-card-back h4 { color: var(--theme-color); font-size: 1.6rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 2px; position: relative; z-index: 1; text-shadow: 0 0 10px var(--theme-color); line-height: 1.3;}
-        
+
         .date-time-box { margin-bottom: 2rem; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; z-index: 1; position: relative;}
         .date-time-box p { font-family: monospace; color: #fff; font-size: 1rem; margin: 8px 0; display: flex; align-items: center; justify-content: flex-start; gap: 10px; }
         .date-time-box i { color: var(--theme-color); font-size: 1.2rem; width: 20px;}
-        
+
         .event-card-back .hero-btn { 
             z-index: 1; 
             width: 100%; text-align: center; 
@@ -289,7 +283,6 @@
             border-color: var(--primary-orange) !important;
         }
 
-        /* --- Custom Close Button --- */
         .carousel-close-btn {
             position: absolute;
             bottom: 40px;
@@ -318,7 +311,6 @@
             transform: translateX(-50%) scale(1.15);
         }
 
-        /* --- Footer Sponsors --- */
         .footer-sponsors-section { text-align: center; margin-bottom: 4rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .footer-sponsors-title { color: var(--text-main); font-size: 1.2rem; font-weight: 900; letter-spacing: 6px; margin-bottom: 2rem; text-transform: uppercase; }
         .sponsor-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1000px; margin: 0 auto; }
@@ -326,7 +318,7 @@
         .sponsor-box:hover { background: rgba(255, 255, 255, 0.1); color: var(--text-main); border-color: var(--primary-gold); box-shadow: 0 0 20px rgba(255, 170, 0, 0.2); transform: translateY(-3px); }
         .sponsor-box img { max-width: 80%; max-height: 80%; object-fit: contain; filter: grayscale(100%) opacity(0.7); transition: all 0.3s ease; }
         .sponsor-box:hover img { filter: grayscale(0%) opacity(1); }
-        
+
         .site-footer { background: #000205; padding: 5rem 10% 2rem; position: relative; z-index: 10; pointer-events: auto; color: #a0a0a0; font-family: 'Montserrat', sans-serif; overflow: hidden; }
         .footer-divider { display: flex; align-items: center; text-align: center; color: #ff9900; font-size: 0.8rem; font-weight: 700; letter-spacing: 3px; margin-bottom: 4rem; }
         .footer-divider::before, .footer-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 153, 0, 0.3); }
@@ -353,10 +345,10 @@
             .main-nav a { font-size: 1.3rem; font-weight: 900; letter-spacing: 4px; text-align: center; line-height: 0.5; }
             .nav-profile-icon { width: 50px; height: 50px; font-size: 1.5rem !important; margin-top: 10px; }
             .footer-bottom-grid { grid-template-columns: 1fr 1fr; }
-            
+
             .event-card-wrapper:hover .event-card-inner { transform: none; }
             .event-card-wrapper.mobile-active .event-card-inner { transform: rotateY(180deg) scale(1); }
-            
+
             .carousel-close-btn { bottom: 20px; width: 50px; height: 50px; font-size: 1.5rem; }
         }
         @media (max-width: 768px) {
@@ -369,14 +361,13 @@
             }
 
             #header-uietlogo-img {
-                order: -1; /* This forces the KUK logo to the left position */
+                order: -1; 
             }
 
-/* 2. Reset the Main Hero Image */
            #hero-main-img {
     max-width: 100%;
-    margin: 0 auto 0 auto; /* Keep margins safely at 0 */
-    transform: scale(1.17) translateY(-14px); /* translateY moves it up safely */
+    margin: 0 auto 0 auto; 
+    transform: scale(1.17) translateY(-14px); 
 }
 
             .hero-sub-wrapper {
@@ -388,18 +379,18 @@
     }
 
             .hero-logos {
-        transform: translate(0px, 0px) !important; /* Negative number shifts it slightly left */
+        transform: translate(0px, 0px) !important; 
         justify-content: center;
         gap: 5px;
         width: 100%;
     }
 
             .hero-actions {
-                margin-top: 0px; /* Removes the gap above the dashboard button */
+                margin-top: 0px; 
             }
             .hero-text-block { margin-left: 0px; margin-top: 14px; text-align: center; margin-bottom: 22vh; }
             .hero-mid { font-size: 0.75rem; margin-left: 0; }
-            
+
             .event-card-wrapper { width: 280px; height: 450px; scroll-snap-align: center; scroll-snap-stop: always; flex-shrink: 0; }
             .event-card-back { padding: 1.5rem 1rem; justify-content: flex-start; }
             .event-card-back h4 { font-size: 1.15rem; margin-bottom: 0.5rem; line-height: 1.2; flex-shrink: 0; }
@@ -435,7 +426,7 @@
             .collage-img.img2 { bottom: 0; right: auto; left: 0; }
             .footer-bottom-grid { grid-template-columns: 1fr; text-align: center; margin-bottom: 0rem; gap: 0.5rem; }
             .footer-socials-new { justify-content: center; }
-            
+
             #speakers { height: 250vh !important; }
             .spacer { height: 700vh !important; }
         }
@@ -518,15 +509,13 @@
     </div>
 
 <div id="events-carousel-container" class="carousel-container">
-        
-        <!-- NEW: Navigation Sliders -->
+
         <button id="carousel-prev" class="carousel-arrow carousel-arrow-left"><i class="fa-solid fa-chevron-left"></i></button>
         <button id="carousel-next" class="carousel-arrow carousel-arrow-right"><i class="fa-solid fa-chevron-right"></i></button>
 
-        <!-- NEW: Scroll Wrapper -->
         <div class="carousel-scroll-wrapper" id="carousel-scroll-wrapper">
             <div class="carousel-track" id="carousel-track">
-            
+
             <div class="event-card-wrapper" style="--theme-color: #00f0ff;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
@@ -726,10 +715,10 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
         </div>
-        
+
         <div id="close-carousel-bottom" class="carousel-close-btn" title="Close Events">
             <i class="fa-solid fa-xmark"></i>
         </div>
@@ -743,7 +732,6 @@
         <a href="https://www.instagram.com/esummit_uietkuk/" class="social-link" title="Instagram" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-instagram"></i></a>
     </div>
 
-    <!-- Buy Goodies Ribbon -->
     <div class="goodies-sidebar">
         <span class="goodies-text">BUY GOODIES</span>
         <div class="goodies-icons">
@@ -768,6 +756,7 @@
                 <li><a href="#events">Events</a></li>
                 <li><a href="#speakers">Speakers</a></li>
                 <li><a href="campus.html">Campus</a></li>
+                <li><a href="team.html">Team</a></li>
                 <li><a href="register.html" class="nav-profile-icon" title="User Login"><i class="fa-solid fa-user"></i></a></li>
             </ul>
         </nav>
@@ -815,7 +804,7 @@
     </main>
 
     <footer class="site-footer">
-        
+
         <div class="footer-sponsors-section">
             <h4 class="footer-sponsors-title">Our Proud Sponsors</h4>
             <div class="sponsor-grid">
@@ -833,7 +822,7 @@
         <div class="footer-divider">
             <span>MADE BY E-SUMMIT'S TECH TEAM</span>
         </div>
-        
+
         <div class="footer-bottom-grid">
             <div class="footer-col brand-col">
                 <h3 class="brand-logo">E-SUMMIT 26'</h3>
@@ -850,6 +839,8 @@
                 <a href="#brochure">Brochure</a>
                 <a href="#speakers">Speakers</a>
                 <a href="campus.html">Campus</a>
+                <a href="Team.html">Teams</a>
+
             </div>
             <div class="footer-col legal-col">
                 <h4>Legal</h4>
@@ -869,7 +860,7 @@
         </div>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
+
     <script>
         const mapHud = document.getElementById('map-hud');
         window.addEventListener('scroll', () => {
@@ -906,11 +897,11 @@
         scene.fog = new THREE.FogExp2(0x00050f, 0.0015);
 
         const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 8000);
-        
+
         const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-        
+
         const all3DFiles = [];
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2(-2, -2); 
@@ -923,11 +914,6 @@
             tooltip.style.top = event.clientY + 'px';
         });
 
-        // Browsers (Chrome, Edge, Firefox, Safari) silently block the 2nd/3rd
-        // auto-triggered download from a single click - only the first one
-        // (or first two) go through. Showing a small panel where the user
-        // clicks each file link themselves avoids that block entirely, since
-        // every download is now the direct result of a real user click.
         function showDownloadPanel(files) {
             const existing = document.getElementById('download-panel-overlay');
             if (existing) existing.remove();
@@ -976,12 +962,11 @@
     if (scanProgress >= 1.2 || document.body.style.cursor === 'pointer') { 
         raycaster.setFromCamera(mouse, camera);
         const intersects = raycaster.intersectObjects(all3DFiles, false);
-        
+
         if (intersects.length > 0) {
             const obj = intersects[0].object;
             if (obj.userData.isDownloadable) {
-                
-                // Define all three files to be downloaded
+
                 const filesToDownload = [
                     { name: 'Brochure.pdf', url: 'https://drive.google.com/uc?export=download&id=1BvLnnFaPSukuC23-idCvqfpGxLQXjika' },
                     { name: 'SOP.pdf', url: 'https://drive.google.com/uc?export=download&id=1W3e69dAfgsnnk70Qj8_VCSVMQemi0DG5' },
@@ -1009,7 +994,7 @@
 
         const terrainGeo = new THREE.PlaneGeometry(4000, 8000, 150, 300);
         terrainGeo.rotateX(-Math.PI / 2);
-        
+
         const positionAttribute = terrainGeo.attributes.position;
         const colors = [];
         const baseColor = new THREE.Color(0x667788);
@@ -1038,7 +1023,7 @@
 
         function createGiantFactoryComplex(x, z, scale = 1, rotation = 0) {
             const group = new THREE.Group();
-            
+
             const mainCore = createCleanBox(200, 350, 250, buildingMaterial);
             mainCore.position.set(0, 175, 0); group.add(mainCore);
 
@@ -1074,7 +1059,7 @@
             group.rotation.y = rotation;
             scene.add(group);
         }
-        
+
         createGiantFactoryComplex(-250, -300, 1, Math.PI / 6); 
         createGiantFactoryComplex(600, -900, 0.7, -Math.PI / 4);
 
@@ -1098,7 +1083,7 @@
         function createBarrelCluster(x, z) {
             const cluster = new THREE.Group();
             const baseMat = new THREE.LineBasicMaterial({ color: 0x445566, transparent: true, opacity: 0.8 });
-            
+
             const floorGeo = new THREE.PlaneGeometry(60, 40, 10, 10);
             const floor = new THREE.LineSegments(
                 new THREE.WireframeGeometry(floorGeo), 
@@ -1158,7 +1143,7 @@
 
                 fileMesh.position.set((i-1)*15, 12, 0);
                 fileMesh.visible = false;
-                
+
                 fileMesh.userData = { isDownloadable: true, filename: fileData[i].name, url: fileData[i].url };
 
                 cluster.add(fileMesh);
@@ -1168,7 +1153,7 @@
 
             const terrainY = getTerrainHeight(x, z);
             cluster.position.set(x, terrainY, z);
-            
+
             cluster.userData = { 
                 barrels, 
                 scanRing, 
@@ -1176,7 +1161,7 @@
                 originalColor: new THREE.Color(0x445566), 
                 targetColor: new THREE.Color(0xffaa00) 
             };
-            
+
             tankGroup.add(cluster);
         }
 
@@ -1188,7 +1173,6 @@
         const laser = new THREE.Line(laserGeo, laserMat);
         scene.add(laser);
 
-
         const machineGroup = new THREE.Group();
         const EVENTS_BASE_Z = -1400; 
 
@@ -1196,7 +1180,7 @@
             const whiteMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
             const yellowMat = new THREE.LineBasicMaterial({ color: 0xffcc00, transparent: true, opacity: 0.8 });
             const dimMat = new THREE.LineBasicMaterial({ color: 0x556677, transparent: true, opacity: 0.4 });
-            
+
             const mainBody = createWireframe(new THREE.BoxGeometry(80, 60, 40), whiteMat);
             mainBody.position.y = 30; 
             machineGroup.add(mainBody);
@@ -1229,7 +1213,7 @@
             const leftPodInner = createWireframe(new THREE.BoxGeometry(25, 50, 30), dimMat);
             leftPodInner.position.set(-55, 27.5, 0);
             machineGroup.add(leftPodInner);
-            
+
             const rightPod = createWireframe(new THREE.BoxGeometry(30, 55, 35), whiteMat);
             rightPod.position.set(55, 27.5, 0);
             machineGroup.add(rightPod);
@@ -1280,13 +1264,12 @@
 
         createTerminalMachine(160, EVENTS_BASE_Z);
 
-
         const billboardGroup = new THREE.Group();
         const SPEAKERS_BASE_Z = -2000; 
 
         function createBillboard(x, z) {
             const whiteWireMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.6 });
-            
+
             const pillar = createWireframe(new THREE.BoxGeometry(20, 160, 20), whiteWireMat);
             pillar.position.y = 80;
             billboardGroup.add(pillar);
@@ -1304,22 +1287,22 @@
             screenCanvas.height = 1024;
             const screenCtx = screenCanvas.getContext('2d');
             const screenTexture = new THREE.CanvasTexture(screenCanvas);
-            
+
             const screenMat = new THREE.MeshBasicMaterial({ map: screenTexture, transparent: true, opacity: 0.95 });
             const screenMesh = new THREE.Mesh(new THREE.PlaneGeometry(196, 116), screenMat);
             screenMesh.position.set(0, 150, 5.1); 
             billboardGroup.add(screenMesh);
-            
+
             billboardGroup.userData = { ctx: screenCtx, texture: screenTexture, canvas: screenCanvas };
             billboardGroup.position.set(x, getTerrainHeight(x, z), z);
-            
+
             billboardGroup.rotation.y = Math.PI / 7; 
-            
+
             scene.add(billboardGroup);
         }
-        
+
         createBillboard(-140, SPEAKERS_BASE_Z);
-        
+
         const sponsorSigns = [];
 
         function createSponsorSign(x, z, title, colorHex, logoUrls = []) {
@@ -1347,45 +1330,33 @@
             const tex = new THREE.CanvasTexture(canvas);
             const boardMat = new THREE.MeshBasicMaterial({ map: tex });
 
-            // Array to store loaded HTML Image objects
             const loadedImages = [];
             let currentIndex = 0;
 
-            // Dedicated function to draw the current state of the board
             function renderBoard() {
-                // 1. Clear background
                 ctx.fillStyle = '#ffffff'; 
                 ctx.fillRect(0, 0, 400, 600);
-                
-                // 2. Draw Header
                 ctx.fillStyle = '#000000'; 
                 ctx.font = '900 35px "Montserrat", sans-serif';
                 ctx.textAlign = 'center'; 
                 ctx.fillText(title, 200, 80);
-
-                // 3. Draw Divider Line
                 ctx.strokeStyle = colorHex; 
                 ctx.lineWidth = 6;
                 ctx.beginPath(); ctx.moveTo(50, 110); ctx.lineTo(350, 110); ctx.stroke();
-
-                // 4. Draw Logo (or Placeholder)
                 if (loadedImages.length > 0) {
                     const img = loadedImages[currentIndex];
-                    
-                    // Math to scale the image cleanly without stretching it
+
                     const maxW = 400; 
                     const maxH = 600;
                     let drawW = img.width;
                     let drawH = img.height;
 
-                    
-                    
                     const drawX = 200 - (drawW / 2);
                     const drawY = 360 - (drawH / 2); 
-                    
+
                     ctx.drawImage(img, drawX, drawY, drawW, drawH);
                 } else {
-                    // Fallback to a single large placeholder if no images exist
+
                     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
                     ctx.fillRect(50, 150, 300, 400);
                     ctx.fillStyle = '#000000'; 
@@ -1393,11 +1364,9 @@
                     ctx.fillText(`BRAND ${currentIndex + 1}`, 200, 360);
                 }
 
-                // Tell Three.js to push the updated canvas to the 3D model
                 tex.needsUpdate = true;
             }
 
-            // Load all provided URLs into Image objects
             if (logoUrls && logoUrls.length > 0) {
                 logoUrls.forEach(url => {
                     const img = new Image();
@@ -1410,17 +1379,15 @@
                 });
             }
 
-            // Initial render call
             renderBoard();
 
-            // Set up the infinite swapping loop (5 seconds)
             const cycleCount = (logoUrls && logoUrls.length > 0) ? logoUrls.length : 3;
             setInterval(() => {
                 if (loadedImages.length > 0) {
-                    // If images loaded, strictly cycle only through the successful ones
+
                     currentIndex = (currentIndex + 1) % loadedImages.length;
                 } else {
-                    // If NO images loaded (broken links), cycle through the 3 placeholders
+
                     currentIndex = (currentIndex + 1) % 3;
                 }
                 renderBoard();
@@ -1443,28 +1410,28 @@
             'https://res.cloudinary.com/di10wvjn8/image/upload/v1785276281/Capture_xjpnqv.png', 
             'https://res.cloudinary.com/di10wvjn8/image/upload/v1785276280/Aqua_dzyhpc.png'
         ]);  
-        
+
         createSponsorSign(-155, -950, 'SPECIAL PARTNERS', '#ffaa00', [
             'https://res.cloudinary.com/di10wvjn8/image/upload/v1785276281/Capture_xjpnqv.png', 
             'https://res.cloudinary.com/di10wvjn8/image/upload/v1785276280/Aqua_dzyhpc.png'
         ]); 
 
         let speakerIndex = 1;
-        
+
         const profileImg = new Image();
         profileImg.crossOrigin = "Anonymous";
         profileImg.src = "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png"; 
-        
+
         function drawSpeakerScreen() {
             if (!billboardGroup.userData.ctx) return;
             const ctx = billboardGroup.userData.ctx;
             const canvas = billboardGroup.userData.canvas;
             const w = canvas.width;
             const h = canvas.height;
-            
+
             ctx.fillStyle = '#00050f'; 
             ctx.fillRect(0, 0, w, h);
-            
+
             ctx.strokeStyle = 'rgba(0, 240, 255, 0.15)';
             ctx.lineWidth = 4;
             for(let i = 0; i < h; i += 20) {
@@ -1485,7 +1452,7 @@
 
             const imgX = w / 2;
             const imgY = h / 2 - 50;
-            
+
             if (profileImg.complete) {
                 ctx.shadowColor = '#00f0ff';
                 ctx.shadowBlur = 30;
@@ -1506,25 +1473,25 @@
             const sideX = imgX + 180;
             const sideY_desig = imgY - 40;
             const sideY_comp = imgY + 80;
-            
+
             ctx.textAlign = 'left';
 
             ctx.font = '700 60px "Courier New", monospace';
             const desigText = "CHIEF ARCHITECT";
             const desigMetrics = ctx.measureText(desigText);
-            
+
             ctx.fillStyle = 'rgba(255, 51, 0, 0.7)'; 
             ctx.fillRect(sideX - 20, sideY_desig - 65, desigMetrics.width + 40, 90);
-            
+
             ctx.fillStyle = '#ffcc00'; 
             ctx.fillText(desigText, sideX, sideY_desig);
 
             const compText = "NEXUS ENTERPRISE";
             const compMetrics = ctx.measureText(compText);
-            
+
             ctx.fillStyle = 'rgba(0, 240, 255, 0.4)'; 
             ctx.fillRect(sideX - 20, sideY_comp - 65, compMetrics.width + 40, 90);
-            
+
             ctx.fillStyle = '#ffcc00'; 
             ctx.fillText(compText, sideX, sideY_comp);
 
@@ -1571,7 +1538,7 @@
             if(!isTuning) return;
             timeOsc += 1;
             ctxOsc.clearRect(0, 0, canvasOsc.width, canvasOsc.height);
-            
+
             ctxOsc.beginPath();
             ctxOsc.strokeStyle = 'rgba(255, 51, 0, 0.5)';
             ctxOsc.lineWidth = 3;
@@ -1597,7 +1564,7 @@
                 statusText.textContent = "FREQUENCY LOCKED";
                 statusText.className = "status-matched";
                 matchTimer++;
-                
+
                 if(matchTimer > 60) {
                     isTuning = false;
                     modalTuner.style.opacity = '0';
@@ -1622,14 +1589,12 @@ const eventTrack = document.getElementById('carousel-track');
         const prevBtn = document.getElementById('carousel-prev');
         const nextBtn = document.getElementById('carousel-next');
 
-        // 1. Clone cards for seamless infinite loop
         const originalCards = Array.from(eventTrack.children);
         originalCards.forEach(card => {
             const clone = card.cloneNode(true);
             eventTrack.appendChild(clone);
         });
 
-        // 2. Auto-scroll & Manual Navigation Logic
         let autoScrollSpeed = 1.0; // Adjust this to change auto-scroll speed
         let isHoveringCarousel = false;
         let isManualScrolling = false;
@@ -1639,8 +1604,7 @@ const eventTrack = document.getElementById('carousel-track');
         function carouselAutoScroll() {
             if (!isHoveringCarousel && !isManualScrolling && !isMobileActive) {
                 scrollWrapper.scrollLeft += autoScrollSpeed;
-                
-                // Seamless looping based on the first clone's exact physical position
+
                 const firstClone = eventTrack.children[originalCards.length];
                 if (firstClone && scrollWrapper.scrollLeft >= firstClone.offsetLeft) {
                     scrollWrapper.scrollLeft -= firstClone.offsetLeft;
@@ -1649,14 +1613,11 @@ const eventTrack = document.getElementById('carousel-track');
             requestAnimationFrame(carouselAutoScroll);
         }
 
-        // Start auto-scroll loop
         carouselAutoScroll();
 
-        // Pause on hover
         scrollWrapper.addEventListener('mouseenter', () => isHoveringCarousel = true);
         scrollWrapper.addEventListener('mouseleave', () => isHoveringCarousel = false);
 
-        // 3. Arrow Controls
         const getCardScrollWidth = () => {
             const card = eventTrack.querySelector('.event-card-wrapper');
             return card ? card.offsetWidth + 40 : 360; // Card width + gap
@@ -1668,17 +1629,14 @@ const eventTrack = document.getElementById('carousel-track');
 
             const firstClone = eventTrack.children[originalCards.length];
 
-            // Prevent hitting the physical edge by jumping bounds invisibly before smooth scrolling
             if (direction === -1 && scrollWrapper.scrollLeft < 10) {
                 scrollWrapper.scrollLeft += firstClone.offsetLeft;
             } else if (direction === 1 && scrollWrapper.scrollLeft >= firstClone.offsetLeft - 10) {
                 scrollWrapper.scrollLeft -= firstClone.offsetLeft;
             }
 
-            // Smooth scroll by exactly one card's width
             scrollWrapper.scrollBy({ left: direction * getCardScrollWidth(), behavior: 'smooth' });
 
-            // Resume auto-scroll after the CSS transition completes
             manualScrollTimeout = setTimeout(() => {
                 isManualScrolling = false;
             }, 600); 
@@ -1687,7 +1645,6 @@ const eventTrack = document.getElementById('carousel-track');
         if (prevBtn) prevBtn.addEventListener('click', () => handleManualScroll(-1));
         if (nextBtn) nextBtn.addEventListener('click', () => handleManualScroll(1));
 
-        // 4. Update Mobile Click/Focus Logic to use JS scrolling
         eventTrack.addEventListener('click', function(e) {
             if (e.target.tagName.toLowerCase() === 'button' || e.target.tagName.toLowerCase() === 'a' || e.target.closest('button') || e.target.closest('a')) return;
 
@@ -1695,14 +1652,13 @@ const eventTrack = document.getElementById('carousel-track');
             if (!clickedCard) return;
 
             const isCurrentlyActive = clickedCard.classList.contains('mobile-active');
-            
+
             document.querySelectorAll('.event-card-wrapper').forEach(c => c.classList.remove('mobile-active'));
-            
+
             if (!isCurrentlyActive) {
                 clickedCard.classList.add('mobile-active');
                 isMobileActive = true; // Pauses auto-scroll
-                
-                // Scroll to center the clicked card visually
+
                 const scrollPos = clickedCard.offsetLeft - (scrollWrapper.clientWidth / 2) + (clickedCard.offsetWidth / 2);
                 scrollWrapper.scrollTo({ left: scrollPos, behavior: 'smooth' });
             } else {
@@ -1762,7 +1718,7 @@ const eventTrack = document.getElementById('carousel-track');
         mainLens.rotation.x = Math.PI / 2;
         mainLens.position.set(0, 15, -8); 
         scannerGroup.add(mainLens);
-        
+
         rover.add(scannerGroup);
         scene.add(rover);
 
@@ -1779,7 +1735,7 @@ const eventTrack = document.getElementById('carousel-track');
 
         let scanActive = false;
         let scanProgress = 0;
-        
+
         document.getElementById('overlay-scan-btn').addEventListener('click', function() {
             scanActive = true;
             scanProgress = 0;
@@ -1814,7 +1770,7 @@ const eventTrack = document.getElementById('carousel-track');
         const clock = new THREE.Clock();
         let currentRoverPos = { x: 60, y: getTerrainHeight(60,0), z: 0 }; 
         let previousRoverPos = { ...currentRoverPos };
-        
+
         const neonYellowColor = new THREE.Color(0xffcc00);
         const terrainColorAttribute = terrainGeo.attributes.color;
 
@@ -1825,7 +1781,7 @@ const eventTrack = document.getElementById('carousel-track');
 
             const desiredPos = getPathPosition(scrollPercent);
             const targetY = getTerrainHeight(currentRoverPos.x, currentRoverPos.z) - 1.5;
-            
+
             currentRoverPos.x += (desiredPos.x - currentRoverPos.x) * 0.08;
             currentRoverPos.z += (desiredPos.z - currentRoverPos.z) * 0.08;
             currentRoverPos.y += (targetY - currentRoverPos.y) * 0.25; 
@@ -1859,7 +1815,7 @@ const eventTrack = document.getElementById('carousel-track');
             const fz = currentRoverPos.z + Math.cos(yaw) * (wheelBase/2);
             const bx = currentRoverPos.x - Math.sin(yaw) * (wheelBase/2);
             const bz = currentRoverPos.z - Math.cos(yaw) * (wheelBase/2);
-            
+
             let rawPitch = -Math.atan2(getTerrainHeight(fx, fz) - getTerrainHeight(bx, bz), wheelBase);
             let targetPitch = THREE.MathUtils.clamp(rawPitch, -0.35, 0.35); 
 
@@ -1879,7 +1835,7 @@ const eventTrack = document.getElementById('carousel-track');
             const pathForward = getPathPosition(scrollPercent + 0.01);
             const pathCurrent = getPathPosition(scrollPercent);
             const targetYaw = Math.atan2(pathForward.x - pathCurrent.x, pathForward.z - pathCurrent.z);
-            
+
             let diff = targetYaw - rover.rotation.y;
             while (diff < -Math.PI) diff += Math.PI * 2;
             while (diff > Math.PI) diff -= Math.PI * 2;
@@ -1915,7 +1871,7 @@ const eventTrack = document.getElementById('carousel-track');
                 }
             }
             previousRoverPos = { ...currentRoverPos };
-            
+
             particles.forEach(p => {
                 if (p.life > 0) {
                     p.life--; 
@@ -1943,21 +1899,21 @@ const eventTrack = document.getElementById('carousel-track');
             if (scanActive) {
                 scanProgress += 0.006; 
                 const sweepPitch = Math.sin(scanProgress * 25) * 0.4;
-                
+
                 const targetLocal = tankGroup.children[0].position.clone();
                 rover.worldToLocal(targetLocal);
-                
+
                 const dummy = new THREE.Object3D();
                 dummy.position.copy(scannerGroup.position);
                 dummy.lookAt(targetLocal);
                 dummy.rotation.x += sweepPitch; 
-                
+
                 scannerGroup.quaternion.slerp(dummy.quaternion, 0.2);
 
                 laserMat.opacity = Math.min(laserMat.opacity + 0.1, 0.6);
                 const lensWorldPos = new THREE.Vector3(0, 15, -8);
                 scannerGroup.localToWorld(lensWorldPos);
-                
+
                 const laserTargetY = 35 - (scanProgress * 35); 
                 const tankTargetWorld = tankGroup.children[0].position.clone();
                 tankTargetWorld.y += laserTargetY;
@@ -1997,14 +1953,14 @@ const eventTrack = document.getElementById('carousel-track');
             } else if (isNearTanks) {
                 const targetLocal = tankGroup.children[0].position.clone();
                 rover.worldToLocal(targetLocal);
-                
+
                 const dummy = new THREE.Object3D();
                 dummy.position.copy(scannerGroup.position);
                 dummy.lookAt(targetLocal);
-                
+
                 scannerGroup.quaternion.slerp(dummy.quaternion, 0.1);
                 if(laserMat.opacity > 0) laserMat.opacity -= 0.05;
-                
+
                 if (clusterData.files[0].visible) {
                     clusterData.files.forEach((file, index) => {
                         const targetY = 40 + Math.sin(time * 2 + index) * 4; 
@@ -2029,7 +1985,7 @@ const eventTrack = document.getElementById('carousel-track');
                 dummy.rotation.x = Math.sin(time * 1.2) * 0.2;
                 scannerGroup.quaternion.slerp(dummy.quaternion, 0.1);
                 if(laserMat.opacity > 0) laserMat.opacity -= 0.05;
-                
+
                 tooltip.style.display = 'none';
                 document.body.style.cursor = 'default';
             }
@@ -2040,20 +1996,20 @@ const eventTrack = document.getElementById('carousel-track');
             if (distToTanks < 250 && !isAboutBlocking) {
                 const markerPos = tankGroup.children[0].position.clone();
                 markerPos.y += 28; 
-                
+
                 const titlePos = tankGroup.children[0].position.clone();
                 titlePos.y += 50; 
-                
+
                 const projMarker = markerPos.project(camera);
                 const projTitle = titlePos.project(camera);
-                
+
                 if (projMarker.z < 1) { 
                     const xM = (projMarker.x * 0.5 + 0.5) * window.innerWidth;
                     const yM = (projMarker.y * -0.5 + 0.5) * window.innerHeight;
-                    
+
                     const xT = (projTitle.x * 0.5 + 0.5) * window.innerWidth;
                     const yT = (projTitle.y * -0.5 + 0.5) * window.innerHeight;
-                    
+
                     if(!scanActive && scanProgress === 0 && distToTanks < 120) {
                         const marker = document.getElementById('scan-marker');
                         marker.style.display = 'block';
@@ -2062,7 +2018,7 @@ const eventTrack = document.getElementById('carousel-track');
                     } else {
                         document.getElementById('scan-marker').style.display = 'none';
                     }
-                    
+
                     const title = document.getElementById('tank-title');
                     if (distToTanks < 120) { 
                         title.style.display = 'block';
@@ -2080,10 +2036,10 @@ const eventTrack = document.getElementById('carousel-track');
             if (distToEvents < 350) {
                 const eMarkerPos = machineGroup.position.clone();
                 eMarkerPos.y += 25; 
-                
+
                 const eTitlePos = machineGroup.position.clone();
                 eTitlePos.y += 90; 
-                
+
                 const projEMarker = eMarkerPos.project(camera);
                 const projETitle = eTitlePos.project(camera);
 
@@ -2155,7 +2111,7 @@ const eventTrack = document.getElementById('carousel-track');
                     (1-t)*defLookY + t*billLookY,
                     (1-t)*defLookZ + t*billLookZ
                 );
-                
+
                 targetCamPos.set(
                     (1-t)*defCamX + t*billCamX,
                     (1-t)*defCamY + t*billCamY,
@@ -2166,15 +2122,15 @@ const eventTrack = document.getElementById('carousel-track');
                 if (currentRoverPos.z > -800) {
                     const uiSide = currentRoverPos.x > 0 ? 1 : -1;
                     targetLookAt.set(uiSide * 15, currentRoverPos.y + lookYOffset, currentRoverPos.z - 20);
-                    // Increased mobile Y (height) from 18 to 25, and Z (distance) from 40 to 65
+
                     targetCamPos.set(uiSide * 25, currentRoverPos.y + (isMobile? 25 : 30), currentRoverPos.z + (isMobile? 80 : 65));
                 } else {
                     targetLookAt.set(currentRoverPos.x, currentRoverPos.y + lookYOffset, currentRoverPos.z - 20);
-                    // Increased mobile Y (height) from 18 to 25, and Z (distance) from 45 to 70
+
                     targetCamPos.set(currentRoverPos.x + 15, currentRoverPos.y + (isMobile? 25 : 30), currentRoverPos.z + (isMobile? 70 : 75));
                 }
             }
-            
+
             const terrainHeightUnderCamera = getTerrainHeight(targetCamPos.x, targetCamPos.z);
             if (targetCamPos.y < terrainHeightUnderCamera + 25) {
                 targetCamPos.y = terrainHeightUnderCamera + 25;
@@ -2182,7 +2138,7 @@ const eventTrack = document.getElementById('carousel-track');
 
             currentCamPos.lerp(targetCamPos, 0.08);
             currentLookAt.lerp(targetLookAt, 0.08);
-            
+
             camera.position.copy(currentCamPos);
             camera.lookAt(currentLookAt);
 
@@ -2201,14 +2157,14 @@ const eventTrack = document.getElementById('carousel-track');
         document.querySelectorAll('.main-nav a').forEach(link => {
             link.addEventListener('click', function(e) {
                 const targetHash = this.getAttribute('href');
-                
+
                 if (sceneLocations[targetHash] !== undefined) {
                     e.preventDefault();
                     const targetZ = sceneLocations[targetHash];
                     const progress = targetZ / MAX_TRAVEL_Z; 
                     const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                     const targetScrollY = progress * docHeight;
-                    
+
                     window.scrollTo({
                         top: targetScrollY,
                         behavior: 'smooth'
@@ -2228,7 +2184,7 @@ const eventTrack = document.getElementById('carousel-track');
 
         const urlParams = new URLSearchParams(window.location.search);
         const targetEvent = urlParams.get('register_event');
-        
+
         if (targetEvent) {
             if (token) {
                 registerEvent(targetEvent);
@@ -2268,9 +2224,6 @@ const eventTrack = document.getElementById('carousel-track');
         }
     });
 
-    // ==========================================
-        // --- DEVELOPER SIGNATURE (CONSOLE) ---
-        // ==========================================
         setTimeout(() => {
             const titleStyle = "font-size: 26px; font-weight: 900; color: #ff3300; font-family: 'Montserrat', sans-serif; text-shadow: 2px 2px 0px #000;";
             const subtitleStyle = "font-size: 16px; font-weight: bold; color: #00f0ff; font-family: monospace; background: #000; padding: 5px 10px; border-radius: 4px; border: 1px solid #00f0ff;";
@@ -2279,8 +2232,7 @@ const eventTrack = document.getElementById('carousel-track');
             console.log("%c🚀 THE SHIFT IS ACTIVE", titleStyle);
             console.log("%cArchitected and Engineered by", subtitleStyle);
             console.log("%cAll systems nominal. Mainframe telemetry online. 📡", systemStyle);
-            
-            // Optional ASCII Art
+
             console.log(
 `%c
  __   __  ___  __   __  _______  _______  __   __
@@ -2295,13 +2247,12 @@ const eventTrack = document.getElementById('carousel-track');
             );
         }, 1000); 
 
-
 </script>
 
 <script>
     async function registerEvent(eventName, btnElement = null) {
         const token = localStorage.getItem('esummit_token');
-        
+
         if (!token) {
             sessionStorage.setItem('pendingEventRegistration', eventName);
             window.location.href = "register.html";
