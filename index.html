@@ -64,7 +64,7 @@
             margin-left: -60px;
         }
 
-        .nav-header { position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; pointer-events: auto; }
+        .nav-header {transition: transform 0.3s ease-in-out; position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; pointer-events: auto; }
         .logo { 
     display: flex; 
     align-items: center; 
@@ -244,6 +244,8 @@
             --theme-color: #00f0ff; position: relative;
         }
 
+        
+
         .event-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
         .event-card-wrapper:hover { z-index: 10; }
         .event-card-wrapper:hover .event-card-inner { transform: rotateY(180deg) scale(1.05); }
@@ -254,6 +256,9 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,0,0,0.5); 
             backdrop-filter: blur(10px); display: flex; flex-direction: column; overflow: hidden; background: rgba(5, 10, 20, 0.9); 
         }
+        .carousel-track:hover .event-card-wrapper:not(:hover) { 
+    filter: none; 
+}
 
         .event-card-front { padding: 12px; }
         .card-poster { flex: 1; width: 100%; border-radius: 4px; overflow: hidden; background: #000; position: relative; z-index: 1; }
@@ -359,6 +364,17 @@
                 top: 0;
                 height: 40px;     
             }
+
+            .sponsor-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 0 10px;
+}
+
+.sponsor-box {
+    width: 100%;
+}
 
             #header-uietlogo-img {
                 order: -1; 
@@ -519,7 +535,7 @@
             <div class="event-card-wrapper" style="--theme-color: #00f0ff;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/36_Hackathon_images_page_1_fshvzp.jpg" alt="36 hours hackathon"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318027/36_Hackathon_images_page_1_fshvzp.jpg" alt="36 hours hackathon"></div>
                         <div class="card-title"><h4>36 Hours Hackathon</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -539,7 +555,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ff3300;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318032/MUN_images_page_1_sdwfif.jpg" alt="ENTRE-mun"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318032/MUN_images_page_1_sdwfif.jpg" alt="ENTRE-mun"></div>
                         <div class="card-title"><h4>ENTRE-MUN</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -559,7 +575,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ffaa00;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/r_images_page_1_e8lzcb.jpg" alt="IPL Auction simulation"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318027/r_images_page_1_e8lzcb.jpg" alt="IPL Auction simulation"></div>
                         <div class="card-title"><h4>IPL Auction</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -579,7 +595,7 @@
             <div class="event-card-wrapper" style="--theme-color: #00ff66;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318031/UIET_KURUKSHETRA_images_page_1_eyzbck.jpg" alt="Virtual stock market simulation"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318031/UIET_KURUKSHETRA_images_page_1_eyzbck.jpg" alt="Virtual stock market simulation"></div>
                         <div class="card-title"><h4>Virtual Stock Market</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -599,7 +615,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ff003c;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/The_Big_Brand_Theory_E-Summit_Brochure_images_page_1_f87es7.jpg" alt="The Big Bang theory"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318027/The_Big_Brand_Theory_E-Summit_Brochure_images_page_1_f87es7.jpg" alt="The Big Bang theory"></div>
                         <div class="card-title"><h4>The Big Bang Theory</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -619,7 +635,7 @@
             <div class="event-card-wrapper" style="--theme-color: #9b59b6;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/E-Summit_Workshop_Mastering_the_Team_Sheet-1_images_page_1_paxmyj.jpg" alt="Workshop-mastering the term sheet"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318027/E-Summit_Workshop_Mastering_the_Team_Sheet-1_images_page_1_paxmyj.jpg" alt="Workshop-mastering the term sheet"></div>
                         <div class="card-title"><h4>"Mastering Term Sheet" Workshop</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -639,7 +655,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ff00ff;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318031/pitch_please_competition_images_page_1_f1tosi.jpg" alt="Pitch please competition"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318031/pitch_please_competition_images_page_1_f1tosi.jpg" alt="Pitch please competition"></div>
                         <div class="card-title"><h4>Pitch Please</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -659,7 +675,7 @@
             <div class="event-card-wrapper" style="--theme-color: #ffd700;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318031/THE_GOLDEN_PITCH_images_page_1_x3awes.jpg" alt="The golden pitch"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318031/THE_GOLDEN_PITCH_images_page_1_x3awes.jpg" alt="The golden pitch"></div>
                         <div class="card-title"><h4>The Golden Pitch</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -679,7 +695,7 @@
             <div class="event-card-wrapper" style="--theme-color: #3498db;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318032/Network_images_page_1_t31n20.jpg" alt="network arena"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318032/Network_images_page_1_t31n20.jpg" alt="network arena"></div>
                         <div class="card-title"><h4>Network Arena</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -699,7 +715,7 @@
             <div class="event-card-wrapper" style="--theme-color: #e67e22;">
                 <div class="event-card-inner">
                     <div class="event-card-front">
-                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/v1785318027/eSummit_Speaker_Session_Premium_Entrepreneurship_Dialogue_images_page_1_iftyy7.jpg" alt="Speaker session"></div>
+                        <div class="card-poster"><img src="https://res.cloudinary.com/di10wvjn8/image/upload/w_400,q_auto,f_auto/v1785318027/eSummit_Speaker_Session_Premium_Entrepreneurship_Dialogue_images_page_1_iftyy7.jpg" alt="Speaker session"></div>
                         <div class="card-title"><h4>Speaker Session</h4></div>
                     </div>
                     <div class="event-card-back">
@@ -851,8 +867,8 @@
             </div>
             <div class="footer-col contact-col">
                 <h4>Contact Us</h4>
-                <p>>esummit.uietkuk026@gmail.com</p>
-                <p>>+91 9193626076</p>
+                <p>esummit.uietkuk026@gmail.com</p>
+                <p>+91 9193626076</p>
             </div>
         </div>
         <div class="footer-copyright">
@@ -2301,7 +2317,26 @@ const eventTrack = document.getElementById('carousel-track');
             }
         }
     }
+
+let lastScrollTop = 0;
+const header = document.querySelector('.nav-header');
+
+window.addEventListener('scroll', () => {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (scrollTop > lastScrollTop && scrollTop > 100) {
+        // Scrolling down past 100px: Hide header
+        header.style.transform = 'translateY(-100%)';
+    } else {
+        // Scrolling up: Show header
+        header.style.transform = 'translateY(0)';
+    }
+    
+    lastScrollTop = scrollTop;
+});
 </script>
+
+
 
 </body>
 </html>

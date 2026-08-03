@@ -279,7 +279,7 @@
         <button class="hud-btn active" data-target="Core">Core & Organizing</button>
         <button class="hud-btn" data-target="Tech">Tech Team</button>
         <button class="hud-btn" data-target="Operations">Operations</button>
-        <button class="hud-btn" data-target="Event Operations">Event Operations</button>
+        <button class="hud-btn" data-target="Event Management">Event Management</button>
         <button class="hud-btn" data-target="Sponsorship">Sponsorship</button>
         <button class="hud-btn" data-target="Media & Design">Media & Design</button>
         <button class="hud-btn" data-target="Ambassadors">Ambassadors</button>
@@ -292,46 +292,52 @@
         
         const teamData = {
           "Core": [
-            {"name": "Riyanshi Varshney", "desig": "Leader", "img": "teams/Riyanshi_Varshney_No_Desig.jpg", "is_leader": true},
-            {"name": "Diksha", "desig": "Leader", "img": "teams/Diksha_No_Desig.jpg", "is_leader": true}
+            {"name": "Riyanshi Varshney", "desig": "Overall Lead", "img": "teams/Riyanshi_Varshney_No_Desig.jpg", "is_leader": true},
+            {"name": "Diksha", "desig": "Overall Co-lead", "img": "teams/Diksha_No_Desig.jpg", "is_leader": true}
           ],
           "Tech": [
-            {"name": "Himesh", "desig": "Leader", "img": "teams/me.png", "is_leader": true},
+            {"name": "Himesh", "desig": "Tech Lead", "img": "teams/me.png", "is_leader": true},
             {"name": "Shubham", "desig": "Member", "img": "teams/Shubham_No_Desig.jpg", "is_leader": false},
             {"name": "Neha", "desig": "Member", "img": "teams/Neha_No_Desig.jpg", "is_leader": false},
             {"name": "Shivendra", "desig": "Member", "img": "teams/shiv.jpeg", "is_leader": false}
           ],
           "Operations": [
-            {"name": "Anjali", "desig": "Leader", "img": "teams/Anjali_No_Desig.jpg", "is_leader": true},
-            {"name": "Neha Yadav", "desig": "Member", "img": "teams/Neha_Yadav_No_Desig.jpg", "is_leader": false},
+            {"name": "Neha Yadav", "desig": "Operations Lead", "img": "teams/Neha_Yadav_No_Desig.jpg", "is_leader": true},
+            {"name": "BHUMIKA", "desig": "Member", "img": "teams/BHUMIKA_No_Desig.jpg", "is_leader": false},
             {"name": "Aditya Kumar", "desig": "Member", "img": "teams/Aditya_Kumar_No_Desig.jpg", "is_leader": false},
             {"name": "Tushar Janghu", "desig": "Member", "img": "teams/Tushar_Janghu_No_Desig.jpg", "is_leader": false},
-            {"name": "Vijeta", "desig": "Member", "img": "teams/Vijeta_No_Desig.jpg", "is_leader": false}
-          ],
-          "Event Operations": [
-            {"name": "Neha Yadav", "desig": "Leader", "img": "teams/Neha_Yadav_No_Desig.jpg", "is_leader": true},
-            {"name": "BHUMIKA", "desig": "Member", "img": "teams/BHUMIKA_No_Desig.jpg", "is_leader": false},
             {"name": "Akshansh Mishra", "desig": "Member", "img": "teams/Akshansh_Mishra_No_Desig.jpg", "is_leader": false},
-            {"name": "Himani Sharma", "desig": "Member", "img": "teams/Himani_Sharma_No_Desig.jpg", "is_leader": false},
+            
+          ],
+          "Event Management": [
+            {"name": "Anshu Saini", "desig": "Event Management Lead", "img": "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png", "is_leader": true},
+            {"name": "------", "desig": "Member", "img": "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png","is_leader": false},
+            {"name": "------", "desig": "Member", "img": "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png","is_leader": false},
+            //{"name": "Vijeta", "desig": "Member", "img": "teams/Vijeta_No_Desig.jpg", "is_leader": false},
+            //{"name": "Himani Sharma", "desig": "Member", "img": "teams/Himani_Sharma_No_Desig.jpg", "is_leader": false},
             {"name": "Amber Batra", "desig": "Member", "img": "teams/Amber_Batra_No_Desig.jpg", "is_leader": false}
           ],
           "Sponsorship": [
-            {"name": "Dhruv verma", "desig": "Leader", "img": "teams/Dhruv_verma_No_Desig.jpg", "is_leader": true},
+            {"name": "Dhruv verma", "desig": "Sponsorship Lead", "img": "teams/Dhruv_verma_No_Desig.jpg", "is_leader": true},
             {"name": "Prince", "desig": "Member", "img": "teams/Prince_No_Desig.jpg", "is_leader": false},
             {"name": "Hemant", "desig": "Member", "img": "teams/Hemant_No_Desig.jpg", "is_leader": false},
             {"name": "Aditya yadav", "desig": "Member", "img": "teams/Aditya_yadav_No_Desig.jpg", "is_leader": false},
             {"name": "Tilak", "desig": "Member", "img": "teams/Tilak_No_Desig.jpg", "is_leader": false}
           ],
           "Media & Design": [
-            {"name": "Simran", "desig": "Leader", "img": "teams/Simran_No_Desig.jpg", "is_leader": true},
-            {"name": "Aayush", "desig": "Member", "img": "teams/Aayush_No_Desig.jpg", "is_leader": false},
+            {"name": "Simran", "desig": "Media & Design Lead", "img": "teams/Simran_No_Desig.jpg", "is_leader": true},
+            {"name": "Asmit", "desig": "Media & Design Lead", "img": "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png", "is_leader": true},
+            {"name": "Raziya", "desig": "Member", "img": "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png", "is_leader": false},
+            {"name": "Rythm", "desig": "Member", "img": "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png", "is_leader": false},
+            {"name": "Anirudh", "desig": "Member", "img": "teams/Aayush_No_Desig.jpg", "is_leader": false},
             {"name": "Ruhani mahla", "desig": "Member", "img": "teams/Ruhani_mahla_No_Desig.jpg", "is_leader": false},
             {"name": "Sneha sharma", "desig": "Member", "img": "teams/Sneha_sharma_No_Desig.jpg", "is_leader": false},
             {"name": "Yatin Mantoo", "desig": "Member", "img": "teams/Yatin_Mantoo_No_Desig.jpg", "is_leader": false},
             {"name": "Harshit", "desig": "Member", "img": "teams/Harshit_No_Desig.jpg", "is_leader": false}
           ],
           "Ambassadors": [
-            {"name": "Mahima Aggarwal", "desig": "Member", "img": "teams/Mahima_Aggarwal_No_Desig.jpg", "is_leader": false},
+          {"name": "Diksha", "desig": "Ambassadors Lead", "img": "teams/Diksha_No_Desig.jpg", "is_leader": true},  
+          {"name": "Mahima Aggarwal", "desig": "Member", "img": "teams/Mahima_Aggarwal_No_Desig.jpg", "is_leader": false},
             {"name": "Ankita Gupta", "desig": "Member", "img": "teams/Ankita_Gupta_No_Desig.jpg", "is_leader": false},
             {"name": "Vivek sharma", "desig": "Member", "img": "teams/Vivek_sharma_No_Desig.jpg", "is_leader": false},
             {"name": "Ravi", "desig": "Member", "img": "teams/Ravi_No_Desig.jpg", "is_leader": false},

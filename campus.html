@@ -45,7 +45,7 @@
         h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); color: var(--primary-gold); margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 170, 0, 0.3); }
         
         
-        .nav-header { position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; pointer-events: auto; }
+        .nav-header { transition: transform 0.3s ease-in-out; position: fixed; top: 0; width: 100%; padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; pointer-events: auto; }
         .logo { 
     display: flex; 
     align-items: center; 
@@ -861,6 +861,23 @@
             }
         }
     });
+
+    let lastScrollTop = 0;
+const header = document.querySelector('.nav-header');
+
+window.addEventListener('scroll', () => {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (scrollTop > lastScrollTop && scrollTop > 100) {
+        // Scrolling down past 100px: Hide header
+        header.style.transform = 'translateY(-100%)';
+    } else {
+        // Scrolling up: Show header
+        header.style.transform = 'translateY(0)';
+    }
+    
+    lastScrollTop = scrollTop;
+});
 </script>
 
 </body>
