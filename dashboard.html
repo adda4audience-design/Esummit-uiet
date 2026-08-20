@@ -243,7 +243,7 @@
             .data-group .value { font-size: 0.95rem; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; }
 
             
-            .dg-name, .dg-email, .dg-location, .dg-college, .dg-roll, .dg-events, .dg-hostel, .dg-referral, .dg-teams {
+            .dg-name, .dg-email, .dg-location, .dg-college, .dg-roll, .dg-events, .dg-hostel, .dg-referral, .dg-join-events, .dg-teams {
                 grid-column: span 2;
             }
             .dg-phone, .dg-gender, .dg-role, .dg-branch {
@@ -263,7 +263,8 @@
             .dg-events { order: 10; }
             .dg-hostel { order: 11; }
             .dg-referral { order: 12; }
-            .dg-teams { order: 13; }
+            .dg-join-events { order: 13; }
+            .dg-teams { order: 14; }
             
             
             .dg-referral > div:nth-child(2), 
@@ -356,17 +357,35 @@
                         </div>
                         <div style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 10px;">
                             <input type="text" id="d-ref-code" readonly style="flex: 1; min-width: 200px; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #ffaa00; color: var(--text-main); font-family: monospace; font-size: 1.1rem; letter-spacing: 2px;">
-                            <button class="btn-action" style="flex: 1; max-width: 150px; background: rgba(176, 176, 176, 0.1); color: #ffaa00; border-color: #ffaa00; margin-left: 0;" onclick="navigator.clipboard.writeText(document.getElementById('d-ref-code').value)"><i class="fa-regular fa-copy"></i> Copy</button>
+                            <button class="btn-action" style="flex: 1; max-width: 150px; background: rgba(255, 170, 0, 1); color: #ffffff; border-color: #ffaa00; margin-left: 0;" onclick="navigator.clipboard.writeText(document.getElementById('d-ref-code').value)"><i class="fa-regular fa-copy"></i> Copy</button>
                         </div>
                     </div>
+
+                    <div class="data-group span-2 dg-join-events" style="background: rgba(255, 255, 255, 0.02); border-left-color: #ffaa00; margin-top: 20px;">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 15px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <label style="margin: 0;"><i class="fa-solid fa-calendar-plus"></i> INDIVIDUAL EVENTS</label>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); display: block; margin-top: 5px; font-weight: 600;">* Register for individual events</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <select id="direct-event-select" style="padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid #ffaa00; color: white; border-radius: 4px; font-size: 0.9rem; flex: 1; min-width: 200px; font-family: 'Montserrat', sans-serif;">
+                        <option value="" disabled selected>Loading available events...</option>
+                    </select>
+                    <button class="btn-action" style="background: rgba(255, 170, 0, 1); color: #ffffff; border-color: #ffaa00; margin: 0; min-width: 140px;" onclick="registerDirectEvent()">
+                        <i class=""></i> Join Event
+                    </button>
+                </div>
+            </div>
 
                     <div class="data-group span-2 dg-teams" style="background: rgba(255, 255, 255, 0.02); border-left-color: #ffaa00; margin-top: 20px;">
                         <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 15px;">
                             <div style="flex: 1; min-width: 200px;">
-                                <label style="margin: 0;"><i class="fa-solid fa-users"></i> My Teams & Invites</label>
+                                <label style="margin: 0;"><i class="fa-solid fa-users"></i> TEAM EVENTS</label>
                                 <span style="font-size: 0.7rem; color: var(--primary-gold); display: block; margin-top: 5px; font-weight: 600;">* Note: Refresh the page if invite is not visible</span>
                             </div>
-                            <button class="btn-action" style="background: rgba(155, 89, 182, 0.1); color: #ffaa00; border-color: #ffaa00; margin: 0; min-width: 140px;" onclick="openCreateTeamModal()"><i class="fa-solid fa-plus"></i> Create Team</button>                        
+                            <button class="btn-action" style="background: rgba(255, 170, 0, 1); color: #ffffff; border-color: #ffaa00; margin: 0; min-width: 140px;" onclick="openCreateTeamModal()"><i class="fa-solid fa-plus"></i> Create Team</button>                        
                         </div>
                         
                         <div id="teams-container" style="display: flex; flex-direction: column; gap: 15px;">
@@ -482,6 +501,74 @@
         const API_URL = "https://esummit-backend-7rxl.onrender.com/api"
         const token = localStorage.getItem('esummit_token');
         let currentUserData = null;
+
+        const ALL_AVAILABLE_EVENTS = [
+            "Virtual stock market simulation", 
+            "Workshop-mastering the term sheet", 
+            "The golden pitch", 
+            "network arena", 
+            "Speaker session"
+        ];
+        let userTeamEvents = [];
+
+        function updateDirectEventsDropdown() {
+            const select = document.getElementById('direct-event-select');
+            if (!select) return;
+
+            const registeredEvents = currentUserData && currentUserData.registeredEvents ? currentUserData.registeredEvents : [];
+            const excludedEvents = new Set([...registeredEvents, ...userTeamEvents]);
+
+            select.innerHTML = '<option value="" disabled selected>Select Event...</option>';
+            let hasOptions = false;
+
+            ALL_AVAILABLE_EVENTS.forEach(ev => {
+                if (!excludedEvents.has(ev)) {
+                    const opt = document.createElement('option');
+                    opt.value = ev;
+                    opt.textContent = ev.toUpperCase();
+                    select.appendChild(opt);
+                    hasOptions = true;
+                }
+            });
+
+            if (!hasOptions) {
+                select.innerHTML = '<option value="" disabled selected>You have joined all events!</option>';
+            }
+        }
+
+        async function registerDirectEvent() {
+            const select = document.getElementById('direct-event-select');
+            const eventName = select.value;
+            
+            if (!eventName) return alert("Please select an event to join.");
+
+            const btn = document.querySelector('.dg-join-events button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Joining...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_URL}/events/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ eventName })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert(`Successfully registered for ${eventName}!`);
+                    loadProfile(); 
+                } else {
+                    alert(data.error);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Network error while registering for event.");
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
 
         if (!token) window.location.href = "register.html";
 
@@ -771,6 +858,16 @@
             try {
                 const res = await fetch(`${API_URL}/teams/my-teams`, { headers: { 'Authorization': `Bearer ${token}` } });
                 const data = await res.json();
+
+                userTeamEvents = [];
+                if (data.success && data.data.length > 0) {
+                    data.data.forEach(team => {
+                        if (team.events) {
+                            team.events.forEach(ev => userTeamEvents.push(ev));
+                        }
+                    });
+                }
+                updateDirectEventsDropdown();
                 
                 const container = document.getElementById('teams-container');
                 if (!data.success || data.data.length === 0) {
@@ -794,9 +891,8 @@
                     } else if (isLeader) {
                         actionsHtml = `
                             <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
-                                <input type="text" id="invite-input-${team._id}" placeholder="Pass ID or Phone" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #9b59b6; color: white; border-radius: 3px; font-size: 0.75rem;">
-                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #9b59b6; color: white; border: none; margin-left: 0;" onclick="inviteToTeam('${team._id}')">Invite</button>
-                                
+                               
+                                <input type="text" id="invite-input-${team._id}" placeholder="Pass ID or Phone" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem;">                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #3498db; color: white; border: none; margin-left: 0;" onclick="inviteToTeam('${team._id}')">Invite Member</button>                                
                                 <select id="event-input-${team._id}" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem; flex: 1; min-width: 150px;">
                                     <option value="" disabled selected>Select Event...</option>
                                     <option value="36 hours hackathon">36 Hours Hackathon</option>
@@ -814,7 +910,7 @@
 
                     return `
                         <div style="background: rgba(0,0,0,0.3); padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                            <h4 style="margin: 0 0 5px 0; color: #9b59b6; text-transform: uppercase;">${team.teamName} ${isLeader ? '<i class="fa-solid fa-crown" style="color: var(--primary-gold); font-size: 0.8rem;"></i>' : ''}</h4>
+                            <h4 style="margin: 0 0 5px 0; color: #ffaa00; text-transform: uppercase;">${team.teamName} ${isLeader ? '<i class="fa-solid fa-crown" style="color: #ffffff; font-size: 0.8rem;"></i>' : ''}</h4>
                             <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Leader: ${team.leader.fullName}</p>
                             <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Members: ${membersList || 'None yet'}</p>
                             <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Events: <span style="color: #3498db; font-weight: bold;">${team.events.join(', ') || 'None'}</span></p>
