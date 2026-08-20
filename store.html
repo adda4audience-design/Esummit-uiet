@@ -173,7 +173,7 @@
             .img-container { height: 300px; }
 
             .modal-overlay { padding: 10px; align-items: flex-start; }
-            .modal-content { flex-direction: column; border-width: 1px; max-height: calc(100vh - 20px); }
+            .modal-content { display: block; overflow-y: auto; border-width: 1px; max-height: calc(100vh - 20px); }
 
             .close-modal { 
                 top: 15px; right: 15px; font-size: 1.5rem; 
@@ -186,7 +186,7 @@
             .main-image { height: 280px; }
             .thumb { width: 65px; height: 65px; }
 
-            .modal-right { padding: 1.5rem 1rem; }
+            .modal-right { padding: 1.5rem 1rem; overflow: visible; }
             .modal-right h2 { font-size: 1.6rem; }
             .modal-price { font-size: 1.8rem; margin-bottom: 1.5rem; }
 
