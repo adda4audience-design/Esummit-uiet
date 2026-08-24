@@ -854,72 +854,92 @@
             }, 250);
         }
 
-        async function loadTeams() {
-            try {
-                const res = await fetch(`${API_URL}/teams/my-teams`, { headers: { 'Authorization': `Bearer ${token}` } });
-                const data = await res.json();
+async function loadTeams() {
+    try {
+        const res = await fetch(`${API_URL}/teams/my-teams`, { headers: { 'Authorization': `Bearer ${token}` } });
+        const data = await res.json();
 
-                userTeamEvents = [];
-                if (data.success && data.data.length > 0) {
-                    data.data.forEach(team => {
-                        if (team.events) {
-                            team.events.forEach(ev => userTeamEvents.push(ev));
-                        }
-                    });
+        userTeamEvents = [];
+        
+        // FIX 1: Filter out any null or ghost teams caused by direct database deletion
+        const validTeams = (data.success && data.data) ? data.data.filter(t => t !== null) : [];
+
+        if (validTeams.length > 0) {
+            validTeams.forEach(team => {
+                if (team.events) {
+                    team.events.forEach(ev => userTeamEvents.push(ev));
                 }
-                updateDirectEventsDropdown();
-                
-                const container = document.getElementById('teams-container');
-                if (!data.success || data.data.length === 0) {
-                    container.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">You are not part of any teams yet.</span>';
-                    return;
-                }
-
-                container.innerHTML = data.data.map(team => {
-                    const isLeader = team.leader._id === currentUserData._id;
-                    const myMemberData = team.members.find(m => m.user._id === currentUserData._id);
-                    const isPending = myMemberData && myMemberData.status === 'Pending';
-
-                    let actionsHtml = '';
-                    if (isPending) {
-                        actionsHtml = `
-                            <div style="margin-top: 10px;">
-                                <button class="btn-action btn-edit" style="font-size: 0.7rem; padding: 5px 10px; margin-left: 0;" onclick="respondToInvite('${team._id}', 'accept')">Accept Invite</button>
-                                <button class="btn-action btn-logout" style="font-size: 0.7rem; padding: 5px 10px;" onclick="respondToInvite('${team._id}', 'reject')">Decline</button>
-                            </div>
-                        `;
-                    } else if (isLeader) {
-                        actionsHtml = `
-                            <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
-                               
-                                <input type="text" id="invite-input-${team._id}" placeholder="Pass ID or Phone" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem;">                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #3498db; color: white; border: none; margin-left: 0;" onclick="inviteToTeam('${team._id}')">Invite Member</button>                                
-                                <select id="event-input-${team._id}" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem; flex: 1; min-width: 150px;">
-                                    <option value="" disabled selected>Select Event...</option>
-                                    <option value="36 hours hackathon">36 Hours Hackathon</option>
-                                    <option value="ENTRE-mun">ENTRE-MUN</option>
-                                    <option value="IPL Auction simulation">IPL Auction</option>
-                                    <option value="The Big Bang theory">The Big Brand Theory</option>
-                                    <option value="Pitch please competition">Pitch Please</option>
-                                </select>
-                                <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #3498db; color: white; border: none; margin-left: 0;" onclick="registerTeamEvent('${team._id}')">Opt Event</button>
-                            </div>
-                        `;
-                    }
-
-                    const membersList = team.members.map(m => `<span style="font-size: 0.75rem; color: ${m.status === 'Accepted' ? '#2ecc71' : '#fca311'};">${m.user.fullName} (${m.status})</span>`).join(', ');
-
-                    return `
-                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                            <h4 style="margin: 0 0 5px 0; color: #ffaa00; text-transform: uppercase;">${team.teamName} ${isLeader ? '<i class="fa-solid fa-crown" style="color: #ffffff; font-size: 0.8rem;"></i>' : ''}</h4>
-                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Leader: ${team.leader.fullName}</p>
-                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Members: ${membersList || 'None yet'}</p>
-                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Events: <span style="color: #3498db; font-weight: bold;">${team.events.join(', ') || 'None'}</span></p>
-                            ${actionsHtml}
-                        </div>
-                    `;
-                }).join('');
-            } catch (err) { console.error(err); }
+            });
         }
+        updateDirectEventsDropdown();
+        
+        const container = document.getElementById('teams-container');
+        if (!data.success || validTeams.length === 0) {
+            container.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">You are not part of any teams yet.</span>';
+            return;
+        }
+
+        container.innerHTML = validTeams.map(team => {
+            // FIX 2: Safely check for leader and member properties in case they are missing
+            const isLeader = team.leader && team.leader._id === currentUserData._id;
+            
+            // Safely find member data
+            let myMemberData = null;
+            if (team.members) {
+                myMemberData = team.members.find(m => m.user && m.user._id === currentUserData._id);
+            }
+            
+            const isPending = myMemberData && myMemberData.status === 'Pending';
+
+            let actionsHtml = '';
+            if (isPending) {
+                actionsHtml = `
+                    <div style="margin-top: 10px;">
+                        <button class="btn-action btn-edit" style="font-size: 0.7rem; padding: 5px 10px; margin-left: 0;" onclick="respondToInvite('${team._id}', 'accept')">Accept Invite</button>
+                        <button class="btn-action btn-logout" style="font-size: 0.7rem; padding: 5px 10px;" onclick="respondToInvite('${team._id}', 'reject')">Decline</button>
+                    </div>
+                `;
+            } else if (isLeader) {
+                actionsHtml = `
+                    <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" id="invite-input-${team._id}" placeholder="Pass ID or Phone" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem;">                                
+                        <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #3498db; color: white; border: none; margin-left: 0;" onclick="inviteToTeam('${team._id}')">Invite Member</button>                                
+                        <select id="event-input-${team._id}" style="padding: 5px; background: rgba(0,0,0,0.5); border: 1px solid #3498db; color: white; border-radius: 3px; font-size: 0.75rem; flex: 1; min-width: 150px;">
+                            <option value="" disabled selected>Select Event...</option>
+                            <option value="36 hours hackathon">36 Hours Hackathon</option>
+                            <option value="ENTRE-mun">ENTRE-MUN</option>
+                            <option value="IPL Auction simulation">IPL Auction</option>
+                            <option value="The Big Bang theory">The Big Brand Theory</option>
+                            <option value="Pitch please competition">Pitch Please</option>
+                        </select>
+                        <button class="btn-action" style="font-size: 0.7rem; padding: 5px 10px; background: #3498db; color: white; border: none; margin-left: 0;" onclick="registerTeamEvent('${team._id}')">Opt Event</button>
+                    </div>
+                `;
+            }
+
+            // Safely map members
+            const membersList = (team.members || []).map(m => {
+                const userName = m.user ? m.user.fullName : "Unknown User";
+                return `<span style="font-size: 0.75rem; color: ${m.status === 'Accepted' ? '#2ecc71' : '#fca311'};">${userName} (${m.status})</span>`;
+            }).join(', ');
+            
+            const leaderName = team.leader ? team.leader.fullName : "Unknown Leader";
+            const teamEventsList = (team.events && team.events.length > 0) ? team.events.join(', ') : 'None';
+
+            return `
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                    <h4 style="margin: 0 0 5px 0; color: #ffaa00; text-transform: uppercase;">${team.teamName} ${isLeader ? '<i class="fa-solid fa-crown" style="color: #ffffff; font-size: 0.8rem;"></i>' : ''}</h4>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Leader: ${leaderName}</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Members: ${membersList || 'None yet'}</p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 5px;">Events: <span style="color: #3498db; font-weight: bold;">${teamEventsList}</span></p>
+                    ${actionsHtml}
+                </div>
+            `;
+        }).join('');
+    } catch (err) { 
+        console.error("Failed to load teams:", err); 
+    }
+}
 
         function openCreateTeamModal() {
             document.getElementById('new-team-name').value = ''; 
