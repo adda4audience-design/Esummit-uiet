@@ -414,7 +414,7 @@
                             <p><i class="fa-regular fa-clock"></i> 10:30 AM - 05:00 PM</p>
                         </div>
                         <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
-                            <a href="https://drive.google.com/uc?export=download&id=1ryfpW5LBeesxHA0A-IJY5nHwYi7-qmui" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <a href="https://drive.google.com/uc?export=download&id=15YXHwbZ73akmLhfhCj70L8EduYMPddgE" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
                             <button class="hero-btn btn-login" onclick="registerEvent('ENTRE-mun', this)">Register Now</button>
                         </div>
                     </div>
@@ -434,7 +434,7 @@
                             <p><i class="fa-regular fa-clock"></i> 9:00 AM - 10:15 AM</p>
                         </div>
                         <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
-                            <a href="https://drive.google.com/uc?export=download&id=1ryfpW5LBeesxHA0A-IJY5nHwYi7-qmui" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <a href="https://drive.google.com/uc?export=download&id=1NC18hg5hx9L6q7HSvT53YM6sNMonpoaU" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
                             <button class="hero-btn btn-login" onclick="registerEvent('IPL Auction simulation', this)">Register Now</button>
                         </div>
                     </div>
@@ -474,7 +474,7 @@
                             <p><i class="fa-regular fa-clock"></i> 11:00 PM - 12:15 PM</p>
                         </div>
                         <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
-                            <a href="https://drive.google.com/uc?export=download&id=1ryfpW5LBeesxHA0A-IJY5nHwYi7-qmui" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <a href="https://drive.google.com/uc?export=download&id=10flOO9qcw0Lby3HHh0iOeARUcBY99Cq0" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
                             <button class="hero-btn btn-login" onclick="registerEvent('The Big Bang theory', this)">Register Now</button>
                         </div>
                     </div>
@@ -514,7 +514,7 @@
                             <p><i class="fa-regular fa-clock"></i> 11:30 AM - 12:30 PM</p>
                         </div>
                         <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
-                            <a href="https://drive.google.com/uc?export=download&id=1ryfpW5LBeesxHA0A-IJY5nHwYi7-qmui" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <a href="https://drive.google.com/uc?export=download&id=1nRqnhHhmLakLw6AfcLMpArkujwdajO1R" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
                             <button class="hero-btn btn-login" onclick="registerEvent('Pitch please competition', this)">Register Now</button>
                         </div>
                     </div>
@@ -534,7 +534,7 @@
                             <p><i class="fa-regular fa-clock"></i> 02:00 PM Onwards</p>
                         </div>
                         <div style="margin-top: auto; width: 100%; display: flex; flex-direction: column; gap: 8px;">
-                            <a href="https://drive.google.com/uc?export=download&id=1ryfpW5LBeesxHA0A-IJY5nHwYi7-qmui" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
+                            <a href="https://drive.google.com/file/d/1OYOtXD5M08uhSSUuHNQIDTFMobe_9EeK/view?usp=drive_link" target="_blank" class="hero-btn btn-register">Download Info PDF</a>
                             <button class="hero-btn btn-login" onclick="registerEvent('The golden pitch', this)">Register Now</button>
                         </div>
                     </div>
@@ -707,7 +707,7 @@
             </div>
             <div class="footer-col contact-col">
                 <h4>Contact Us</h4>
-                <p>esummit.uietkuk026@gmail.com</p>
+                <p>esummit.uiet@kuk.ac.in</p>
                 <p>+91 9193626076</p>
             </div>
         </div>
@@ -2131,6 +2131,8 @@
             const urlParams = new URLSearchParams(window.location.search);
             const targetEvent = urlParams.get('register_event');
 
+            checkEnrollmentStatus();
+
             if (targetEvent) {
                 if (token) {
                     registerEvent(targetEvent);
@@ -2276,6 +2278,7 @@ async function handleTeamRegistration(eventName, btnElement, originalText, token
                         } else {
                             alert(`SUCCESS: Team enrolled in ${eventName}!`);
                         }
+                        checkEnrollmentStatus();
                     } else {
                         alert(regData.error || "Failed to register team. Ensure you are the team leader.");
                         if (btnElement) {
@@ -2326,6 +2329,7 @@ async function handleIndividualRegistration(eventName, btnElement, originalText,
             } else {
                 alert(`ACCESS GRANTED: You have successfully enrolled in ${eventName}!`);
             }
+            checkEnrollmentStatus();
         } else {
             alert(data.error);
             if (btnElement) {
@@ -2342,6 +2346,63 @@ async function handleIndividualRegistration(eventName, btnElement, originalText,
     }
 }
 
+async function checkEnrollmentStatus() {
+    const token = localStorage.getItem('esummit_token');
+    if (!token) return; // Exit if the user is not logged in
+
+    try {
+        let allEnrolledEvents = [];
+
+        // 1. Fetch individual registered events
+        const profileResponse = await fetch("https://esummit-backend-7rxl.onrender.com/api/auth/profile", {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const profileResult = await profileResponse.json();
+        
+        if (profileResult.success && profileResult.data && profileResult.data.registeredEvents) {
+            allEnrolledEvents = [...allEnrolledEvents, ...profileResult.data.registeredEvents];
+        }
+
+        // 2. Fetch team registered events
+        const teamsResponse = await fetch("https://esummit-backend-7rxl.onrender.com/api/teams/my-teams", {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const teamsResult = await teamsResponse.json();
+        
+        if (teamsResult.success && teamsResult.data && teamsResult.data.length > 0) {
+            teamsResult.data.forEach(team => {
+                if (team.events) {
+                    allEnrolledEvents = [...allEnrolledEvents, ...team.events];
+                }
+            });
+        }
+
+        // 3. Update the UI for all buttons in the carousel
+        const registerButtons = document.querySelectorAll('.event-card-back .btn-login');
+        
+        registerButtons.forEach(btn => {
+            const onclickAttr = btn.getAttribute('onclick');
+            if (onclickAttr) {
+                // Extract event name from registerEvent('Event Name', this)
+                const match = onclickAttr.match(/registerEvent\(['"]([^'"]+)['"]/);
+                
+                if (match && match[1]) {
+                    const eventName = match[1];
+                    
+                    if (allEnrolledEvents.includes(eventName)) {
+                        btn.innerHTML = '<i class="fa-solid fa-check"></i> Enrolled';
+                        btn.style.setProperty('background', '#2ecc71', 'important');
+                        btn.style.setProperty('border-color', '#2ecc71', 'important');
+                        btn.disabled = true; 
+                    }
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error("Failed to fetch enrollment status:", error);
+    }
+}
         let lastScrollTop = 0;
         const header = document.querySelector('.nav-header');
 
