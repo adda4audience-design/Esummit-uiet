@@ -110,7 +110,8 @@
         #kuk-details { border-left-color: var(--neon-blue); }
         #external-college-details { border-left-color: var(--primary-gold); }
         #non-student-details { border-left-color: var(--primary-orange); }
-        
+        #startup-details { border-left-color: #00ff66; }
+
         #hostel-options {
             display: none; margin-top: 15px; padding: 15px; border-radius: 4px;
             background: rgba(255, 170, 0, 0.05); border-left: 3px solid var(--primary-gold);
@@ -219,6 +220,7 @@
                     <select id="main-role" onchange="updateFormLogic()" required>
                         <option value="student">Student</option>
                         <option value="non-student">Non-Student</option>
+                        <option value="startup-founder">Startup Founder</option>
                     </select>
                 </div>
 
@@ -237,6 +239,42 @@
                         <div class="form-group" style="animation-delay: 0s;"><label>State</label><input type="text" id="ns-state" placeholder="State" required></div>
                     </div>
                 </div>
+
+                <div id="startup-details" class="dynamic-panel" style="animation-delay: 0s;">
+    <div class="form-group" style="animation-delay: 0s;">
+        <label>Startup Name</label>
+        <input type="text" id="inp-startup-name" placeholder="Enter your startup name" required>
+    </div>
+    <div class="form-group" style="animation-delay: 0s;">
+        <label>Industry / Field</label>
+        <input type="text" id="inp-startup-field" placeholder="e.g., EdTech, AI, SaaS" required>
+    </div>
+    <div class="input-row">
+        <div class="form-group" style="animation-delay: 0s;">
+            <label>Registered Entity?</label>
+            <select id="inp-startup-registered" required>
+                <option value="" disabled selected>Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+        <div class="form-group" style="animation-delay: 0s;">
+            <label>Startup Phase</label>
+            <select id="inp-startup-phase" required>
+                <option value="" disabled selected>Select Phase</option>
+                <option value="Ideation">Ideation</option>
+                <option value="Prototype / MVP">Prototype / MVP</option>
+                <option value="Pre-Revenue">Pre-Revenue</option>
+                <option value="Revenue-Generating">Revenue-Generating</option>
+                <option value="Scaling">Scaling</option>
+            </select>
+        </div>
+    </div>
+    <div class="input-row">
+        <div class="form-group" style="animation-delay: 0s;"><label>City</label><input type="text" id="startup-city" placeholder="City" required></div>
+        <div class="form-group" style="animation-delay: 0s;"><label>State</label><input type="text" id="startup-state" placeholder="State" required></div>
+    </div>
+</div>
 
                 
                 <div class="form-group" id="student-type-box" style="animation-delay: 0.3s;">
@@ -375,6 +413,7 @@
             const studentType = document.getElementById('student-type').value;
             
             const nonStudentBox = document.getElementById('non-student-details');
+            const startupBox = document.getElementById('startup-details');
             
             const kukCollegeBox = document.getElementById('kuk-college-box');
             const kukCollege = document.getElementById('kuk-college').value;
@@ -389,12 +428,16 @@
             
             togglePanel(studentTypeBox, false);
             togglePanel(nonStudentBox, false);
+            togglePanel(startupBox, false);
             togglePanel(kukCollegeBox, false);
             togglePanel(kukDetailsBox, false);
             togglePanel(extCollegeBox, false);
             togglePanel(hostelBox, false);
 
-            if (mainRole === 'non-student') {
+            if (mainRole === 'startup-founder') {
+                togglePanel(startupBox, true);
+                togglePanel(hostelBox, true);
+            } else if (mainRole === 'non-student') {
                 togglePanel(nonStudentBox, true);
                 togglePanel(hostelBox, true);
             } else {
@@ -527,8 +570,19 @@
                     let finalCompany = '';
                     let specificRoleVal = 'Student';
                     let delegateStatus = 'no';
+                    let startupField = undefined;
+                    let startupRegistered = undefined;
+                    let startupPhase = undefined;
 
-                    if (mainRole === 'non-student') {
+                    if (mainRole === 'startup-founder') {
+                        specificRoleVal = 'Startup Founder';
+                        finalCompany = document.getElementById('inp-startup-name').value;
+                        finalCity = document.getElementById('startup-city').value;
+                        finalState = document.getElementById('startup-state').value;
+                        startupField = document.getElementById('inp-startup-field').value;
+                        startupRegistered = document.getElementById('inp-startup-registered').value;
+                        startupPhase = document.getElementById('inp-startup-phase').value;
+                    } else if (mainRole === 'non-student') {
                         specificRoleVal = document.getElementById('inp-role').value;
                         finalCompany = document.getElementById('inp-company').value;
                         finalCity = document.getElementById('ns-city').value;
@@ -574,6 +628,9 @@
                         branch: finalBranch,
                         year: finalYear,
                         rollNo: finalRoll,
+                        startupField: startupField,
+                        startupRegistered: startupRegistered,
+                        startupPhase: startupPhase,
                         referredBy: document.getElementById('inp-referral').value.trim() || undefined
                     };
 
@@ -595,8 +652,7 @@
 
                         
                         const pendingEvent = sessionStorage.getItem('pendingEventRegistration');
-                        const TEAM_EVENTS = [
-                            "36 hours hackathon", 
+                        const TEAM_EVENTS = [ 
                             "IPL Auction simulation", 
                             "The Big Bang theory", 
                             "Pitch please competition"
