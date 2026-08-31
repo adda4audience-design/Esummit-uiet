@@ -482,15 +482,28 @@
                         
                         
                         const pendingEvent = sessionStorage.getItem('pendingEventRegistration');
+                        const TEAM_EVENTS = [
+                            "36 hours hackathon", 
+                            "IPL Auction simulation", 
+                            "The Big Bang theory", 
+                            "Pitch please competition"
+                        ];
+
                         if (pendingEvent) {
-                            try {
-                                await fetch(`${API_URL}/events/register`, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${data.token}` },
-                                    body: JSON.stringify({ eventName: pendingEvent })
-                                });
-                                sessionStorage.removeItem('pendingEventRegistration');
-                            } catch (e) { console.error("Auto-enroll failed:", e); }
+                            sessionStorage.removeItem('pendingEventRegistration'); 
+                            
+                            if (TEAM_EVENTS.includes(pendingEvent)) {
+                                alert(`"${pendingEvent}" is a team event. Please create or join a team here first.`);
+                                window.location.href = "dashboard.html";
+                            } else {
+                                try {
+                                    await fetch(`${API_URL}/events/register`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${data.token}` },
+                                        body: JSON.stringify({ eventName: pendingEvent })
+                                    });
+                                } catch (e) { console.error("Auto-enroll failed:", e); }
+                            }
                         }
                         
 
@@ -582,15 +595,28 @@
 
                         
                         const pendingEvent = sessionStorage.getItem('pendingEventRegistration');
+                        const TEAM_EVENTS = [
+                            "36 hours hackathon", 
+                            "IPL Auction simulation", 
+                            "The Big Bang theory", 
+                            "Pitch please competition"
+                        ];
+
                         if (pendingEvent) {
-                            try {
-                                await fetch(`${API_URL}/events/register`, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${loginData.token}` },
-                                    body: JSON.stringify({ eventName: pendingEvent })
-                                });
-                                sessionStorage.removeItem('pendingEventRegistration');
-                            } catch (e) { console.error("Auto-enroll failed:", e); }
+                            sessionStorage.removeItem('pendingEventRegistration');
+                            
+                            if (TEAM_EVENTS.includes(pendingEvent)) {
+                                alert(`"${pendingEvent}" is a team event. Please create or join a team here first.`);
+                                // User will be redirected to dashboard naturally below
+                            } else {
+                                try {
+                                    await fetch(`${API_URL}/events/register`, {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${loginData.token}` },
+                                        body: JSON.stringify({ eventName: pendingEvent })
+                                    });
+                                } catch (e) { console.error("Auto-enroll failed:", e); }
+                            }
                         }
                         
 
