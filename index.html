@@ -1216,6 +1216,7 @@
         bottomCap.position.y = -panelH / 2;
 
         prismGroup.position.y = panelH / 2 + 20; // Sit on the ground naturally
+        prismGroup.position.x = isInitMobile ? -11 : 0; // <--- ADD THIS: Shifts left by 60 units on mobile
         hologramGroup.add(prismGroup);
 
         // --- HOVERING "SPEAKERS" TITLE ---
