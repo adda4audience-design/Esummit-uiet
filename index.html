@@ -1102,6 +1102,57 @@
         createTerminalMachine(160, EVENTS_BASE_Z);
 
 
+        const speakersData = [
+            {
+                name: "Harshit Gupta",
+                designation: "Senior Investment Analyst ",
+                company: "Chandigarh Angels Network (CAN)",
+                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1790262070/1675931062544_dcafzs.jpg"
+            },
+            {
+                name: "Nikunj Dang",
+                designation: "Founder & CEO",
+                company: "Yagnum",
+                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1786127801/1716387037719_dpm4vv.jpg"
+            },
+            {
+                name: "CA Vinay Haritwal",
+                designation: "Founder",
+                company: "Mentorbuddy",
+                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1786127801/1783783730590_aeyyzc.jpg"
+            },
+            {
+                name: "Nitika",
+                designation: "Chief Investments & Operations",
+                company: "Chandigarh Angels Network (CAN) ",
+                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1790262069/1760426033720_wn1qbt.jpg"
+            },
+            {
+                name: "Ashu Sharma",
+                designation: "Associate Director",
+                company: "TiE Chandigarh",
+                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1790262070/1789115994517_pimmem.jpg"
+            },
+            {
+                name: "Sanjeeva Shivesh",
+                designation: "Founder / Guest Investor & Jury",
+                company: "ThinkStartup / Angel Investor",
+                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1784055110/Image-not-found_fdwm0s.png"
+            },
+            {
+                name: "Amit Singal",
+                designation: "Founder & General Partner ",
+                company: "Indicorn Angels Fund ",
+                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1790262070/1771909008337_vhfxce.jpg"
+            },
+            {
+                name: "Utkarsh Goklani",
+                designation: "Co-Founder",
+                company: "Wyzr (wyzr.in) ",
+                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1790262069/1775372814016_1_g1zimr.jpg"
+            },
+        ];
+
         // --- SOLID 3D TRIANGULAR PRISM SETUP ---
         const hologramGroup = new THREE.Group();
         const prismGroup = new THREE.Group();
@@ -1115,10 +1166,13 @@
         // in the camera frame on both desktop and mobile)
         const panelW = 220;
         const panelH = 330;
-        const apothegm = panelW / (2 * Math.sqrt(3)); // Distance from center to edge
-        const prismRadius = panelW / Math.sqrt(3);    // Distance from center to vertex
+        const numSpeakers = speakersData.length;
 
-        for(let i=0; i<3; i++) {
+        // Calculate distance for ANY polygon (triangle, square, octagon, etc.)
+        const apothegm = (panelW / 2) / Math.tan(Math.PI / numSpeakers);
+        const prismRadius = (panelW / 2) / Math.sin(Math.PI / numSpeakers);
+
+        for(let i=0; i<numSpeakers; i++) { 
             const cvs = document.createElement('canvas');
             cvs.width = 1024; 
             cvs.height = 1536; 
@@ -1127,16 +1181,16 @@
             const tex = new THREE.CanvasTexture(cvs);
             speakerTextures.push(tex);
             
-            // Solid, non-transparent material. FrontSide only creates the single-face illusion
             const mat = new THREE.MeshBasicMaterial({ 
                 map: tex, 
-                transparent: false,
+                transparent: true,
                 side: THREE.FrontSide 
             });
             
             const plane = new THREE.Mesh(new THREE.PlaneGeometry(panelW, panelH), mat);
             
-            const angle = i * (Math.PI * 2 / 3);
+            // Calculate the angle dynamically
+            const angle = i * (Math.PI * 2 / numSpeakers); 
             plane.position.x = Math.sin(angle) * apothegm;
             plane.position.z = Math.cos(angle) * apothegm;
             plane.rotation.y = angle;
@@ -1145,16 +1199,20 @@
         }
 
         // Add solid top and bottom caps to close the prism illusion
-        const capGeo = new THREE.CircleGeometry(prismRadius, 3);
-        const capMat = new THREE.MeshBasicMaterial({ color: 0x050a15, side: THREE.DoubleSide }); // Matches canvas bg
+        // Change '3' to 'numSpeakers'
+        const capGeo = new THREE.CircleGeometry(prismRadius, numSpeakers); 
+        const capMat = new THREE.MeshBasicMaterial({ color: 0x050a15, side: THREE.DoubleSide });
 
         const topCap = new THREE.Mesh(capGeo, capMat);
+        topCap.visible = false;
         topCap.rotation.x = -Math.PI / 2;
-        topCap.rotation.z = Math.PI / 6; // Align vertices with panels
+        // Align the cap vertices with the panels dynamically
+        topCap.rotation.z = Math.PI / numSpeakers; 
         topCap.position.y = panelH / 2;
         
 
         const bottomCap = topCap.clone();
+        bottomCap.visible = false;
         bottomCap.position.y = -panelH / 2;
 
         prismGroup.position.y = panelH / 2 + 20; // Sit on the ground naturally
@@ -1180,31 +1238,11 @@
         hologramGroup.position.set(0, getTerrainHeight(0, SPEAKERS_BASE_Z), SPEAKERS_BASE_Z);
         scene.add(hologramGroup);
 
-        const speakersData = [
-            {
-                name: "Saurabh Shah",
-                designation: "Head of People Operations",
-                company: "Krafton India",
-                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1786127801/1753837620238_ijnvj3.jpg"
-            },
-            {
-                name: "Nikunj Dang",
-                designation: "Founder & CEO",
-                company: "Yagnum",
-                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1786127801/1716387037719_dpm4vv.jpg"
-            },
-            {
-                name: "CA Vinay Haritwal",
-                designation: "Founder",
-                company: "Mentorbuddy",
-                imgSrc: "https://res.cloudinary.com/di10wvjn8/image/upload/v1786127801/1783783730590_aeyyzc.jpg"
-            }
-        ];
 
         const speakerImages = [];
 
         function drawPrismFaces() {
-            for(let i=0; i<3; i++) {
+            for(let i=0; i<speakersData.length; i++) {
                 const ctx = speakerCanvases[i].getContext('2d');
                 const w = speakerCanvases[i].width;    // 1024
                 const h = speakerCanvases[i].height;   // 1536
@@ -1263,7 +1301,7 @@
             clearInterval(speakerAutoRotate);
             speakerAutoRotate = setInterval(() => {
                 if(hologramGroup.userData.prism) {
-                    hologramGroup.userData.targetRotation += (Math.PI * 2 / 3);
+                    hologramGroup.userData.targetRotation += (Math.PI * 2 / numSpeakers);
                 }
             }, 4000);
         }
@@ -1272,14 +1310,14 @@
 
         document.getElementById('speaker-next').addEventListener('click', () => {
             if(hologramGroup.userData.prism) {
-                hologramGroup.userData.targetRotation += (Math.PI * 2 / 3);
+                hologramGroup.userData.targetRotation += (Math.PI * 2 / numSpeakers);
                 startSpeakerRotation(); // Reset timer on manual click
             }
         });
 
         document.getElementById('speaker-prev').addEventListener('click', () => {
             if(hologramGroup.userData.prism) {
-                hologramGroup.userData.targetRotation -= (Math.PI * 2 / 3);
+                hologramGroup.userData.targetRotation += (Math.PI * 2 / numSpeakers);
                 startSpeakerRotation(); // Reset timer on manual click
             }
         });
@@ -1776,7 +1814,7 @@
                 hologramGroup.userData.prism.position.y = 185 + Math.sin(time * 2) * 5;
                 
                 if (hologramGroup.userData.titlePlane) {
-                    hologramGroup.userData.titlePlane.position.y = 384 + Math.sin(time * 2) * 5;
+                    hologramGroup.userData.titlePlane.position.y = 500 + Math.sin(time * 2) * 5;
                     hologramGroup.userData.titlePlane.lookAt(camera.position);
                 }
             }
@@ -2021,7 +2059,7 @@
                 // now smaller (220x330) so these can be tighter than before; mobile
                 // still gets a bit more distance since its narrower portrait aspect
                 // tightens the horizontal field of view at a given distance.
-                const holoDist = isMobile ? 680 : 560;
+                const holoDist = (isMobile ? 680 : 560) + (apothegm - 63.5);
                 const holoYOffset = 205;
 
                 const holoLookX = hologramGroup.position.x;
